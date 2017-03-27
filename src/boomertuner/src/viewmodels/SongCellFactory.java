@@ -1,9 +1,9 @@
-package boomertuner.viewmodels;
+package viewmodels;
 
-import boomertuner.models.Song;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
+import models.Song;
 
 /**
  * Created by bryancapps on 3/26/17.

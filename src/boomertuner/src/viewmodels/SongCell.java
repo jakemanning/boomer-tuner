@@ -1,7 +1,7 @@
-package boomertuner.viewmodels;
+package viewmodels;
 
-import boomertuner.models.Song;
 import javafx.scene.control.ListCell;
+import models.Song;
 
 /**
  * Created by bryancapps on 3/26/17.

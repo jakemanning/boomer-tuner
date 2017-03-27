@@ -1,4 +1,4 @@
-package boomertuner.models;
+package models;
 
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;

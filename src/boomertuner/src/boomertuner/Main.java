@@ -1,6 +1,11 @@
 package boomertuner;
 
-import boomertuner.models.Song;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -12,14 +17,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
+import models.Song;
 
 public class Main extends Application {
     private final static Path musicFolder = Paths.get(System.getProperty("user.home"),
@@ -43,7 +41,7 @@ public class Main extends Application {
 
         try {
             Files.walk(musicFolder, 5)
-                    .filter(path -> path.toString().toLowerCase().endsWith(".mp3"))
+                    .filter(path -> path.toString().toLowerCase().endsWith(".m4a"))
                     .map(path -> Song.from(path.toUri().toString()))
                     .filter(Objects::nonNull)
                     .forEachOrdered(songFuture -> songFuture.thenAccept(items::add));
