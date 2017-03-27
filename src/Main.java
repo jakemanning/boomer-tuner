@@ -1,14 +1,5 @@
-package boomertuner;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Objects;
-
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +9,12 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import models.Song;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
 
 public class Main extends Application {
     private final static Path musicFolder = Paths.get(System.getProperty("user.home"),
@@ -41,21 +38,20 @@ public class Main extends Application {
 
         try {
             Files.walk(musicFolder, 5)
-                    .filter(path -> path.toString().toLowerCase().endsWith(".m4a"))
-                    .map(path -> Song.from(path.toUri().toString()))
+                    .filter(path -> path.toString().toLowerCase().endsWith(".mp3")
+                            || path.toString().toLowerCase().endsWith(".m4a"))
+                    .map(path -> Song.from(path.toUri()))
                     .filter(Objects::nonNull)
-                    .forEachOrdered(songFuture -> songFuture.thenAccept(items::add));
+                    .forEachOrdered(items::add);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         list.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (currentPlayer != null) currentPlayer.stop();
-            Media media = new Media(newValue.getUri());
+            Media media = new Media(newValue.getUri().toString());
             currentPlayer = new MediaPlayer(media);
             currentPlayer.play();
-            media.getMetadata().addListener((MapChangeListener<? super String, ? super Object>)
-                    change -> System.out.println(change.getKey() + ": " + change.getValueAdded()));
         });
     }
 

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.BorderPane?>
 
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="boomertuner.Controller">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <center>
       <ListView id="center" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>

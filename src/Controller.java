@@ -1,5 +1,3 @@
-package boomertuner;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import models.Song;
