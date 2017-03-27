@@ -1,5 +1,9 @@
 package models;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -8,10 +12,6 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 
 /**
  * Created by bryancapps on 3/26/17.
@@ -38,12 +38,30 @@ public class Song {
             String artist = tag.getFirst(FieldKey.ARTIST);
             String album = tag.getFirst(FieldKey.ALBUM);
             String title = tag.getFirst(FieldKey.TITLE);
-            int track = Integer.valueOf(tag.getFirst(FieldKey.TRACK));
+            String trackStr = tag.getFirst(FieldKey.TRACK);
+            
+            int track = trackStr.isEmpty() ? -1 : Integer.valueOf(trackStr);
             return new Song(title, artist, album, track, uri);
-        } catch (CannotReadException | IOException | TagException | InvalidAudioFrameException | ReadOnlyFileException e) {
+        } catch (CannotReadException | IOException | TagException | InvalidAudioFrameException | ReadOnlyFileException | NumberFormatException e) {
             e.printStackTrace();
             return null;
         }
+    }
+    
+    public Integer getTrack() {
+    	return track;
+    }
+    
+    public String getTitle() {
+    	return title;
+    }
+    
+    public String getArtist() {
+    	return artist;
+    }
+    
+    public String getAlbum() {
+    	return album;
     }
 
     public URI getUri() {
