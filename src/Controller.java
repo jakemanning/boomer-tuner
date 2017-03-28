@@ -7,7 +7,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import models.Song;
@@ -22,11 +21,6 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 public class Controller {
-    public HBox bottom;
-    public ImageView artwork;
-    public ImageView previous;
-    public ImageView play;
-    public ImageView next;
     @FXML
     private TableView<Song> table;
     @FXML
@@ -37,6 +31,14 @@ public class Controller {
     private TableColumn<Song, String> artistCol;
     @FXML
     private TableColumn<Song, String> albumCol;
+    @FXML
+    private ImageView artwork;
+    @FXML
+    private ImageView previous;
+    @FXML
+    private ImageView play;
+    @FXML
+    private ImageView next;
 
     private final static Path musicFolder = Paths.get(System.getProperty("user.home"), "Music", "iTunes",
             "iTunes Media", "Music");

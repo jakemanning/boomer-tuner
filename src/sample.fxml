@@ -15,12 +15,12 @@
         </TableView>
     </center>
     <bottom>
-        <HBox fx:id="bottom" prefWidth="Infinity" prefHeight="60.0">
-            <ImageView fx:id="artwork" HBox.hgrow="NEVER"/>
+        <HBox prefWidth="Infinity" prefHeight="50.0" maxHeight="50.0" minHeight="50.0" alignment="CENTER">
+            <ImageView fx:id="artwork" HBox.hgrow="NEVER" fitHeight="40.0" preserveRatio="true"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <ImageView fx:id="previous" HBox.hgrow="NEVER"/>
-            <ImageView fx:id="play" HBox.hgrow="NEVER"/>
-            <ImageView fx:id="next" HBox.hgrow="NEVER"/>
+            <ImageView fx:id="previous" HBox.hgrow="NEVER" fitHeight="40.0" preserveRatio="true"/>
+            <ImageView fx:id="play" HBox.hgrow="NEVER" fitHeight="40.0" preserveRatio="true"/>
+            <ImageView fx:id="next" HBox.hgrow="NEVER" fitHeight="40.0" preserveRatio="true"/>
             <Region HBox.hgrow="ALWAYS"/>
         </HBox>
     </bottom>
