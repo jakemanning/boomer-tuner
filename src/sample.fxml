@@ -15,8 +15,9 @@
         </TableView>
     </center>
     <bottom>
-        <HBox prefWidth="Infinity" prefHeight="50.0" maxHeight="50.0" minHeight="50.0" alignment="CENTER">
-            <ImageView fx:id="artwork" HBox.hgrow="NEVER" fitHeight="40.0" preserveRatio="true"/>
+        <HBox prefHeight="50.0" maxHeight="50.0" minHeight="50.0" alignment="CENTER">
+        
+            <ImageView fx:id="artwork" HBox.hgrow="NEVER" translateX="10" fitHeight="40.0" fitWidth="40.0" preserveRatio="true"/>
             <Region HBox.hgrow="ALWAYS"/>
             <ImageView fx:id="previous" HBox.hgrow="NEVER" fitHeight="40.0" preserveRatio="true"/>
             <ImageView fx:id="play" HBox.hgrow="NEVER" fitHeight="40.0" preserveRatio="true"/>
