@@ -1,28 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<?import javafx.scene.control.Button?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
     <center>
         <TableView fx:id="table" prefHeight="575.0" prefWidth="668.0" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn fx:id="trackCol" editable="false" prefWidth="50.0" text="Track"/>
-                <TableColumn fx:id="titleCol" editable="false" prefWidth="200.0" text="Title"/>
-                <TableColumn fx:id="artistCol" editable="false" prefWidth="200.0" text="Artist"/>
-                <TableColumn fx:id="albumCol" editable="false" prefWidth="200.0" text="Album"/>
+                <TableColumn fx:id="trackCol" editable="false" prefWidth="50.0" text="Track" />
+                <TableColumn fx:id="titleCol" editable="false" prefWidth="200.0" text="Title" />
+                <TableColumn fx:id="artistCol" editable="false" prefWidth="200.0" text="Artist" />
+                <TableColumn fx:id="albumCol" editable="false" prefWidth="200.0" text="Album" />
             </columns>
         </TableView>
     </center>
     <bottom>
-        <HBox prefHeight="50.0" maxHeight="50.0" minHeight="50.0" alignment="CENTER">
-        
-            <ImageView fx:id="artwork" HBox.hgrow="NEVER" translateX="10" fitHeight="40.0" fitWidth="40.0" preserveRatio="true"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <ImageView fx:id="previous" HBox.hgrow="NEVER" fitHeight="40.0" preserveRatio="true"/>
-            <ImageView fx:id="play" HBox.hgrow="NEVER" fitHeight="40.0" preserveRatio="true"/>
-            <ImageView fx:id="next" HBox.hgrow="NEVER" fitHeight="40.0" preserveRatio="true"/>
-            <Region HBox.hgrow="ALWAYS"/>
+        <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
+           <children>
+               <ImageView fx:id="artwork" fitHeight="40.0" fitWidth="40.0" preserveRatio="true" translateX="10" HBox.hgrow="NEVER"/>
+               <Region HBox.hgrow="ALWAYS" />
+               <ImageView fx:id="previous" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER" />
+               <ImageView fx:id="play" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER" />
+               <ImageView fx:id="next" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER" />
+               <Region HBox.hgrow="ALWAYS" />
+               <Button fx:id="playlist" onMousePressed="#togglePlaylist" text="Create Playlist" translateX="-10" HBox.hgrow="NEVER" />
+           </children>
         </HBox>
     </bottom>
+   <left>
+      <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <ListView fx:id="menu" prefHeight="576.0" prefWidth="200.0" />
+         </children>
+      </Pane>
+   </left>
 </BorderPane>
