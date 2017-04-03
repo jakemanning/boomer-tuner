@@ -3,6 +3,7 @@ package models;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Objects;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -70,13 +71,13 @@ public class Song {
 
 		if (track != song.track)
 			return false;
-		if (!title.equals(song.title))
+		if (!Objects.equals(title, song.title))
 			return false;
-		if (!artist.equals(song.artist))
+		if (!Objects.equals(artist, song.artist))
 			return false;
-		if (!album.equals(song.album))
+		if (!Objects.equals(album, song.album))
 			return false;
-		return uri.equals(song.uri);
+		return Objects.equals(uri, song.uri);
 	}
 
 	@Override

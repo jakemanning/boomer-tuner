@@ -37,8 +37,8 @@ import models.Album;
 import models.Artist;
 import models.MusicLibrary;
 import models.Song;
-import utils.Icon;
 import utils.Category;
+import utils.Icon;
 
 public class Controller {
 	@FXML
@@ -98,7 +98,7 @@ public class Controller {
 	@FXML
 	private void togglePlaylist() {
 		playlistMode = !playlistMode;
-
+		
 		if (playlistMode) {
 			table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			table.getSelectionModel().selectedItemProperty().removeListener(songListener);

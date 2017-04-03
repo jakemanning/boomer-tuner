@@ -2,6 +2,7 @@ package models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Artist {
 	public final String name;
@@ -24,9 +25,9 @@ public class Artist {
 
 		Artist artist = (Artist) o;
 
-		if (name != artist.name)
+		if (!Objects.equals(name, artist.name))
 			return false;
-		return !albums.equals(artist.albums);
+		return Objects.equals(albums, artist.albums);
 	}
 
 	@Override

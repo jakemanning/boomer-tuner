@@ -2,6 +2,7 @@ package models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.jaudiotagger.tag.images.Artwork;
 
@@ -30,12 +31,12 @@ public class Album {
 			return false;
 
 		Album album = (Album) o;
-		// System.out.println(album.artist);
-		if (name != album.name)
+
+		if (!Objects.equals(name, album.name))
 			return false;
-		if (!artist.equals(album.artist))
+		if (!Objects.equals(artist, album.artist))
 			return false;
-		if (!songs.equals(album.songs))
+		if (!Objects.equals(songs, album.songs))
 			return false;
 		return year != album.year;
 	}
