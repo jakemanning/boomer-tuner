@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Button?>
 
 <?import javafx.scene.text.Text?>
+<?import com.sun.javafx.webkit.theme.RenderThemeImpl.FormSlider?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
     <center>
         <TableView fx:id="table" prefHeight="575.0" prefWidth="668.0" BorderPane.alignment="CENTER">
@@ -20,23 +21,27 @@
         </TableView>
     </center>
     <bottom>
-            <BorderPane maxHeight="100.0" minHeight="100.0" prefHeight="50.0">
+            <BorderPane maxHeight="100.0" minHeight="100.0" prefHeight="50.0" minWidth="600">
                 <left>
-                    <HBox alignment="CENTER_LEFT" maxHeight="100.0" minHeight="100.0" prefHeight="100.0" maxWidth="200" minWidth="200">
+                    <HBox alignment="CENTER_LEFT" maxHeight="100.0" minHeight="100.0" prefHeight="100.0" maxWidth="150" minWidth="150">
                         <VBox alignment="CENTER" maxHeight="100" minHeight="100" prefHeight="100">
                             <ImageView fx:id="artwork" fitHeight="100.0" fitWidth="100" preserveRatio="true"/>
                         </VBox>
                     </HBox>
                 </left>
                 <center>
-                    <VBox alignment="CENTER" maxHeight="40" minHeight="40" prefHeight="40">
-                        <HBox alignment="CENTER" maxHeight="20.0" minHeight="20.0" prefHeight="20.0">
-                            <Text fx:id="songTitle" text="a"/>
-                        </HBox>
-                        <HBox alignment="CENTER" maxHeight="20.0" minHeight="20.0" prefHeight="20.0">
-                            <Text fx:id="seekbar" text="b"/>
-                        </HBox>
-                    </VBox>
+                    <HBox alignment="CENTER" minWidth="300">
+                        <VBox alignment="CENTER" maxHeight="40" minHeight="40" prefHeight="40">
+                            <HBox alignment="CENTER" maxHeight="20.0" minHeight="20.0" maxWidth="700" prefHeight="20.0">
+                                <Text fx:id="songTitle"/>
+                            </HBox>
+                            <HBox alignment="CENTER" maxHeight="20.0" minHeight="20.0" prefHeight="20.0">
+                                <Text fx:id="currentTime" text="0:00"/>
+                                <Slider fx:id="seekbar" minWidth="300" maxWidth="700" HBox.hgrow="ALWAYS"/>
+                                <Text fx:id="songLength" text="0:00"/>
+                            </HBox>
+                        </VBox>
+                    </HBox>
                 </center>
                 <bottom>
                     <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
@@ -46,7 +51,7 @@
                     </HBox>
                 </bottom>
                 <right>
-                    <HBox alignment="CENTER_RIGHT" maxHeight="100.0" minHeight="100.0" prefHeight="100.0" maxWidth="200" minWidth="200">
+                    <HBox alignment="CENTER_RIGHT" maxHeight="100.0" minHeight="100.0" prefHeight="100.0" maxWidth="150" minWidth="150">
                         <VBox alignment="CENTER" maxHeight="100" minHeight="100" prefHeight="100">
                                 <Button fx:id="playlist" onMousePressed="#togglePlaylist" text="Create Playlist" translateX="-10" HBox.hgrow="NEVER" />
                         </VBox>

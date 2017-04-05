@@ -31,6 +31,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import models.Album;
@@ -51,6 +52,8 @@ public class Controller {
 	private TableColumn<Song, Artist> artistCol;
 	@FXML
 	private TableColumn<Song, Album> albumCol;
+	@FXML
+	private Text songTitle;
 	@FXML
 	private ImageView artwork;
 	@FXML
@@ -147,6 +150,8 @@ public class Controller {
 			Media media = new Media(newValue.uri.toString());
 			mediaPlayer = new MediaPlayer(media);
 			mediaPlayer.play();
+
+			songTitle.setText(newValue.title);
 
 			play.setImage(Icon.PAUSE.image());
 			try {
