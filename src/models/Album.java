@@ -7,9 +7,9 @@ import java.util.Objects;
 import org.jaudiotagger.tag.images.Artwork;
 
 public class Album {
-	public final String name;
-	public final Artwork artwork;
-	public Artist artist;
+	private final String name;
+	private final Artwork artwork;
+	private Artist artist;
 	private List<Song> songs = new ArrayList<>();
 	private int year;
 
@@ -19,7 +19,7 @@ public class Album {
 	}
 
 	public void addSong(final Song song) {
-		artist = song.artist;
+		artist = song.getArtist();
 		songs.add(song);
 	}
 
@@ -32,13 +32,15 @@ public class Album {
 
 		Album album = (Album) o;
 
-		if (!Objects.equals(name, album.name))
+		if (!Objects.equals(this.name, album.getName()))
 			return false;
-		if (!Objects.equals(artist, album.artist))
+		if (!Objects.equals(this.artist, album.getArtist()))
 			return false;
-		if (!Objects.equals(songs, album.songs))
+		if (!Objects.equals(this.songs, album.getSongs()))
 			return false;
-		return year != album.year;
+		if (this.year != album.getYear())
+			return false;
+		return true;
 	}
 
 	@Override
@@ -53,5 +55,25 @@ public class Album {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public Artwork getArtwork() {
+		return artwork;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Artist getArtist() {
+		return artist;
+	}
+
+	public List<Song> getSongs() {
+		return songs;
+	}
+
+	public int getYear() {
+		return year;
 	}
 }

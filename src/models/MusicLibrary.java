@@ -13,7 +13,7 @@ import utils.Category;
 public class MusicLibrary {
 	private static MusicLibrary instance = new MusicLibrary();
 	private ObservableList<Song> items = FXCollections.observableArrayList();
-	public ObservableList<Playlist> playlists = FXCollections.observableArrayList();
+	private ObservableList<Playlist> playlists = FXCollections.observableArrayList();
 
 	public static MusicLibrary instance() {
 		return instance;
@@ -57,6 +57,6 @@ public class MusicLibrary {
 		playlists.add(playlist);
 
 		items.clear();
-		items.addAll(playlist.songs);
+		items.addAll(playlist.getSongs());
 	}
 }

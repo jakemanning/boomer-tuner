@@ -19,11 +19,11 @@ import org.jaudiotagger.tag.images.Artwork;
  * Created by bryancapps on 3/26/17.
  */
 public class Song {
-	public final String title;
-	public final Artist artist;
-	public final Album album;
-	public final int track;
-	public final URI uri;
+	private final String title;
+	private final Artist artist;
+	private final Album album;
+	private final int track;
+	private final URI uri;
 
 	public Song(final String title, final Artist artist, final Album album, final int track, final Artwork artwork,
 			final URI uri) {
@@ -71,13 +71,15 @@ public class Song {
 
 		if (track != song.track)
 			return false;
-		if (!Objects.equals(title, song.title))
+		if (!Objects.equals(title, song.getTitle()))
 			return false;
-		if (!Objects.equals(artist, song.artist))
+		if (!Objects.equals(artist, song.getArtist()))
 			return false;
-		if (!Objects.equals(album, song.album))
+		if (!Objects.equals(album, song.getAlbum()))
 			return false;
-		return Objects.equals(uri, song.uri);
+		if (!Objects.equals(uri, song.getUri()))
+			return false;
+		return true;
 	}
 
 	@Override
@@ -93,5 +95,25 @@ public class Song {
 	@Override
 	public String toString() {
 		return title;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public Artist getArtist() {
+		return artist;
+	}
+
+	public Album getAlbum() {
+		return album;
+	}
+
+	public int getTrack() {
+		return track;
+	}
+
+	public URI getUri() {
+		return uri;
 	}
 }

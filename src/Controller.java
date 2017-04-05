@@ -77,10 +77,10 @@ public class Controller {
 	@FXML
 	private void initialize() {
 		table.setPlaceholder(new Label("Choose a Directory to play music"));
-		trackCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().track));
-		titleCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().title));
-		artistCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().artist));
-		albumCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().album));
+		trackCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTrack()));
+		titleCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTitle()));
+		artistCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getArtist()));
+		albumCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getAlbum()));
 
 		previous.setImage(Icon.PREVIOUS.image());
 		play.setImage(Icon.PLAY.image());
@@ -142,15 +142,15 @@ public class Controller {
 
 
     private void playNewSong(Song newValue) {
-        Media media = new Media(newValue.uri.toString());
+        Media media = new Media(newValue.getUri().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
 
-        songTitle.setText(newValue.title);
+        songTitle.setText(newValue.getTitle());
 
         play.setImage(Icon.PAUSE.image());
         try {
-            BufferedImage image = (BufferedImage) newValue.album.artwork.getImage();
+            BufferedImage image = (BufferedImage) newValue.getAlbum().getArtwork().getImage();
             artwork.setImage(SwingFXUtils.toFXImage(image, null));
         } catch (IOException e) {
             e.printStackTrace();
