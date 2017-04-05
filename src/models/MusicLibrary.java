@@ -1,14 +1,14 @@
 package models;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import utils.Category;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import utils.Category;
 
 public class MusicLibrary {
 	private static MusicLibrary instance = new MusicLibrary();
@@ -21,6 +21,10 @@ public class MusicLibrary {
 
 	private MusicLibrary() {
 	}
+
+    public ObservableList<Song> getSongs() {
+        return items;
+    }
 
 	public ObservableList<Song> initializeSongs(Path musicFolder) {
 		items.clear();
@@ -43,9 +47,9 @@ public class MusicLibrary {
 		case Songs:
 			break;
 		case Playlists:
-			// items.addAll(playlists);
-			break;
-		case Albums:
+            // songs.addAll(playlists);
+            break;
+            case Albums:
 			break;
 		case Artists:
 			break;
@@ -59,4 +63,6 @@ public class MusicLibrary {
 		items.clear();
 		items.addAll(playlist.getSongs());
 	}
+
+    //TODO: make this observable or just piggyback off ObservableList
 }

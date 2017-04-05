@@ -4,10 +4,11 @@ public enum Category {
 	Songs,
 	Playlists,
 	Albums,
-	Artists;
-	
-	@Override
-	public String toString() {
-		return this.name();
+    Artists,
+    Videos;
+
+    @Override
+    public String toString() {
+        return this.name();
 	}
 }
