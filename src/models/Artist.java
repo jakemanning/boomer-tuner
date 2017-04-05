@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Artist {
-	public final String name;
+	private final String name;
 	private List<Album> albums = new ArrayList<>();
 
 	public Artist(final String name) {
@@ -13,7 +13,7 @@ public class Artist {
 	}
 
 	public void addSong(Song song) {
-		albums.add(song.album);
+		albums.add(song.getAlbum());
 	}
 
 	@Override
@@ -22,12 +22,10 @@ public class Artist {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-
 		Artist artist = (Artist) o;
-
-		if (!Objects.equals(name, artist.name))
+		if (!Objects.equals(this.name, artist.getName()))
 			return false;
-		return Objects.equals(albums, artist.albums);
+		return true;
 	}
 
 	@Override
@@ -39,6 +37,10 @@ public class Artist {
 
 	@Override
 	public String toString() {
+		return name;
+	}
+
+	public String getName() {
 		return name;
 	}
 }

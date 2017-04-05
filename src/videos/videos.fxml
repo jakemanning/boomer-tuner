@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<TableView xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="table" prefHeight="575.0"
+           prefWidth="668.0" fx:controller="videos.VideosController">
+    <columns>
+        <TableColumn fx:id="titleCol" editable="false" prefWidth="200.0" text="Title"/>
+        <TableColumn fx:id="durationCol" editable="false" prefWidth="100.0" text="Duration"/>
+    </columns>
+</TableView>

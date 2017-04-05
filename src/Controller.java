@@ -1,10 +1,3 @@
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.stream.Collectors;
-
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -13,15 +6,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -31,6 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import models.Album;
@@ -40,6 +26,17 @@ import models.Song;
 import utils.Category;
 import utils.Icon;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Collectors;
+
+/**
+ * Not used, see MenuController in the menu package and SongsController in the songs package.
+ * Will be removed in the future once those are fully functional.
+ */
 public class Controller {
 	@FXML
 	private TableView<Song> table;
@@ -51,6 +48,10 @@ public class Controller {
 	private TableColumn<Song, Artist> artistCol;
 	@FXML
 	private TableColumn<Song, Album> albumCol;
+	@FXML
+	private Text songTitle;
+	@FXML
+	private Text songLength;
 	@FXML
 	private ImageView artwork;
 	@FXML
@@ -66,16 +67,24 @@ public class Controller {
 
 	private boolean playlistMode = false;
 	private MediaPlayer mediaPlayer;
-	private ChangeListener<Song> songListener;
+	private ChangeListener<Song> songListener = (ov, oldValue, newValue) -> {
+		if (newValue == null) {
+			return; // If user selects new directory
+		}
+		if (mediaPlayer != null) {
+			mediaPlayer.stop();
+		}
+		playNewSong(newValue);
+	};
 	private ChangeListener<Category> menuListener;
 
 	@FXML
 	private void initialize() {
-		table.setPlaceholder(new Label("Choose a Directory to play music"));
-		trackCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().track));
-		titleCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().title));
-		artistCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().artist));
-		albumCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().album));
+		table.setPlaceholder(new Label("Choose a Directory to play music")); // this stuff obv not added to MenuView
+		trackCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTrack()));
+		titleCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTitle()));
+		artistCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getArtist()));
+		albumCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getAlbum()));
 
 		previous.setImage(Icon.PREVIOUS.image());
 		play.setImage(Icon.PLAY.image());
@@ -85,11 +94,10 @@ public class Controller {
 		next.setOnMousePressed(nextPressed());
 
 		play.setOnMousePressed(playPressed());
-		songListener = selectionListener();
-		table.getSelectionModel().selectedItemProperty().addListener(songListener);
+		table.getSelectionModel().selectedItemProperty().addListener(songListener); // not added to MenuView
 
 		ObservableList<Category> menuList = FXCollections.observableArrayList(Category.Songs, Category.Albums,
-				Category.Playlists, Category.Artists);
+				Category.Playlists, Category.Artists, Category.Videos);
 		menu.setItems(menuList);
 		menuListener = menuListener();
 		menu.getSelectionModel().selectedItemProperty().addListener(menuListener);
@@ -98,7 +106,7 @@ public class Controller {
 	@FXML
 	private void togglePlaylist() {
 		playlistMode = !playlistMode;
-		
+
 		if (playlistMode) {
 			table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			table.getSelectionModel().selectedItemProperty().removeListener(songListener);
@@ -135,27 +143,21 @@ public class Controller {
 		table.setItems(MusicLibrary.instance().initializeSongs(musicFolder));
 	}
 
-	private ChangeListener<Song> selectionListener() {
-		return (ov, oldValue, newValue) -> {
-			if (newValue == null) {
-				return; // If user selects new directory
-			}
-			if (mediaPlayer != null) {
-				mediaPlayer.stop();
-			}
 
-			Media media = new Media(newValue.uri.toString());
-			mediaPlayer = new MediaPlayer(media);
-			mediaPlayer.play();
+	private void playNewSong(Song newValue) {
+		Media media = new Media(newValue.getUri().toString());
+		mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.play();
 
-			play.setImage(Icon.PAUSE.image());
-			try {
-				BufferedImage image = (BufferedImage) newValue.album.artwork.getImage();
-				artwork.setImage(SwingFXUtils.toFXImage(image, null));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		};
+		songTitle.setText(newValue.getTitle());
+
+		play.setImage(Icon.PAUSE.image());
+		try {
+			BufferedImage image = (BufferedImage) newValue.getAlbum().getArtwork().getImage();
+			artwork.setImage(SwingFXUtils.toFXImage(image, null));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private ChangeListener<Category> menuListener() {

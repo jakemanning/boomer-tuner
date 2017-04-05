@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Playlist {
 	private String name;
-	public List<Song> songs = new ArrayList<>();
+	private List<Song> songs = new ArrayList<>();
 	
 	public Playlist(List<Song> songs) {
 		this.songs.addAll(songs);
@@ -36,5 +36,9 @@ public class Playlist {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public List<Song> getSongs() {
+		return songs;
 	}
 }

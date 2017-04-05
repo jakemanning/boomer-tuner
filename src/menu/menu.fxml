@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml">
+    <bottom>
+        <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
+            <children>
+                <ImageView fx:id="artwork" fitHeight="40.0" fitWidth="40.0" preserveRatio="true" translateX="10"
+                           HBox.hgrow="NEVER"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <ImageView fx:id="previous" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
+                <ImageView fx:id="play" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
+                <ImageView fx:id="next" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="playlist" text="Create Playlist" translateX="-10" HBox.hgrow="NEVER"/>
+            </children>
+        </HBox>
+    </bottom>
+    <left>
+        <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <ListView fx:id="menu" prefHeight="576.0" prefWidth="200.0"/>
+            </children>
+        </Pane>
+    </left>
+</fx:root>
