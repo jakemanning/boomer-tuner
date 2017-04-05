@@ -31,13 +31,13 @@
                 </left>
                 <center>
                     <HBox alignment="CENTER" minWidth="300">
-                        <VBox alignment="CENTER" maxHeight="40" minHeight="40" prefHeight="40">
-                            <HBox alignment="CENTER" maxHeight="20.0" minHeight="20.0" maxWidth="700" prefHeight="20.0">
+                        <VBox alignment="CENTER" maxHeight="40" minHeight="40" prefHeight="40" minWidth="300" maxWidth="700">
+                            <HBox alignment="CENTER" maxHeight="20.0" minHeight="20.0" prefHeight="20.0">
                                 <Text fx:id="songTitle"/>
                             </HBox>
                             <HBox alignment="CENTER" maxHeight="20.0" minHeight="20.0" prefHeight="20.0">
                                 <Text fx:id="currentTime" text="0:00"/>
-                                <Slider fx:id="seekbar" minWidth="300" maxWidth="700" HBox.hgrow="ALWAYS"/>
+                                <Slider fx:id="seekbar" prefWidth="500" HBox.hgrow="ALWAYS"/>
                                 <Text fx:id="songLength" text="0:00"/>
                             </HBox>
                         </VBox>

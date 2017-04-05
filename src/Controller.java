@@ -54,6 +54,8 @@ public class Controller {
 	private TableColumn<Song, Album> albumCol;
 	@FXML
 	private Text songTitle;
+    @FXML
+    private Text songLength;
 	@FXML
 	private ImageView artwork;
 	@FXML
@@ -138,6 +140,23 @@ public class Controller {
 		table.setItems(MusicLibrary.instance().initializeSongs(musicFolder));
 	}
 
+
+    private void playNewSong(Song newValue) {
+        Media media = new Media(newValue.uri.toString());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+
+        songTitle.setText(newValue.title);
+
+        play.setImage(Icon.PAUSE.image());
+        try {
+            BufferedImage image = (BufferedImage) newValue.album.artwork.getImage();
+            artwork.setImage(SwingFXUtils.toFXImage(image, null));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 	private ChangeListener<Song> selectionListener() {
 		return (ov, oldValue, newValue) -> {
 			if (newValue == null) {
@@ -146,24 +165,11 @@ public class Controller {
 			if (mediaPlayer != null) {
 				mediaPlayer.stop();
 			}
-
-			Media media = new Media(newValue.uri.toString());
-			mediaPlayer = new MediaPlayer(media);
-			mediaPlayer.play();
-
-			songTitle.setText(newValue.title);
-
-			play.setImage(Icon.PAUSE.image());
-			try {
-				BufferedImage image = (BufferedImage) newValue.album.artwork.getImage();
-				artwork.setImage(SwingFXUtils.toFXImage(image, null));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			playNewSong(newValue);
 		};
 	}
 
-	private ChangeListener<Category> menuListener() {
+    private ChangeListener<Category> menuListener() {
 		return (ov, oldValue, newValue) -> {
 			MusicLibrary.instance().filterOnCategory(newValue);
 		};
