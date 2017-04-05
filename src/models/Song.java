@@ -3,8 +3,10 @@ package models;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.DoubleSummaryStatistics;
 import java.util.Objects;
 
+import javafx.util.Duration;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -23,14 +25,16 @@ public class Song {
 	private final Artist artist;
 	private final Album album;
 	private final int track;
+	private final String duration;
 	private final URI uri;
 
-	public Song(final String title, final Artist artist, final Album album, final int track, final Artwork artwork,
+	public Song(final String title, final Artist artist, final Album album, final int track, final Artwork artwork, final String duration,
 			final URI uri) {
 		this.title = title;
 		this.artist = artist;
 		this.album = album;
 		this.track = track;
+		this.duration = duration;
 		this.uri = uri;
 
 		if (artist != null) {
@@ -50,14 +54,27 @@ public class Song {
 			Album album = new Album(tag.getFirst(FieldKey.ALBUM), artwork);
 			String title = tag.getFirst(FieldKey.TITLE);
 			String trackStr = tag.getFirst(FieldKey.TRACK);
+			String duration = calcDuration(f);
 
 			int track = trackStr.isEmpty() ? -1 : Integer.valueOf(trackStr);
-			return new Song(title, artist, album, track, artwork, uri);
+			return new Song(title, artist, album, track, artwork, duration, uri);
 		} catch (CannotReadException | IOException | TagException | InvalidAudioFrameException
 				| ReadOnlyFileException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	private static String calcDuration(AudioFile f) {
+		double length = (double) f.getAudioHeader().getTrackLength();
+		int minutes = (int) (length/60.0);
+		//The audio header is weird and always returns 1 less than the real length
+		Integer seconds = (int) length%60 + 1;
+		String secondsOutput = seconds.toString();
+		if(seconds < 10){
+			secondsOutput = "0" + seconds;
+		}
+		return (minutes + ":" + secondsOutput);
 	}
 
 	@Override
@@ -111,6 +128,10 @@ public class Song {
 
 	public int getTrack() {
 		return track;
+	}
+
+	public String getDuration() {
+		return duration;
 	}
 
 	public URI getUri() {

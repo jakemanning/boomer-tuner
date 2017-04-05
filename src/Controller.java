@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.stream.Collectors;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -146,7 +147,9 @@ public class Controller {
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
 
+		songLength.setText(newValue.getDuration());
         songTitle.setText(newValue.getTitle());
+
 
         play.setImage(Icon.PAUSE.image());
         try {
