@@ -1,12 +1,5 @@
 package models;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.util.DoubleSummaryStatistics;
-import java.util.Objects;
-
-import javafx.util.Duration;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -16,6 +9,11 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.images.Artwork;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Objects;
 
 /**
  * Created by bryancapps on 3/26/17.
