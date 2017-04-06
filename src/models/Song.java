@@ -65,14 +65,19 @@ public class Song {
 
 	private static String calcDuration(AudioFile f) {
 		double length = (double) f.getAudioHeader().getTrackLength();
-		int minutes = (int) (length/60.0);
+		Integer minutes = (int) (length/60.0);
+
+		String minutesOutput = "00";
+		if(minutes != 0){
+			minutesOutput = minutes.toString();
+		}
 		//The audio header is weird and always returns 1 less than the real length
 		Integer seconds = (int) length%60 + 1;
 		String secondsOutput = seconds.toString();
 		if(seconds < 10){
 			secondsOutput = "0" + seconds;
 		}
-		return (minutes + ":" + secondsOutput);
+		return (minutesOutput + ":" + secondsOutput);
 	}
 
 	@Override
@@ -92,9 +97,7 @@ public class Song {
 			return false;
 		if (!Objects.equals(album, song.getAlbum()))
 			return false;
-		if (!Objects.equals(uri, song.getUri()))
-			return false;
-		return true;
+		return Objects.equals(uri, song.getUri());
 	}
 
 	@Override
