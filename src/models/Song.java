@@ -24,7 +24,7 @@ public class Song implements Category {
 	private final String title;
 	private final Artist artist;
 	private final int track;
-	private final int seconds;
+	private final Integer length;
 	private final URI uri;
 	private final Album album;
 
@@ -34,7 +34,7 @@ public class Song implements Category {
 		this.artist = artist;
 		this.album = album;
 		this.track = track;
-		this.seconds = seconds;
+		this.length = seconds;
 		this.uri = uri;
 
 		if (artist != null) {
@@ -54,7 +54,7 @@ public class Song implements Category {
 			Album album = new Album(tag.getFirst(FieldKey.ALBUM), artwork);
 			String title = tag.getFirst(FieldKey.TITLE);
 			String trackStr = tag.getFirst(FieldKey.TRACK);
-			int seconds = f.getAudioHeader().getTrackLength() + 1;
+			Integer seconds = f.getAudioHeader().getTrackLength() + 1;
 
 			int track = trackStr.isEmpty() ? -1 : Integer.valueOf(trackStr);
 			return new Song(title, artist, album, track, artwork, seconds, uri);
@@ -76,7 +76,7 @@ public class Song implements Category {
 		if (o == null || getClass() != o.getClass()) return false;
 		Song song = (Song) o;
 		return track == song.track &&
-				seconds == song.seconds &&
+				length == song.length &&
 				Objects.equals(title, song.title) &&
 				Objects.equals(artist, song.artist) &&
 				Objects.equals(uri, song.uri) &&
@@ -85,7 +85,7 @@ public class Song implements Category {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(title, artist, track, seconds, uri, album);
+		return Objects.hash(title, artist, track, length, uri, album);
 	}
 
 	@Override
@@ -110,7 +110,17 @@ public class Song implements Category {
 	}
 
 	public String getDuration() {
-		return String.format("%d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, (seconds % 60));
+		Integer minutes = (int) (length /60.0);
+		String minutesOutput = "00";
+		if(minutes != 0){
+			minutesOutput = minutes.toString();
+		}
+		Integer seconds = (int) (length %60);
+		String secondsOutput = seconds.toString();
+		if(seconds < 10){
+			secondsOutput = "0" + seconds;
+		}
+		return (minutesOutput + ":" + secondsOutput);
 	}
 
 	public URI getUri() {
