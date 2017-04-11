@@ -25,8 +25,8 @@ public class Artist implements Category {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Artist artist = (Artist) o;
-		
-		return !Objects.equals(this.name, artist.getName());
+
+		return Objects.equals(this.name, artist.getName());
 	}
 
 	@Override

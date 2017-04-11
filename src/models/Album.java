@@ -1,8 +1,11 @@
 package models;
 
+import javafx.embed.swing.SwingFXUtils;
 import org.jaudiotagger.tag.images.Artwork;
 import utils.Category;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,8 +40,6 @@ public class Album implements Category {
 			return false;
 		if (!Objects.equals(artist.getName(), album.artist.getName()))
 			return false;
-		if (!Objects.equals(this.songs, album.getSongs()))
-			return false;
 		if (this.year != album.getYear())
 			return false;
 		return true;
@@ -58,8 +59,13 @@ public class Album implements Category {
 		return name;
 	}
 
-	public Artwork getArtwork() {
-		return artwork;
+	public javafx.scene.image.Image getArtwork() {
+		try {
+			return SwingFXUtils.toFXImage((BufferedImage) artwork.getImage(), null);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public String getName() {

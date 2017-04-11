@@ -14,7 +14,7 @@ import models.Artist;
 import models.Song;
 import root.RootModel;
 import utils.MediaLibrary;
-import utils.MediaPlayer;
+import utils.MusicPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,11 +32,11 @@ public class SongsView extends TableView<Song> implements CategoryView {
         if (newValue == null) {
             return; // If user selects new directory
         }
-        if (MediaPlayer.instance().isPlaying()) {
-            MediaPlayer.instance().stop();
-        }
-        MediaPlayer.instance().play(newValue);
-    };
+		if (MusicPlayer.instance().isPlaying()) {
+			MusicPlayer.instance().stop();
+		}
+		MusicPlayer.instance().play(getItems(), getSelectionModel().getSelectedIndex());
+	};
 
     public SongsView(SongsController controller) {
         songsController = controller;
@@ -50,7 +50,7 @@ public class SongsView extends TableView<Song> implements CategoryView {
 
         lookupViews();
 
-//        setItems(MediaLibrary.instance());
+		setItems(MediaLibrary.instance().getSongs());
 
         setPlaceholder(new Label("Choose a Directory to play music"));
         trackCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTrack()));

@@ -31,7 +31,7 @@ public class MediaLibrary {
 					.forEach(path -> {
 						if (Song.accepts(path)) {
 							Song song = Song.from(path.toUri());
-							if (song != null) {
+							if (song != null && !songs.contains(song)) {
 								songs.add(song);
 								artists.add(song.getArtist());
 								albums.add(song.getAlbum());

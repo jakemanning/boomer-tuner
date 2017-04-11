@@ -1,11 +1,5 @@
 package models;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Path;
-import java.util.Objects;
-
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -15,8 +9,13 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.images.Artwork;
-
 import utils.Category;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * Created by bryancapps on 3/26/17.
@@ -73,26 +72,20 @@ public class Song implements Category {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		Song song = (Song) o;
-
-		return (track == song.track) && Objects.equals(title, song.getTitle())
-				&& Objects.equals(artist, song.getArtist()) && Objects.equals(album, song.getAlbum())
-				&& Objects.equals(uri, song.getUri());
+		return track == song.track &&
+				seconds == song.seconds &&
+				Objects.equals(title, song.title) &&
+				Objects.equals(artist, song.artist) &&
+				Objects.equals(uri, song.uri) &&
+				Objects.equals(album, song.album);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = title.hashCode();
-		result = 31 * result + artist.hashCode();
-		result = 31 * result + album.hashCode();
-		result = 31 * result + track;
-		result = 31 * result + uri.hashCode();
-		return result;
+		return Objects.hash(title, artist, track, seconds, uri, album);
 	}
 
 	@Override

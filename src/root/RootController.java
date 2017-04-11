@@ -4,7 +4,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import utils.CategoryType;
-import utils.MediaPlayer;
+import utils.MediaLibrary;
+import utils.MusicPlayer;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -30,21 +31,21 @@ public class RootController {
     }
 
     void previousPressed() {
-        MediaPlayer.instance().previous();
-    }
+		MusicPlayer.instance().previous();
+	}
 
     void playPressed() {
-        //TODO: Consult Jake to see how these should be implemented using our MediaPlayer class
-        if (MediaPlayer.instance().isPlaying()) {
-            MediaPlayer.instance().pause();
-        } else {
-            MediaPlayer.instance().play();
-        }
+		//TODO: Consult Jake to see how these should be implemented using our MusicPlayer class
+		if (MusicPlayer.instance().isPlaying()) {
+			MusicPlayer.instance().pause();
+		} else {
+			MusicPlayer.instance().resume();
+		}
     }
 
     void nextPressed() {
-        MediaPlayer.instance().next();
-    }
+		MusicPlayer.instance().next();
+	}
 
     void togglePlaylist() {
         rootModel.togglePlaylistMode();
@@ -58,7 +59,7 @@ public class RootController {
             System.out.println("No Directory selected");
         } else {
             Path musicFolder = Paths.get(selectedDirectory.toURI());
-//            MediaLibrary.instance().initializeSongs(musicFolder);
-        }
+			MediaLibrary.instance().importPath(musicFolder);
+		}
     }
 }

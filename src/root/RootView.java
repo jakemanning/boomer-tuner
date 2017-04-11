@@ -11,11 +11,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import models.Song;
 import songs.SongsController;
 import songs.SongsView;
 import utils.CategoryType;
 import utils.Icon;
+import utils.MusicPlayer;
+import utils.MusicPlayerListener;
 import videos.VideosView;
 
 import java.io.IOException;
@@ -23,14 +27,15 @@ import java.io.IOException;
 /**
  * Created by bryancapps on 4/4/17.
  */
-public class RootView extends BorderPane implements SelectedCategoryListener {
-    private RootModel rootModel;
+public class RootView extends BorderPane implements SelectedCategoryListener, MusicPlayerListener {
+	private RootModel rootModel;
     private RootController rootController;
     private Button playlist;
     private ListView<CategoryType> menu;
     private ImageView previous;
     private ImageView play;
     private ImageView next;
+	private ImageView artwork;
 
     public RootView(RootModel model, RootController controller) throws IOException {
         rootModel = model;
@@ -39,6 +44,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener {
         fxmlLoader.setRoot(this);
         fxmlLoader.load();
         rootModel.addSelectedCategoryListener(this);
+		MusicPlayer.instance().addListener(this);
 
         lookupViews();
 
@@ -66,7 +72,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener {
         previous = (ImageView) lookup("#previous");
         play = (ImageView) lookup("#play");
         next = (ImageView) lookup("#next");
-    }
+		artwork = (ImageView) lookup("#artwork");
+	}
 
     public void initializeMenuBar(final Stage stage) {
         final MenuBar menuBar = new MenuBar();
@@ -106,4 +113,20 @@ public class RootView extends BorderPane implements SelectedCategoryListener {
             setCenter((Node) newView);
         }
     }
+
+	@Override
+	public void newSong(Song song) {
+		play.setImage(Icon.PAUSE.image());
+		artwork.setImage(song.getAlbum().getArtwork());
+		//TODO: Change title above seekbar and set seekbar to zero
+	}
+
+	@Override
+	public void playingStatusChanged(MediaPlayer.Status status) {
+		if (status.equals(MediaPlayer.Status.PLAYING)) {
+			play.setImage(Icon.PAUSE.image());
+		} else if (status.equals(MediaPlayer.Status.PAUSED)) {
+			play.setImage(Icon.PLAY.image());
+		}
+	}
 }
