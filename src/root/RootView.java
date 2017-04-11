@@ -12,6 +12,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.Song;
 import songs.SongsController;
@@ -36,6 +37,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Mu
     private ImageView play;
     private ImageView next;
 	private ImageView artwork;
+	private Text songTitle;
+	private Text songLength;
 
     public RootView(RootModel model, RootController controller) throws IOException {
         rootModel = model;
@@ -73,6 +76,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Mu
         play = (ImageView) lookup("#play");
         next = (ImageView) lookup("#next");
 		artwork = (ImageView) lookup("#artwork");
+		songTitle = (Text) lookup("#songTitle");
+		songLength = (Text) lookup("#songLength");
 	}
 
     public void initializeMenuBar(final Stage stage) {
@@ -118,7 +123,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Mu
 	public void newSong(Song song) {
 		play.setImage(Icon.PAUSE.image());
 		artwork.setImage(song.getAlbum().getArtwork());
-		//TODO: Change title above seekbar and set seekbar to zero
+		songLength.setText(song.getDuration());
+		songTitle.setText(song.getTitle());
 	}
 
 	@Override
