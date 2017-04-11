@@ -1,7 +1,4 @@
-package utils;
-
-import models.Song;
-import models.Video;
+package models;
 
 import java.nio.file.Path;
 

@@ -20,6 +20,11 @@
             <artifactId>jaudiotagger</artifactId>
             <version>2.2.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.mp4parser</groupId>
+            <artifactId>isoparser</artifactId>
+            <version>1.9.27</version>
+        </dependency>
     </dependencies>
 
     <build>

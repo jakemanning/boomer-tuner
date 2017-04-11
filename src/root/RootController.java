@@ -5,15 +5,12 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import utils.CategoryType;
 import utils.MediaLibrary;
-import utils.MusicPlayer;
+import utils.Player;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Created by bryancapps on 4/3/17.
- */
 public class RootController {
     private RootModel rootModel;
     private boolean playlistMode = false;
@@ -31,20 +28,19 @@ public class RootController {
     }
 
     void previousPressed() {
-		MusicPlayer.instance().previous();
+		Player.instance().previous();
 	}
 
     void playPressed() {
-		//TODO: Consult Jake to see how these should be implemented using our MusicPlayer class
-		if (MusicPlayer.instance().isPlaying()) {
-			MusicPlayer.instance().pause();
+		if (Player.instance().isPlaying()) {
+			Player.instance().pause();
 		} else {
-			MusicPlayer.instance().resume();
+			Player.instance().resume();
 		}
-    }
+	}
 
     void nextPressed() {
-		MusicPlayer.instance().next();
+		Player.instance().next();
 	}
 
     void togglePlaylist() {

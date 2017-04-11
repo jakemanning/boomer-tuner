@@ -1,18 +1,64 @@
 package videos;
 
-import base.CategoryView;
-import javafx.scene.control.ListView;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ChangeListener;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import models.Video;
 import root.RootModel;
+import utils.CategoryView;
+import utils.MediaLibrary;
+import utils.Player;
 
-/**
- * Created by bryancapps on 4/4/17.
- */
-public class VideosView extends ListView<Video> implements CategoryView {
-    @Override
-    public void setMenuModel(RootModel rootModel) {
-        rootModel.addPlaylistModeListener(newValue -> {
+import java.io.IOException;
+
+public class VideosView extends TableView<Video> implements CategoryView {
+	private VideosController videosController;
+	private TableColumn<Video, String> titleCol;
+	private TableColumn<Video, String> durationCol;
+	private ChangeListener<Video> selectionListener = (ov, oldValue, newValue) -> {
+		if (newValue == null) {
+			return; // If user selects new directory
+		}
+		if (Player.instance().isPlaying()) {
+			Player.instance().stop();
+		}
+		Player.instance().playVideos(getItems(), getSelectionModel().getSelectedIndex());
+	};
+
+	public VideosView(VideosController controller) {
+		videosController = controller;
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("videos.fxml"));
+		fxmlLoader.setRoot(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException exception) {
+			throw new RuntimeException(exception);
+		}
+
+		lookupViews();
+
+		setItems(MediaLibrary.instance().getVideos());
+
+		setPlaceholder(new Label("Choose a Directory to play videos"));
+		titleCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTitle()));
+		durationCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getDuration()));
+
+		getSelectionModel().selectedItemProperty().addListener(selectionListener);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void lookupViews() {
+		titleCol = (TableColumn<Video, String>) getVisibleLeafColumn(0);
+		durationCol = (TableColumn<Video, String>) getVisibleLeafColumn(1);
+	}
+
+	@Override
+	public void setRootModel(RootModel rootModel) {
+		rootModel.addPlaylistModeListener(newValue -> {
 
         });
-    }
+	}
 }
