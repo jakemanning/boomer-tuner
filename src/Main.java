@@ -1,20 +1,20 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import menu.MenuController;
-import menu.MenuModel;
-import menu.MenuView;
+import root.RootController;
+import root.RootModel;
+import root.RootView;
 
 public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		MenuModel menuModel = new MenuModel();
-		MenuController menuController = new MenuController(menuModel);
-		MenuView menuView = new MenuView(menuModel, menuController);
-		menuView.initializeMenuBar(primaryStage);
+		RootModel rootModel = new RootModel();
+		RootController rootController = new RootController(rootModel);
+		RootView rootView = new RootView(rootModel, rootController);
+		rootView.initializeMenuBar(primaryStage);
 
-		Scene scene = new Scene(menuView);
+		Scene scene = new Scene(rootView);
 		primaryStage.setTitle("Boomer Tuner");
 		primaryStage.setScene(scene);
 		primaryStage.show();
