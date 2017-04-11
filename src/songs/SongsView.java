@@ -1,5 +1,8 @@
 package songs;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import base.CategoryView;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
@@ -10,10 +13,11 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import menu.MenuModel;
-import models.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
+import models.Album;
+import models.Artist;
+import models.Song;
+import utils.MediaLibrary;
+import utils.MediaPlayer;
 
 /**
  * Created by bryancapps on 4/4/17.
@@ -46,7 +50,7 @@ public class SongsView extends TableView<Song> implements CategoryView {
 
         lookupViews();
 
-        setItems(MusicLibrary.instance().getSongs());
+//        setItems(MediaLibrary.instance());
 
         setPlaceholder(new Label("Choose a Directory to play music"));
         trackCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTrack()));
@@ -58,7 +62,7 @@ public class SongsView extends TableView<Song> implements CategoryView {
     }
 
     private void lookupViews() {
-        // wouldn't be suprised it this doesn't work
+        // wouldn't be surprised it this doesn't work
         trackCol = (TableColumn<Song, Integer>) getVisibleLeafColumn(0);
         titleCol = (TableColumn<Song, String>) getVisibleLeafColumn(1);
         artistCol = (TableColumn<Song, Artist>) getVisibleLeafColumn(2);
@@ -77,7 +81,7 @@ public class SongsView extends TableView<Song> implements CategoryView {
         } else {
             ObservableList<Song> selectedCells = getSelectionModel().getSelectedItems();
             if (selectedCells.size() > 0) {
-                MusicLibrary.instance().addPlaylist(new ArrayList<>(selectedCells));
+                MediaLibrary.instance().addPlaylist(new ArrayList<>(selectedCells));
             }
 
             getSelectionModel().setSelectionMode(SelectionMode.SINGLE);

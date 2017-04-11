@@ -34,7 +34,7 @@ public class Album {
 
 		if (!Objects.equals(this.name, album.getName()))
 			return false;
-		if (!Objects.equals(this.artist, album.getArtist()))
+		if (!Objects.equals(artist.getName(), album.artist.getName()))
 			return false;
 		if (!Objects.equals(this.songs, album.getSongs()))
 			return false;

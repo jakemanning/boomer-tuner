@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Playlist {
+import utils.Category;
+
+public class Playlist implements Category {
 	private String name;
 	private List<Song> songs = new ArrayList<>();
-	
+
 	public Playlist(List<Song> songs) {
 		this.songs.addAll(songs);
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -21,9 +23,7 @@ public class Playlist {
 
 		Playlist playlist = (Playlist) o;
 
-		if (!Objects.equals(name, playlist.name))
-			return false;
-		return Objects.equals(songs, playlist.songs);
+		return Objects.equals(name, playlist.name) && Objects.equals(songs, playlist.songs);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class Playlist {
 		result = 31 * result + songs.hashCode();
 		return result;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name;

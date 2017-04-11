@@ -1,11 +1,17 @@
 package menu;
 
+import java.io.IOException;
+
 import base.CategoryView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -14,11 +20,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import songs.SongsController;
 import songs.SongsView;
-import utils.Category;
+import utils.CategoryType;
 import utils.Icon;
 import videos.VideosView;
-
-import java.io.IOException;
 
 /**
  * Created by bryancapps on 4/4/17.
@@ -27,7 +31,7 @@ public class MenuView extends BorderPane implements SelectedCategoryListener {
     private MenuModel menuModel;
     private MenuController menuController;
     private Button playlist;
-    private ListView<Category> menu;
+    private ListView<CategoryType> menu;
     private ImageView previous;
     private ImageView play;
     private ImageView next;
@@ -42,12 +46,12 @@ public class MenuView extends BorderPane implements SelectedCategoryListener {
 
         lookupViews();
 
-        ObservableList<Category> menuList = FXCollections.observableArrayList(Category.Songs, Category.Albums,
-                Category.Playlists, Category.Artists, Category.Videos);
+        ObservableList<CategoryType> menuList = FXCollections.observableArrayList(CategoryType.Songs, CategoryType.Albums,
+        		CategoryType.Playlists, CategoryType.Artists, CategoryType.Videos);
         menu.setItems(menuList);
 
         menu.getSelectionModel().selectedItemProperty().addListener(menuController.getMenuListener());
-        menu.getSelectionModel().select(Category.Songs); // does this work? I want it to select in sidebar and show in center
+        menu.getSelectionModel().select(CategoryType.Songs); // does this work? I want it to select in sidebar and show in center
 
         previous.setImage(Icon.PREVIOUS.image());
         play.setImage(Icon.PLAY.image());
@@ -62,7 +66,7 @@ public class MenuView extends BorderPane implements SelectedCategoryListener {
 
     private void lookupViews() {
         playlist = (Button) lookup("#playlist");
-        menu = (ListView<Category>) lookup("#menu");
+        menu = (ListView<CategoryType>) lookup("#menu");
         previous = (ImageView) lookup("#previous");
         play = (ImageView) lookup("#play");
         next = (ImageView) lookup("#next");
@@ -85,7 +89,7 @@ public class MenuView extends BorderPane implements SelectedCategoryListener {
     }
 
     @Override
-    public void selectedCategoryChanged(Category value) {
+    public void selectedCategoryChanged(CategoryType value) {
         CategoryView newView = null;
         switch (value) {
             case Songs:

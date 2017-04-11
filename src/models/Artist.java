@@ -23,9 +23,8 @@ public class Artist {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Artist artist = (Artist) o;
-		if (!Objects.equals(this.name, artist.getName()))
-			return false;
-		return true;
+		
+		return !Objects.equals(this.name, artist.getName());
 	}
 
 	@Override

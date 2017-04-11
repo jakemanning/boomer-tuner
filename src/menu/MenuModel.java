@@ -1,16 +1,17 @@
 package menu;
 
-import utils.Category;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import utils.Category;
+import utils.CategoryType;
 
 /**
  * Created by bryancapps on 4/4/17.
  */
 public class MenuModel {
     private boolean playlistMode = false;
-    private Category selectedCategory;
+    private CategoryType selectedCategory;
     private List<PlaylistModeListener> playlistListeners = new ArrayList<>();
     private List<SelectedCategoryListener> categoryListeners = new ArrayList<>();
 
@@ -27,11 +28,11 @@ public class MenuModel {
         setPlaylistMode(!isPlaylistMode());
     }
 
-    public Category getSelectedCategory() {
+    public CategoryType getSelectedCategory() {
         return selectedCategory;
     }
 
-    public void setSelectedCategory(Category selectedCategory) {
+    public void setSelectedCategory(CategoryType selectedCategory) {
         this.selectedCategory = selectedCategory;
         categoryChanged();
     }

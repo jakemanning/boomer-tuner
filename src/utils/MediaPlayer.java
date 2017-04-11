@@ -1,16 +1,18 @@
-package models;
+package utils;
 
 import java.util.Collections;
 import java.util.List;
+
+import models.Song;
 
 /**
  * Created by bryancapps on 4/3/17.
  */
 public class MediaPlayer {
-    private static MediaPlayer ourInstance = new MediaPlayer();
+    private static MediaPlayer instance = new MediaPlayer();
 
     public static MediaPlayer instance() {
-        return ourInstance;
+        return instance;
     }
 
     private javafx.scene.media.MediaPlayer currentPlayer;

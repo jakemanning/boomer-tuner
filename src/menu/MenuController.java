@@ -1,15 +1,15 @@
 package menu;
 
-import javafx.beans.value.ChangeListener;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
-import models.MediaPlayer;
-import models.MusicLibrary;
-import utils.Category;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import javafx.beans.value.ChangeListener;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import utils.CategoryType;
+import utils.MediaLibrary;
+import utils.MediaPlayer;
 
 /**
  * Created by bryancapps on 4/3/17.
@@ -17,8 +17,8 @@ import java.nio.file.Paths;
 public class MenuController {
     private MenuModel menuModel;
     private boolean playlistMode = false;
-    private ChangeListener<Category> menuListener = (ov, oldValue, newValue) -> {
-        MusicLibrary.instance().filterOnCategory(newValue);
+    private ChangeListener<CategoryType> menuListener = (ov, oldValue, newValue) -> {
+        MediaLibrary.instance().filterOnCategory(newValue);
         menuModel.setSelectedCategory(newValue);
     };
 
@@ -27,7 +27,7 @@ public class MenuController {
     }
 
 
-    public ChangeListener<Category> getMenuListener() {
+    public ChangeListener<CategoryType> getMenuListener() {
         return menuListener;
     }
 
@@ -60,7 +60,7 @@ public class MenuController {
             System.out.println("No Directory selected");
         } else {
             Path musicFolder = Paths.get(selectedDirectory.toURI());
-            MusicLibrary.instance().initializeSongs(musicFolder);
+//            MediaLibrary.instance().initializeSongs(musicFolder);
         }
     }
 }
