@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import utils.Category;
-
 public class Playlist implements Category {
 	private String name;
 	private List<Song> songs = new ArrayList<>();

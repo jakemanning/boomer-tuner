@@ -1,7 +1,5 @@
 package models;
 
-import utils.Category;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

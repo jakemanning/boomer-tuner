@@ -2,7 +2,6 @@ package models;
 
 import javafx.embed.swing.SwingFXUtils;
 import org.jaudiotagger.tag.images.Artwork;
-import utils.Category;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

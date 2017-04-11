@@ -9,7 +9,6 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.images.Artwork;
-import utils.Category;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,10 +16,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.util.Objects;
 
-/**
- * Created by bryancapps on 3/26/17.
- */
-public class Song implements Category {
+public class Song implements Category, Playable {
 	private final String title;
 	private final Artist artist;
 	private final int track;

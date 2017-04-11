@@ -1,6 +1,6 @@
 package root;
 
-import base.CategoryView;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -12,23 +12,20 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.Song;
+import models.Video;
 import songs.SongsController;
 import songs.SongsView;
-import utils.CategoryType;
-import utils.Icon;
-import utils.MusicPlayer;
-import utils.MusicPlayerListener;
+import utils.*;
+import videos.VideosController;
 import videos.VideosView;
 
 import java.io.IOException;
 
-/**
- * Created by bryancapps on 4/4/17.
- */
-public class RootView extends BorderPane implements SelectedCategoryListener, MusicPlayerListener {
+public class RootView extends BorderPane implements SelectedCategoryListener, PlayerListener {
 	private RootModel rootModel;
     private RootController rootController;
     private Button playlist;
@@ -47,7 +44,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Mu
         fxmlLoader.setRoot(this);
         fxmlLoader.load();
         rootModel.addSelectedCategoryListener(this);
-		MusicPlayer.instance().addListener(this);
+		Player.instance().addListener(this);
 
         lookupViews();
 
@@ -56,7 +53,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Mu
         menu.setItems(menuList);
 
         menu.getSelectionModel().selectedItemProperty().addListener(rootController.getMenuListener());
-        menu.getSelectionModel().select(CategoryType.Songs); // does this work? I want it to select in sidebar and show in center
+		menu.getSelectionModel().select(CategoryType.Songs);
 
         previous.setImage(Icon.PREVIOUS.image());
         play.setImage(Icon.PLAY.image());
@@ -69,12 +66,13 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Mu
         playlist.setOnAction(e -> rootController.togglePlaylist());
     }
 
-    private void lookupViews() {
-        playlist = (Button) lookup("#playlist");
-        menu = (ListView<CategoryType>) lookup("#menu");
-        previous = (ImageView) lookup("#previous");
-        play = (ImageView) lookup("#play");
-        next = (ImageView) lookup("#next");
+	@SuppressWarnings("unchecked")
+	private void lookupViews() {
+		playlist = (Button) lookup("#playlist");
+		menu = (ListView<CategoryType>) lookup("#menu");
+		previous = (ImageView) lookup("#previous");
+		play = (ImageView) lookup("#play");
+		next = (ImageView) lookup("#next");
 		artwork = (ImageView) lookup("#artwork");
 		songTitle = (Text) lookup("#songTitle");
 		songLength = (Text) lookup("#songLength");
@@ -110,13 +108,13 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Mu
             case Artists:
                 break;
             case Videos:
-                newView = new VideosView();
-                break;
-        }
+				newView = new VideosView(new VideosController());
+				break;
+		}
         if (newView != null) {
-            newView.setMenuModel(rootModel);
-            setCenter((Node) newView);
-        }
+			newView.setRootModel(rootModel);
+			setCenter((Node) newView);
+		}
     }
 
 	@Override
@@ -128,9 +126,29 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Mu
 	}
 
 	@Override
-	public void playingStatusChanged(MediaPlayer.Status status) {
+	public void newVideo(Video video) {
+		play.setImage(Icon.PAUSE.image());
+		songLength.setText(video.getDuration());
+		songTitle.setText(video.getTitle());
+		MediaView videoView = Player.instance().getView();
+		setVideoView(videoView);
+	}
+
+	private void setVideoView(MediaView videoView) {
+		artwork.setImage(null);
+		videoView.fitWidthProperty().bind(Bindings.selectDouble(videoView.sceneProperty(), "width"));
+		videoView.fitHeightProperty().bind(Bindings.selectDouble(videoView.sceneProperty(), "height"));
+		videoView.setPreserveRatio(true);
+		setCenter(videoView);
+	}
+
+	@Override
+	public void playingStatusChanged(CategoryType type, MediaPlayer.Status status) {
 		if (status.equals(MediaPlayer.Status.PLAYING)) {
 			play.setImage(Icon.PAUSE.image());
+			if (type.equals(CategoryType.Videos)) {
+				setVideoView(Player.instance().getView());
+			}
 		} else if (status.equals(MediaPlayer.Status.PAUSED)) {
 			play.setImage(Icon.PLAY.image());
 		}

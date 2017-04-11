@@ -5,9 +5,6 @@ import utils.CategoryType;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by bryancapps on 4/4/17.
- */
 public class RootModel {
     private boolean playlistMode = false;
     private CategoryType selectedCategory;

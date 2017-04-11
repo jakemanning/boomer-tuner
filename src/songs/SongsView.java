@@ -1,6 +1,5 @@
 package songs;
 
-import base.CategoryView;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
@@ -13,15 +12,13 @@ import models.Album;
 import models.Artist;
 import models.Song;
 import root.RootModel;
+import utils.CategoryView;
 import utils.MediaLibrary;
-import utils.MusicPlayer;
+import utils.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Created by bryancapps on 4/4/17.
- */
 public class SongsView extends TableView<Song> implements CategoryView {
     private SongsController songsController;
     private TableColumn<Song, Integer> trackCol;
@@ -32,11 +29,11 @@ public class SongsView extends TableView<Song> implements CategoryView {
         if (newValue == null) {
             return; // If user selects new directory
         }
-		if (MusicPlayer.instance().isPlaying()) {
-			MusicPlayer.instance().stop();
-		}
-		MusicPlayer.instance().play(getItems(), getSelectionModel().getSelectedIndex());
-	};
+        if (Player.instance().isPlaying()) {
+            Player.instance().stop();
+        }
+        Player.instance().playSongs(getItems(), getSelectionModel().getSelectedIndex());
+    };
 
     public SongsView(SongsController controller) {
         songsController = controller;
@@ -61,20 +58,19 @@ public class SongsView extends TableView<Song> implements CategoryView {
         getSelectionModel().selectedItemProperty().addListener(songListener);
     }
 
+    @SuppressWarnings("unchecked")
     private void lookupViews() {
-        // wouldn't be surprised it this doesn't work
         trackCol = (TableColumn<Song, Integer>) getVisibleLeafColumn(0);
         titleCol = (TableColumn<Song, String>) getVisibleLeafColumn(1);
         artistCol = (TableColumn<Song, Artist>) getVisibleLeafColumn(2);
         albumCol = (TableColumn<Song, Album>) getVisibleLeafColumn(3);
     }
 
-    public void setMenuModel(RootModel rootModel) {
+    public void setRootModel(RootModel rootModel) {
         rootModel.addPlaylistModeListener(this::playlistModeChanged);
     }
 
     public void playlistModeChanged(boolean playlistMode) {
-        //TODO: Move this logic to the controller
         if (playlistMode) {
             getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             getSelectionModel().selectedItemProperty().removeListener(songListener);

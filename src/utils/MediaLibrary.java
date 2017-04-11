@@ -37,7 +37,10 @@ public class MediaLibrary {
 								albums.add(song.getAlbum());
 							}
 						} else if (Video.accepts(path)) {
-							videos.add(Video.from(path.toUri()));
+							Video video = Video.from(path.toUri());
+							if (video != null && !videos.contains(video)) {
+								videos.add(video);
+							}
 						}
 					});
 
