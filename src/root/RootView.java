@@ -1,17 +1,11 @@
-package menu;
-
-import java.io.IOException;
+package root;
 
 import base.CategoryView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -24,25 +18,27 @@ import utils.CategoryType;
 import utils.Icon;
 import videos.VideosView;
 
+import java.io.IOException;
+
 /**
  * Created by bryancapps on 4/4/17.
  */
-public class MenuView extends BorderPane implements SelectedCategoryListener {
-    private MenuModel menuModel;
-    private MenuController menuController;
+public class RootView extends BorderPane implements SelectedCategoryListener {
+    private RootModel rootModel;
+    private RootController rootController;
     private Button playlist;
     private ListView<CategoryType> menu;
     private ImageView previous;
     private ImageView play;
     private ImageView next;
 
-    public MenuView(MenuModel model, MenuController controller) throws IOException {
-        menuModel = model;
-        menuController = controller;
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("menu.fxml"));
+    public RootView(RootModel model, RootController controller) throws IOException {
+        rootModel = model;
+        rootController = controller;
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("root.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.load();
-        menuModel.addSelectedCategoryListener(this);
+        rootModel.addSelectedCategoryListener(this);
 
         lookupViews();
 
@@ -50,18 +46,18 @@ public class MenuView extends BorderPane implements SelectedCategoryListener {
         		CategoryType.Playlists, CategoryType.Artists, CategoryType.Videos);
         menu.setItems(menuList);
 
-        menu.getSelectionModel().selectedItemProperty().addListener(menuController.getMenuListener());
+        menu.getSelectionModel().selectedItemProperty().addListener(rootController.getMenuListener());
         menu.getSelectionModel().select(CategoryType.Songs); // does this work? I want it to select in sidebar and show in center
 
         previous.setImage(Icon.PREVIOUS.image());
         play.setImage(Icon.PLAY.image());
         next.setImage(Icon.NEXT.image());
 
-        previous.setOnMousePressed(e -> menuController.previousPressed());
-        next.setOnMousePressed(e -> menuController.nextPressed());
-        play.setOnMousePressed(e -> menuController.playPressed());
+        previous.setOnMousePressed(e -> rootController.previousPressed());
+        next.setOnMousePressed(e -> rootController.nextPressed());
+        play.setOnMousePressed(e -> rootController.playPressed());
 
-        playlist.setOnAction(e -> menuController.togglePlaylist());
+        playlist.setOnAction(e -> rootController.togglePlaylist());
     }
 
     private void lookupViews() {
@@ -81,7 +77,7 @@ public class MenuView extends BorderPane implements SelectedCategoryListener {
 
         final Menu file = new Menu("File");
         final MenuItem open = new MenuItem("Import Media...");
-        open.setOnAction(e -> menuController.chooseDirectory(stage));
+        open.setOnAction(e -> rootController.chooseDirectory(stage));
         open.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
         file.getItems().add(open);
         menuBar.getMenus().add(file);
@@ -106,7 +102,7 @@ public class MenuView extends BorderPane implements SelectedCategoryListener {
                 break;
         }
         if (newView != null) {
-            newView.setMenuModel(menuModel);
+            newView.setMenuModel(rootModel);
             setCenter((Node) newView);
         }
     }

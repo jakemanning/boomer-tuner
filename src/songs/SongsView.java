@@ -1,8 +1,5 @@
 package songs;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import base.CategoryView;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
@@ -12,12 +9,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import menu.MenuModel;
 import models.Album;
 import models.Artist;
 import models.Song;
+import root.RootModel;
 import utils.MediaLibrary;
 import utils.MediaPlayer;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by bryancapps on 4/4/17.
@@ -69,8 +69,8 @@ public class SongsView extends TableView<Song> implements CategoryView {
         albumCol = (TableColumn<Song, Album>) getVisibleLeafColumn(3);
     }
 
-    public void setMenuModel(MenuModel menuModel) {
-        menuModel.addPlaylistModeListener(newValue -> playlistModeChanged(newValue));
+    public void setMenuModel(RootModel rootModel) {
+        rootModel.addPlaylistModeListener(newValue -> playlistModeChanged(newValue));
     }
 
     public void playlistModeChanged(boolean playlistMode) {

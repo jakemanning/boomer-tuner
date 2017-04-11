@@ -1,13 +1,14 @@
 package utils;
 
-import models.Album;
-import models.Playlist;
-import models.Song;
+import models.*;
 
 public enum CategoryType {
 	Songs (Song.class),
 	Playlists (Playlist.class),
-	Albums (Album.class), Artists, Videos, Images;
+	Albums(Album.class),
+	Artists(Artist.class),
+	Videos(Video.class),
+	Images(Image.class);
 
 	private CategoryType(Class<? extends Category> type) {
 		

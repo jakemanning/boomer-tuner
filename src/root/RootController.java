@@ -1,29 +1,27 @@
-package menu;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+package root;
 
 import javafx.beans.value.ChangeListener;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import utils.CategoryType;
-import utils.MediaLibrary;
 import utils.MediaPlayer;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Created by bryancapps on 4/3/17.
  */
-public class MenuController {
-    private MenuModel menuModel;
+public class RootController {
+    private RootModel rootModel;
     private boolean playlistMode = false;
     private ChangeListener<CategoryType> menuListener = (ov, oldValue, newValue) -> {
-        MediaLibrary.instance().filterOnCategory(newValue);
-        menuModel.setSelectedCategory(newValue);
+        rootModel.setSelectedCategory(newValue);
     };
 
-    public MenuController(MenuModel model) {
-        menuModel = model;
+    public RootController(RootModel model) {
+        rootModel = model;
     }
 
 
@@ -49,7 +47,7 @@ public class MenuController {
     }
 
     void togglePlaylist() {
-        menuModel.togglePlaylistMode();
+        rootModel.togglePlaylistMode();
     }
 
     void chooseDirectory(Stage stage) {

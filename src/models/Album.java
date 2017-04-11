@@ -1,12 +1,13 @@
 package models;
 
+import org.jaudiotagger.tag.images.Artwork;
+import utils.Category;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.jaudiotagger.tag.images.Artwork;
-
-public class Album {
+public class Album implements Category {
 	private final String name;
 	private final Artwork artwork;
 	private Artist artist;

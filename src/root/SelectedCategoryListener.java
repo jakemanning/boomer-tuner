@@ -1,4 +1,4 @@
-package menu;
+package root;
 
 import utils.CategoryType;
 

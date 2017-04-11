@@ -1,15 +1,14 @@
-package menu;
+package root;
+
+import utils.CategoryType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import utils.Category;
-import utils.CategoryType;
-
 /**
  * Created by bryancapps on 4/4/17.
  */
-public class MenuModel {
+public class RootModel {
     private boolean playlistMode = false;
     private CategoryType selectedCategory;
     private List<PlaylistModeListener> playlistListeners = new ArrayList<>();

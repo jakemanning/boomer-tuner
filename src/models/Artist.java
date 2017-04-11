@@ -1,10 +1,12 @@
 package models;
 
+import utils.Category;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Artist {
+public class Artist implements Category {
 	private final String name;
 	private List<Album> albums = new ArrayList<>();
 
