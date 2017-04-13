@@ -36,7 +36,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private ImageView artwork;
 	private Text songTitle;
 	private Text songLength;
-	private Button shuffle;
+	private ToggleButton shuffle;
 
     public RootView(RootModel model, RootController controller) throws IOException {
         rootModel = model;
@@ -78,7 +78,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		artwork = (ImageView) lookup("#artwork");
 		songTitle = (Text) lookup("#songTitle");
 		songLength = (Text) lookup("#songLength");
-		shuffle = (Button) lookup("#shuffle");
+		shuffle = (ToggleButton) lookup("#shuffle");
 	}
 
     public void initializeMenuBar(final Stage stage) {
