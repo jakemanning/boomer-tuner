@@ -58,4 +58,8 @@ public class RootController {
 			MediaLibrary.instance().importPath(musicFolder);
 		}
     }
+
+	void shuffle() {
+		Player.instance().toggleShuffle();
+	}
 }
