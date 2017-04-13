@@ -10,14 +10,17 @@ import models.Video;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Player {
 
 	private static Player instance = new Player();
-
 	public static Player instance() {
 		return instance;
 	}
+
+	private boolean shuffleMode = false;
+	private Random random = new Random();
 
 	private Player() {
 	}
@@ -42,10 +45,14 @@ public class Player {
 		currentPlayer.play();
 	}
 
+	public void toggleShuffle() {
+		shuffleMode = !shuffleMode;
+	}
+
 	public void playSongs(List<Song> songs, int index) {
 		play(songs, index);
 		currentPlayer.setOnEndOfMedia(() -> {
-			currentIndex = (currentIndex + 1) % playQueue.size();
+			currentIndex = nextIndex();
 			Media media = new Media(playQueue.get(currentIndex).getUri().toString());
 			currentPlayer = new MediaPlayer(media);
 			currentPlayer.play();
@@ -54,10 +61,18 @@ public class Player {
 		newSongBeingPlayed();
 	}
 
+	private int nextIndex() {
+		if (shuffleMode) {
+			return random.nextInt(playQueue.size());
+		} else {
+			return (currentIndex + 1) % playQueue.size();
+		}
+	}
+
 	public void playVideos(List<Video> videos, int index) {
 		play(videos, index);
 		currentPlayer.setOnEndOfMedia(() -> {
-			currentIndex = (currentIndex + 1) % playQueue.size();
+			currentIndex = nextIndex();
 			Media media = new Media(playQueue.get(currentIndex).getUri().toString());
 			currentPlayer = new MediaPlayer(media);
 			currentPlayer.play();
@@ -111,7 +126,7 @@ public class Player {
 	}
 
 	public void next() {
-		play(playQueue, (currentIndex + 1) % playQueue.size());
+		play(playQueue, nextIndex());
 	}
 
 	public void addListener(PlayerListener listener) {
