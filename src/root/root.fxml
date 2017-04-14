@@ -4,7 +4,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml">
@@ -35,9 +35,13 @@
             </center>
             <bottom>
                 <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
+                    <ImageView fx:id="shuffle" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
+                    <Region minWidth="20.0" maxWidth="20.0"/>
                     <ImageView fx:id="previous" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
                     <ImageView fx:id="play" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
                     <ImageView fx:id="next" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
+                    <Region minWidth="20.0" maxWidth="20.0"/>
+                    <ImageView fx:id="loop" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
                 </HBox>
             </bottom>
             <right>
@@ -45,7 +49,7 @@
                       minWidth="150">
                     <VBox alignment="CENTER" maxHeight="100" minHeight="100" prefHeight="100">
                         <Button fx:id="playlist" text="Create Playlist" translateX="-10" HBox.hgrow="NEVER"/>
-                        <ToggleButton fx:id="shuffle" text="Shuffle" translateX="-10" translateY="10"
+                        <ToggleButton fx:id="shuffleButton" text="Shuffle" translateX="-10" translateY="10"
                                       HBox.hgrow="NEVER"/>
                     </VBox>
                 </HBox>

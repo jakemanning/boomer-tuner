@@ -30,13 +30,15 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
     private RootController rootController;
     private Button playlist;
     private ListView<CategoryType> menu;
+    private ImageView shuffle;
     private ImageView previous;
     private ImageView play;
     private ImageView next;
+    private ImageView loop;
 	private ImageView artwork;
 	private Text songTitle;
 	private Text songLength;
-	private ToggleButton shuffle;
+	private ToggleButton shuffleButton;
 
     public RootView(RootModel model, RootController controller) throws IOException {
         rootModel = model;
@@ -56,29 +58,33 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
         menu.getSelectionModel().selectedItemProperty().addListener(rootController.getMenuListener());
 		menu.getSelectionModel().select(CategoryType.Songs);
 
+		shuffle.setImage(Icon.SHUFFLE.image());
         previous.setImage(Icon.PREVIOUS.image());
         play.setImage(Icon.PLAY.image());
         next.setImage(Icon.NEXT.image());
+        loop.setImage(Icon.LOOP.image());
 
         previous.setOnMousePressed(e -> rootController.previousPressed());
         next.setOnMousePressed(e -> rootController.nextPressed());
         play.setOnMousePressed(e -> rootController.playPressed());
 
         playlist.setOnAction(e -> rootController.togglePlaylist());
-		shuffle.setOnAction(e -> rootController.shuffle());
+		shuffleButton.setOnAction(e -> rootController.shuffle());
 	}
 
 	@SuppressWarnings("unchecked")
 	private void lookupViews() {
 		playlist = (Button) lookup("#playlist");
 		menu = (ListView<CategoryType>) lookup("#menu");
+		shuffle = (ImageView) lookup("#shuffle");
 		previous = (ImageView) lookup("#previous");
 		play = (ImageView) lookup("#play");
 		next = (ImageView) lookup("#next");
+		loop = (ImageView) lookup("#loop");
 		artwork = (ImageView) lookup("#artwork");
 		songTitle = (Text) lookup("#songTitle");
 		songLength = (Text) lookup("#songLength");
-		shuffle = (ToggleButton) lookup("#shuffle");
+		shuffleButton = (ToggleButton) lookup("#shuffleButton");
 	}
 
     public void initializeMenuBar(final Stage stage) {
