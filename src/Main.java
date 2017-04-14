@@ -16,6 +16,8 @@ public class Main extends Application {
 
 		Scene scene = new Scene(rootView);
 		primaryStage.setTitle("Boomer Tuner");
+		primaryStage.setMinWidth(650);
+		primaryStage.setMinHeight(300);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
