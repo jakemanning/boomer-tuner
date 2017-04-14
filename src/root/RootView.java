@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -30,11 +31,17 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
     private RootController rootController;
     private Button playlist;
     private ListView<CategoryType> menu;
-    private ImageView shuffle;
-    private ImageView previous;
-    private ImageView play;
-    private ImageView next;
-    private ImageView loop;
+    private Label shuffle;
+    private Label previous;
+    private Label play;
+    private Label next;
+    private Label loop;
+	private final ImageView shuffleImage = createScaledImage(Icon.SHUFFLE.image());
+    private final ImageView previousImage = createScaledImage(Icon.PREVIOUS.image());
+    private final ImageView pauseImage = createScaledImage(Icon.PAUSE.image());
+	private final ImageView playImage = createScaledImage(Icon.PLAY.image());
+	private final ImageView nextImage = createScaledImage(Icon.NEXT.image());
+	private final ImageView loopImage = createScaledImage(Icon.LOOP.image());
 	private ImageView artwork;
 	private Text songTitle;
 	private Text songLength;
@@ -58,11 +65,11 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
         menu.getSelectionModel().selectedItemProperty().addListener(rootController.getMenuListener());
 		menu.getSelectionModel().select(CategoryType.Songs);
 
-		shuffle.setImage(Icon.SHUFFLE.image());
-        previous.setImage(Icon.PREVIOUS.image());
-        play.setImage(Icon.PLAY.image());
-        next.setImage(Icon.NEXT.image());
-        loop.setImage(Icon.LOOP.image());
+		shuffle.setGraphic(shuffleImage);
+        previous.setGraphic(previousImage);
+        play.setGraphic(playImage);
+        next.setGraphic(nextImage);
+        loop.setGraphic(loopImage);
 
         previous.setOnMousePressed(e -> rootController.previousPressed());
         next.setOnMousePressed(e -> rootController.nextPressed());
@@ -76,17 +83,23 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private void lookupViews() {
 		playlist = (Button) lookup("#playlist");
 		menu = (ListView<CategoryType>) lookup("#menu");
-		shuffle = (ImageView) lookup("#shuffle");
-		previous = (ImageView) lookup("#previous");
-		play = (ImageView) lookup("#play");
-		next = (ImageView) lookup("#next");
-		loop = (ImageView) lookup("#loop");
+		shuffle = (Label) lookup("#shuffle");
+		previous = (Label) lookup("#previous");
+		play = (Label) lookup("#play");
+		next = (Label) lookup("#next");
+		loop = (Label) lookup("#loop");
 		artwork = (ImageView) lookup("#artwork");
 		songTitle = (Text) lookup("#songTitle");
 		songLength = (Text) lookup("#songLength");
 		shuffleButton = (ToggleButton) lookup("#shuffleButton");
 	}
 
+	private ImageView createScaledImage(Image img){
+		ImageView iView = new ImageView(img);
+		iView.setFitWidth(40);
+		iView.setPreserveRatio(true);
+		return iView;
+	}
     public void initializeMenuBar(final Stage stage) {
         final MenuBar menuBar = new MenuBar();
         final String os = System.getProperty("os.name");
@@ -128,7 +141,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 
 	@Override
 	public void newSong(Song song) {
-		play.setImage(Icon.PAUSE.image());
+		play.setGraphic(pauseImage);
 		artwork.setImage(song.getAlbum().getArtwork());
 		songLength.setText(song.getDuration());
 		songTitle.setText(song.getTitle());
@@ -136,7 +149,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 
 	@Override
 	public void newVideo(Video video) {
-		play.setImage(Icon.PAUSE.image());
+		play.setGraphic(pauseImage);
 		songLength.setText(video.getDuration());
 		songTitle.setText(video.getTitle());
 		MediaView videoView = Player.instance().getView();
@@ -154,12 +167,12 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	@Override
 	public void playingStatusChanged(CategoryType type, MediaPlayer.Status status) {
 		if (status.equals(MediaPlayer.Status.PLAYING)) {
-			play.setImage(Icon.PAUSE.image());
+			play.setGraphic(pauseImage);
 			if (type.equals(CategoryType.Videos)) {
 				setVideoView(Player.instance().getView());
 			}
 		} else if (status.equals(MediaPlayer.Status.PAUSED)) {
-			play.setImage(Icon.PLAY.image());
+			play.setGraphic(playImage);
 		}
 	}
 }
