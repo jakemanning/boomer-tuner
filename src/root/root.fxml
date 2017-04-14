@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml">
@@ -35,13 +32,13 @@
             </center>
             <bottom>
                 <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
-                    <ImageView fx:id="shuffle" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
+                    <Label fx:id="shuffle" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
                     <Region minWidth="20.0" maxWidth="20.0"/>
-                    <ImageView fx:id="previous" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
-                    <ImageView fx:id="play" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
-                    <ImageView fx:id="next" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
+                    <Label fx:id="previous" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
+                    <Label fx:id="play" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
+                    <Label fx:id="next" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
                     <Region minWidth="20.0" maxWidth="20.0"/>
-                    <ImageView fx:id="loop" fitHeight="40.0" preserveRatio="true" HBox.hgrow="NEVER"/>
+                    <Label fx:id="loop" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
                 </HBox>
             </bottom>
             <right>
