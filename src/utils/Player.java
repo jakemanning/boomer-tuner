@@ -1,5 +1,11 @@
 package utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -7,10 +13,6 @@ import javafx.util.Duration;
 import models.Playable;
 import models.Song;
 import models.Video;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class Player {
 
@@ -59,6 +61,19 @@ public class Player {
 			newSongBeingPlayed();
 		});
 		newSongBeingPlayed();
+		
+		currentPlayer.currentTimeProperty().addListener(new InvalidationListener() {
+			public void invalidated(Observable ov) {
+				timeUpdated();
+			}
+		});
+		
+		currentPlayer.setOnReady(new Runnable() {
+			@Override
+			public void run() {
+				timeUpdated();
+			}
+		});
 	}
 
 	private int nextIndex() {
@@ -102,11 +117,9 @@ public class Player {
 			playingStatusChanged(MediaPlayer.Status.PAUSED);
 		}
 	}
-
+	
 	public void stop() {
-//        if (currentPlayer != null) {
-//            currentPlayer.stop();
-//        }
+		
 	}
 
 	boolean isPaused() {
@@ -123,6 +136,10 @@ public class Player {
 			}
 			play(playQueue, newIndex);
 		}
+	}
+	
+	public void seek(double value) {
+		currentPlayer.seek(currentPlayer.getMedia().getDuration().multiply(value));
 	}
 
 	public void next() {
@@ -149,6 +166,12 @@ public class Player {
 	private void newVideoBeingPlayed() {
 		for (PlayerListener listener : listeners) {
 			listener.newVideo((Video) playQueue.get(currentIndex));
+		}
+	}
+	
+	private void timeUpdated() {
+		for (PlayerListener listener : listeners) {
+			listener.timeUpdated(playQueue.get(currentIndex), currentPlayer.getCurrentTime(), currentPlayer.getTotalDuration());
 		}
 	}
 }
