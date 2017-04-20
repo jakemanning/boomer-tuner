@@ -21,6 +21,7 @@ public class Player {
 	}
 
 	private boolean shuffleMode = false;
+	private boolean loopMode = false;
 	private Random random = new Random();
 
 	private Player() {
@@ -68,6 +69,9 @@ public class Player {
 
 	public void toggleShuffle() {
 		shuffleMode = !shuffleMode;
+	}
+	public void toggleLoop() {
+		loopMode = !loopMode;
 	}
 
 	public void playSongs(List<Song> songs, int index) {
