@@ -1,23 +1,12 @@
 package root;
 
-import java.io.IOException;
-
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -34,13 +23,11 @@ import models.Song;
 import models.Video;
 import songs.SongsController;
 import songs.SongsView;
-import utils.CategoryType;
-import utils.CategoryView;
-import utils.Icon;
-import utils.Player;
-import utils.PlayerListener;
+import utils.*;
 import videos.VideosController;
 import videos.VideosView;
+
+import java.io.IOException;
 
 public class RootView extends BorderPane implements SelectedCategoryListener, PlayerListener {
 	private RootModel rootModel;
@@ -53,11 +40,13 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private Label next;
 	private Label loop;
 	private final ImageView shuffleImage = createScaledImage(Icon.SHUFFLE.image());
+    private final ImageView shufflePressedImage = createScaledImage(Icon.SHUFFLE_PRESSED.image());
 	private final ImageView previousImage = createScaledImage(Icon.PREVIOUS.image());
 	private final ImageView pauseImage = createScaledImage(Icon.PAUSE.image());
 	private final ImageView playImage = createScaledImage(Icon.PLAY.image());
 	private final ImageView nextImage = createScaledImage(Icon.NEXT.image());
 	private final ImageView loopImage = createScaledImage(Icon.LOOP.image());
+    private final ImageView loopPressedImage = createScaledImage(Icon.LOOP_PRESSED.image());
 	private ImageView artwork;
 	private Text songTitle;
 	private Text songLength;
