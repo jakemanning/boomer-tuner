@@ -4,6 +4,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
+import models.Category;
 import models.Playable;
 import models.Song;
 import models.Video;
@@ -36,13 +37,33 @@ public class Player {
 		return new MediaView(currentPlayer);
 	}
 
+	private void setCurrentPlayer(MediaPlayer player) {
+		currentPlayer = player;
+		Category newItem = playQueue.get(currentIndex);
+		if (CategoryType.of(newItem) == CategoryType.Songs) {
+			newSongBeingPlayed();
+		} else if (CategoryType.of(newItem) == CategoryType.Videos) {
+			newVideoBeingPlayed();
+		}
+		currentPlayer.setOnEndOfMedia(() -> {
+			currentIndex = nextIndex();
+			Media media = new Media(playQueue.get(currentIndex).getUri().toString());
+			setCurrentPlayer(new MediaPlayer(media));
+			currentPlayer.play();
+		});
+		currentPlayer.statusProperty()
+				.addListener((observable, oldValue, newValue) -> playingStatusChanged(newValue));
+		currentPlayer.currentTimeProperty().addListener(ov -> timeUpdated());
+		currentPlayer.setOnReady(this::timeUpdated);
+	}
+
 	private void play(List<? extends Playable> items, int index) {
 		if (currentPlayer != null && currentPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
 			currentPlayer.stop();
 		}
 		playQueue = items;
 		currentIndex = index;
-		currentPlayer = new MediaPlayer(new Media(playQueue.get(currentIndex).getUri().toString()));
+		setCurrentPlayer(new MediaPlayer(new Media(playQueue.get(currentIndex).getUri().toString())));
 		currentPlayer.play();
 	}
 
@@ -55,14 +76,6 @@ public class Player {
 
 	public void playSongs(List<Song> songs, int index) {
 		play(songs, index);
-		currentPlayer.setOnEndOfMedia(() -> {
-			currentIndex = nextIndex();
-			Media media = new Media(playQueue.get(currentIndex).getUri().toString());
-			currentPlayer = new MediaPlayer(media);
-			currentPlayer.play();
-			newSongBeingPlayed();
-		});
-		newSongBeingPlayed();
 	}
 
 	private int nextIndex() {
@@ -75,25 +88,12 @@ public class Player {
 
 	public void playVideos(List<Video> videos, int index) {
 		play(videos, index);
-		currentPlayer.setOnEndOfMedia(() -> {
-			currentIndex = nextIndex();
-			Media media = new Media(playQueue.get(currentIndex).getUri().toString());
-			currentPlayer = new MediaPlayer(media);
-			currentPlayer.play();
-			newVideoBeingPlayed();
-		});
-		newVideoBeingPlayed();
 	}
 
 	public void resume() {
 		if (currentPlayer != null) {
 			currentPlayer.play();
-			playingStatusChanged(MediaPlayer.Status.PLAYING);
 		}
-	}
-
-	boolean isStopped() {
-		return currentPlayer == null || currentPlayer.getStatus().equals(javafx.scene.media.MediaPlayer.Status.STOPPED);
 	}
 
 	public boolean isPlaying() {
@@ -103,18 +103,7 @@ public class Player {
 	public void pause() {
 		if (currentPlayer != null) {
 			currentPlayer.pause();
-			playingStatusChanged(MediaPlayer.Status.PAUSED);
 		}
-	}
-
-	public void stop() {
-//        if (currentPlayer != null) {
-//            currentPlayer.stop();
-//        }
-	}
-
-	boolean isPaused() {
-		return currentPlayer != null && currentPlayer.getStatus().equals(javafx.scene.media.MediaPlayer.Status.PAUSED);
 	}
 
 	public void previous() {
@@ -127,6 +116,10 @@ public class Player {
 			}
 			play(playQueue, newIndex);
 		}
+	}
+
+	public void seek(double value) {
+		currentPlayer.seek(currentPlayer.getMedia().getDuration().multiply(value));
 	}
 
 	public void next() {
@@ -153,6 +146,12 @@ public class Player {
 	private void newVideoBeingPlayed() {
 		for (PlayerListener listener : listeners) {
 			listener.newVideo((Video) playQueue.get(currentIndex));
+		}
+	}
+
+	private void timeUpdated() {
+		for (PlayerListener listener : listeners) {
+			listener.timeUpdated(playQueue.get(currentIndex), currentPlayer.getCurrentTime(), currentPlayer.getTotalDuration());
 		}
 	}
 }
