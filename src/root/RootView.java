@@ -37,11 +37,13 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
     private Label next;
     private Label loop;
 	private final ImageView shuffleImage = createScaledImage(Icon.SHUFFLE.image());
+	private final ImageView shufflePressedImage = createScaledImage(Icon.SHUFFLE_PRESSED.image());
     private final ImageView previousImage = createScaledImage(Icon.PREVIOUS.image());
     private final ImageView pauseImage = createScaledImage(Icon.PAUSE.image());
 	private final ImageView playImage = createScaledImage(Icon.PLAY.image());
 	private final ImageView nextImage = createScaledImage(Icon.NEXT.image());
-	private final ImageView loopImage = createScaledImage(Icon.LOOP.image());
+	private final ImageView loopPressedImage = createScaledImage(Icon.LOOP.image());
+	private final ImageView loopImage = createScaledImage(Icon.LOOP_PRESSED.image());
 	private ImageView artwork;
 	private Text songTitle;
 	private Text songLength;
