@@ -29,9 +29,6 @@ public class SongsView extends TableView<Song> implements CategoryView {
         if (newValue == null) {
             return; // If user selects new directory
         }
-        if (Player.instance().isPlaying()) {
-            Player.instance().stop();
-        }
         Player.instance().playSongs(getItems(), getSelectionModel().getSelectedIndex());
     };
 
