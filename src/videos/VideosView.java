@@ -22,9 +22,6 @@ public class VideosView extends TableView<Video> implements CategoryView {
 		if (newValue == null) {
 			return; // If user selects new directory
 		}
-		if (Player.instance().isPlaying()) {
-			Player.instance().stop();
-		}
 		Player.instance().playVideos(getItems(), getSelectionModel().getSelectedIndex());
 	};
 
