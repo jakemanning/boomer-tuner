@@ -15,6 +15,7 @@ import utils.MediaLibrary;
 import utils.Player;
 
 public class RootController {
+    private boolean shuffleMode = false;
     private RootModel rootModel;
     private boolean playlistMode = false;
     private ChangeListener<CategoryType> menuListener = (ov, oldValue, newValue) -> {
@@ -62,7 +63,8 @@ public class RootController {
 		}
     }
 
-	void shuffle() {
+	void shufflePressed() {
+        rootModel.toggleShuffleMode();
 		Player.instance().toggleShuffle();
 	}
 	

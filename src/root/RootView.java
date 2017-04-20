@@ -50,7 +50,6 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private ImageView artwork;
 	private Text songTitle;
 	private Text songLength;
-	private ToggleButton shuffleButton;
 	private Slider seekbar;
 	private Text currentTime;
 
@@ -82,7 +81,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		play.setOnMousePressed(e -> rootController.playPressed());
 
 		playlist.setOnAction(e -> rootController.togglePlaylist());
-		shuffleButton.setOnAction(e -> rootController.shuffle());
+		shuffle.setOnMouseClicked(e -> rootController.shufflePressed());
 		seekbar.valueChangingProperty().addListener(rootController.seek(seekbar));
 	}
 
@@ -98,7 +97,6 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		artwork = (ImageView) lookup("#artwork");
 		songTitle = (Text) lookup("#songTitle");
 		songLength = (Text) lookup("#songLength");
-		shuffleButton = (ToggleButton) lookup("#shuffleButton");
 		seekbar = (Slider) lookup("#seekbar");
 		currentTime = (Text) lookup("#currentTime");
 	}

@@ -7,21 +7,23 @@ import java.util.List;
 
 public class RootModel {
     private boolean playlistMode = false;
+    private boolean shuffleMode = false;
+    private boolean loopMode = false;
     private CategoryType selectedCategory;
-    private List<PlaylistModeListener> playlistListeners = new ArrayList<>();
     private List<SelectedCategoryListener> categoryListeners = new ArrayList<>();
 
-    public boolean isPlaylistMode() {
-        return playlistMode;
-    }
-
-    public void setPlaylistMode(boolean playlistMode) {
-        this.playlistMode = playlistMode;
+    public void togglePlaylistMode() {
+        playlistMode = !playlistMode;
         playlistModeChanged();
     }
+    public void toggleShuffleMode() {
+       shuffleMode = !shuffleMode;
+       shuffleModeChanged();
+    }
 
-    public void togglePlaylistMode() {
-        setPlaylistMode(!isPlaylistMode());
+    public void toggleLoopMode() {
+        loopMode = !loopMode;
+        loopModeChanged();
     }
 
     public CategoryType getSelectedCategory() {
@@ -31,10 +33,6 @@ public class RootModel {
     public void setSelectedCategory(CategoryType selectedCategory) {
         this.selectedCategory = selectedCategory;
         categoryChanged();
-    }
-
-    public void addPlaylistModeListener(PlaylistModeListener listener) {
-        playlistListeners.add(listener);
     }
 
     public void addSelectedCategoryListener(SelectedCategoryListener listener) {
@@ -50,6 +48,16 @@ public class RootModel {
     private void playlistModeChanged() {
         for (PlaylistModeListener listener : playlistListeners) {
             listener.playlistModeChanged(playlistMode);
+        }
+    }
+    private void shuffleModeChanged() {
+        for (ShuffleModeListener listener : shuffleListeners) {
+            listener.shuffleModeChanged(shuffleMode);
+        }
+    }
+    private void loopModeChanged() {
+        for (LoopModeListener listener : loopListeners) {
+            listener.loopModeChanged(loopMode);
         }
     }
 }
