@@ -121,7 +121,26 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		open.setOnAction(e -> rootController.chooseDirectory(stage));
 		open.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
 		file.getItems().add(open);
-		menuBar.getMenus().add(file);
+
+		final Menu controls = new Menu("Controls");
+		final MenuItem play = new MenuItem("Play/Pause");
+		play.setOnAction(e -> rootController.playPressed());
+		play.setAccelerator(new KeyCodeCombination(KeyCode.SPACE));
+		final MenuItem previous = new MenuItem("Previous");
+		previous.setOnAction(e -> rootController.previousPressed());
+		previous.setAccelerator(new KeyCodeCombination(KeyCode.LEFT));
+		final MenuItem next = new MenuItem("Next");
+		next.setOnAction(e -> rootController.nextPressed());
+		next.setAccelerator(new KeyCodeCombination(KeyCode.RIGHT));
+		final MenuItem shuffle = new MenuItem("Toggle Shuffle");
+		shuffle.setOnAction(e -> rootController.shufflePressed());
+		shuffle.setAccelerator(new KeyCodeCombination(KeyCode.S));
+		final MenuItem loop = new MenuItem("Toggle Repeat");
+		loop.setOnAction(e -> rootController.loopPressed());
+		loop.setAccelerator(new KeyCodeCombination(KeyCode.R));
+		controls.getItems().addAll(play, previous, next, shuffle, loop);
+
+		menuBar.getMenus().addAll(file, controls);
 		setTop(menuBar);
 	}
 
