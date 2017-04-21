@@ -1,9 +1,5 @@
 package root;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -13,6 +9,10 @@ import javafx.stage.Stage;
 import utils.CategoryType;
 import utils.MediaLibrary;
 import utils.Player;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class RootController {
     private RootModel rootModel;
@@ -62,7 +62,7 @@ public class RootController {
 		}
     }
 
-	void shuffle() {
+	void shufflePressed() {
 		Player.instance().toggleShuffle();
 	}
 	
@@ -73,5 +73,9 @@ public class RootController {
 				Player.instance().seek(seekbar.getValue() / 100.0);
 			}
         };
+	}
+
+	void loopPressed() {
+		Player.instance().toggleLoop();
 	}
 }

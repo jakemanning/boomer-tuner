@@ -50,7 +50,6 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private ImageView artwork;
 	private Text songTitle;
 	private Text songLength;
-	private ToggleButton shuffleButton;
 	private Slider seekbar;
 	private Text currentTime;
 
@@ -77,12 +76,13 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		next.setGraphic(nextImage);
 		loop.setGraphic(loopImage);
 
-		previous.setOnMousePressed(e -> rootController.previousPressed());
-		next.setOnMousePressed(e -> rootController.nextPressed());
-		play.setOnMousePressed(e -> rootController.playPressed());
+		shuffle.setOnMouseClicked(e -> rootController.shufflePressed());
+		previous.setOnMouseClicked(e -> rootController.previousPressed());
+		next.setOnMouseClicked(e -> rootController.nextPressed());
+		play.setOnMouseClicked(e -> rootController.playPressed());
+		loop.setOnMouseClicked(e -> rootController.loopPressed());
 
 		playlist.setOnAction(e -> rootController.togglePlaylist());
-		shuffleButton.setOnAction(e -> rootController.shuffle());
 		seekbar.valueChangingProperty().addListener(rootController.seek(seekbar));
 	}
 
@@ -98,7 +98,6 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		artwork = (ImageView) lookup("#artwork");
 		songTitle = (Text) lookup("#songTitle");
 		songLength = (Text) lookup("#songLength");
-		shuffleButton = (ToggleButton) lookup("#shuffleButton");
 		seekbar = (Slider) lookup("#seekbar");
 		currentTime = (Text) lookup("#currentTime");
 	}
@@ -190,6 +189,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	 * https://docs.oracle.com/javase/8/javafx/media-tutorial/playercontrol.htm#
 	 * BABHHBEB)
 	 */
+	@Override
 	public void timeUpdated(Playable media, Duration elapsed, Duration duration) {
 		if (media == null || seekbar == null || elapsed == null || duration == null) {
 			return;
@@ -207,5 +207,23 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 			}
 		});
 
+	}
+
+	@Override
+	public void shuffleModeUpdated(boolean shuffling) {
+		if (shuffling) {
+			shuffle.setGraphic(shufflePressedImage);
+		} else {
+			shuffle.setGraphic(shuffleImage);
+		}
+	}
+
+	@Override
+	public void loopModeUpdated(boolean looping) {
+		if (looping) {
+			loop.setGraphic(loopPressedImage);
+		} else {
+			loop.setGraphic(loopImage);
+		}
 	}
 }

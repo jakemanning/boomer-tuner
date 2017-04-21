@@ -9,9 +9,7 @@ import models.Playable;
 import models.Song;
 import models.Video;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Player {
 
@@ -30,7 +28,8 @@ public class Player {
 	private List<PlayerListener> listeners = new ArrayList<>();
 
 	private MediaPlayer currentPlayer;
-	private List<? extends Playable> playQueue = new ArrayList<>();
+	private List<Playable> playQueue = new ArrayList<>();
+	private Deque<Playable> lastPlayed = new ArrayDeque<>();
 	private int currentIndex;
 
 	public MediaView getView() {
@@ -46,6 +45,7 @@ public class Player {
 			newVideoBeingPlayed();
 		}
 		currentPlayer.setOnEndOfMedia(() -> {
+			lastPlayed.addFirst(playQueue.get(currentIndex));
 			currentIndex = nextIndex();
 			Media media = new Media(playQueue.get(currentIndex).getUri().toString());
 			setCurrentPlayer(new MediaPlayer(media));
@@ -61,7 +61,7 @@ public class Player {
 		if (currentPlayer != null && currentPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
 			currentPlayer.stop();
 		}
-		playQueue = items;
+		playQueue = new ArrayList<>(items);
 		currentIndex = index;
 		setCurrentPlayer(new MediaPlayer(new Media(playQueue.get(currentIndex).getUri().toString())));
 		currentPlayer.play();
@@ -69,24 +69,48 @@ public class Player {
 
 	public void toggleShuffle() {
 		shuffleMode = !shuffleMode;
+		for (PlayerListener listener : listeners) {
+			listener.shuffleModeUpdated(shuffleMode);
+		}
 	}
 	public void toggleLoop() {
 		loopMode = !loopMode;
-	}
-
-	public void playSongs(List<Song> songs, int index) {
-		play(songs, index);
-	}
-
-	private int nextIndex() {
-		if (shuffleMode) {
-			return random.nextInt(playQueue.size());
-		} else {
-			return (currentIndex + 1) % playQueue.size();
+		for (PlayerListener listener : listeners) {
+			listener.loopModeUpdated(loopMode);
 		}
 	}
 
+	public void playSongs(List<Song> songs, int index) {
+		lastPlayed.clear();
+		play(songs, index);
+	}
+
+	private int previousIndex() {
+		if (loopMode) {
+			return currentIndex;
+		}
+		if (!lastPlayed.isEmpty()) {
+			return playQueue.indexOf(lastPlayed.removeFirst());
+		}
+		int newIndex = ((currentIndex - 1) % playQueue.size());
+		if (newIndex < 0) {
+			newIndex = newIndex + playQueue.size();
+		}
+		return newIndex;
+	}
+
+	private int nextIndex() {
+		if (loopMode) {
+			return currentIndex;
+		}
+		if (shuffleMode) {
+			return random.nextInt(playQueue.size());
+		}
+		return (currentIndex + 1) % playQueue.size();
+	}
+
 	public void playVideos(List<Video> videos, int index) {
+		lastPlayed.clear();
 		play(videos, index);
 	}
 
@@ -110,11 +134,7 @@ public class Player {
 		if (currentPlayer.getCurrentTime().greaterThan(Duration.seconds(7))) {
 			currentPlayer.seek(Duration.ZERO);
 		} else {
-			int newIndex = ((currentIndex - 1) % playQueue.size());
-			if (newIndex < 0) {
-				newIndex = newIndex + playQueue.size();
-			}
-			play(playQueue, newIndex);
+			play(playQueue, previousIndex());
 		}
 	}
 
@@ -123,6 +143,7 @@ public class Player {
 	}
 
 	public void next() {
+		lastPlayed.addFirst(playQueue.get(currentIndex));
 		play(playQueue, nextIndex());
 	}
 

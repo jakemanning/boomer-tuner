@@ -46,8 +46,6 @@
                       minWidth="150">
                     <VBox alignment="CENTER" maxHeight="100" minHeight="100" prefHeight="100">
                         <Button fx:id="playlist" text="Create Playlist" translateX="-10" HBox.hgrow="NEVER"/>
-                        <ToggleButton fx:id="shuffleButton" text="Shuffle" translateX="-10" translateY="10"
-                                      HBox.hgrow="NEVER"/>
                     </VBox>
                 </HBox>
             </right>
