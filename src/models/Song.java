@@ -1,11 +1,5 @@
 package models;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Path;
-import java.util.Objects;
-
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -16,7 +10,11 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.images.Artwork;
 
-import javafx.util.Duration;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Path;
+import java.util.Objects;
 
 public class Song implements Category, Playable {
 	private final String title;
@@ -122,17 +120,5 @@ public class Song implements Category, Playable {
 
 	public URI getUri() {
 		return uri;
-	}
-
-	public String format(Duration elapsed) {
-		int secondsElapsed = (int) Math.floor(elapsed.toSeconds());
-		if (secondsElapsed >= 3600) {
-			return String.format("%d:%02d:%02d", secondsElapsed / 3600, (secondsElapsed % 3600) / 60,
-					secondsElapsed % 60);
-		} else if (secondsElapsed >= 600) {
-			return String.format("%02d:%02d", (secondsElapsed % 3600) / 60, secondsElapsed % 60);
-		} else {
-			return String.format("%2d:%02d", (secondsElapsed % 3600) / 60, secondsElapsed % 60);
-		}
 	}
 }

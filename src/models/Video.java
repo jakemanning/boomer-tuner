@@ -1,26 +1,26 @@
 package models;
 
-import java.io.File;
-import java.io.IOException;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
+
 import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
-
-import org.mp4parser.IsoFile;
-import org.mp4parser.boxes.iso14496.part12.MovieHeaderBox;
-
-import javafx.util.Duration;
 
 public class Video implements Category, Playable {
 	private final String title;
-	private final long seconds;
+	private final StringProperty duration = new SimpleStringProperty(Playable.format(Duration.ZERO));
 
 	public String getTitle() {
 		return title;
 	}
 
-	public String getDuration() {
-		return String.format("%d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, (seconds % 60));
+	public StringProperty durationProperty() {
+		return duration;
 	}
 
 	public URI getUri() {
@@ -29,25 +29,17 @@ public class Video implements Category, Playable {
 
 	private final URI uri;
 
-	public Video(String title, long seconds, URI uri) {
+	private Video(String title, URI uri) {
 		this.title = title;
-		this.seconds = seconds;
 		this.uri = uri;
 	}
 
 	public static Video from(final URI path) {
-		File file = new File(path);
-		long seconds;
-		try {
-			IsoFile isoFile = new IsoFile(file);
-			MovieHeaderBox movieHeaderBox = isoFile.getMovieBox().getMovieHeaderBox();
-			seconds = movieHeaderBox.getDuration() / 1000; // convert millis to
-															// seconds
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return new Video(file.getName(), seconds, path);
+		Media media = new Media(path.toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		Video video = new Video(Paths.get(path).getFileName().toString(), path);
+		mediaPlayer.setOnReady(() -> video.duration.set(Playable.format(media.getDuration())));
+		return video;
 	}
 
 	public static boolean accepts(final Path path) {
@@ -63,21 +55,17 @@ public class Video implements Category, Playable {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Video video = (Video) o;
-		return Objects.equals(title, video.title) && Objects.equals(seconds, video.seconds)
+		return Objects.equals(title, video.title) && Objects.equals(duration.get(), video.duration.get())
 				&& Objects.equals(uri, video.uri);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(title, seconds, uri);
+		return Objects.hash(title, duration.get(), uri);
 	}
 
 	@Override
 	public String toString() {
 		return title;
-	}
-
-	public String format(Duration elapsed) {
-		return null;
 	}
 }

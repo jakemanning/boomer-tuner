@@ -178,7 +178,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	@Override
 	public void newVideo(Video video) {
 		play.setGraphic(pauseImage);
-		songLength.setText(video.getDuration());
+		songLength.setText(video.durationProperty().get());
 		songTitle.setText(video.getTitle());
 		MediaView videoView = Player.instance().getView();
 		setVideoView(videoView);
@@ -217,7 +217,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				String currentTimeText = media.format(elapsed);
+				String currentTimeText = Playable.format(elapsed);
 				currentTime.setText(currentTimeText);
 				
 				if (!seekbar.isDisabled() && duration.greaterThan(Duration.ZERO) && !seekbar.isValueChanging()) {

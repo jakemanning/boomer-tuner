@@ -62,7 +62,7 @@ public class Album implements Category {
 	public javafx.scene.image.Image getArtwork() {
 		try {
 			return SwingFXUtils.toFXImage((BufferedImage) artwork.getImage(), null);
-		} catch (NullPointerException | IOException e) {
+		} catch (NullPointerException | IOException | IllegalArgumentException e) {
 			System.out.println("Failed to set artwork from music file");
 			return Icon.DEFAULT_ARTWORK.image();
 		}
