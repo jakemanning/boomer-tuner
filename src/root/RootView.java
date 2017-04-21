@@ -1,10 +1,10 @@
 package root;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -12,9 +12,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -52,6 +53,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private Text songLength;
 	private Slider seekbar;
 	private Text currentTime;
+	private BorderPane controlPane;
 
 	public RootView(RootModel model, RootController controller) throws IOException {
 		rootModel = model;
@@ -100,6 +102,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		songLength = (Text) lookup("#songLength");
 		seekbar = (Slider) lookup("#seekbar");
 		currentTime = (Text) lookup("#currentTime");
+		controlPane = (BorderPane) lookup("#controlPane");
 	}
 
 	private ImageView createScaledImage(Image img) {
@@ -186,10 +189,17 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 
 	private void setVideoView(MediaView videoView) {
 		artwork.setImage(null);
-		videoView.fitWidthProperty().bind(Bindings.selectDouble(videoView.sceneProperty(), "width"));
-		videoView.fitHeightProperty().bind(Bindings.selectDouble(videoView.sceneProperty(), "height"));
+		VBox container = new VBox();
+		container.setBackground(new Background(new BackgroundFill(Paint.valueOf("black"), null, null)));
+		container.setAlignment(Pos.CENTER);
+		double videoWidth = getWidth() - menu.getWidth();
+		double videoHeight = getHeight() - controlPane.getHeight();
+		videoView.setFitWidth(videoWidth);
+		videoView.setFitHeight(videoHeight);
 		videoView.setPreserveRatio(true);
-		setCenter(videoView);
+		VBox.setVgrow(videoView, Priority.ALWAYS);
+		container.getChildren().add(videoView);
+		setCenter(container);
 	}
 
 	@Override

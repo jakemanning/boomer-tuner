@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Text?>
 <fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml">
     <bottom>
-        <BorderPane maxHeight="100.0" minHeight="100.0" prefHeight="50.0" minWidth="600">
+        <BorderPane fx:id="controlPane" maxHeight="100.0" minHeight="100.0" prefHeight="50.0" minWidth="600">
             <left>
                 <HBox alignment="CENTER_LEFT" maxHeight="100.0" minHeight="100.0" prefHeight="100.0" maxWidth="150"
                       minWidth="150">
