@@ -205,6 +205,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		VBox.setVgrow(videoView, Priority.ALWAYS);
 		container.getChildren().add(videoView);
 		setCenter(container);
+		widthProperty().addListener((o, old, w) -> videoView.setFitWidth(w.doubleValue() - menu.getWidth()));
+		heightProperty().addListener((o, old, h) -> videoView.setFitHeight(h.doubleValue() - controlPane.getHeight()));
 	}
 
 	@Override
@@ -228,16 +230,13 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		if (media == null || seekbar == null || elapsed == null || duration == null) {
 			return;
 		}
-		
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				String currentTimeText = Playable.format(elapsed);
-				currentTime.setText(currentTimeText);
-				
-				if (!seekbar.isDisabled() && duration.greaterThan(Duration.ZERO) && !seekbar.isValueChanging()) {
-					seekbar.setValue(elapsed.toMillis() / duration.toMillis() * 100.0);
-				}
+
+		Platform.runLater(() -> {
+			String currentTimeText = Playable.format(elapsed);
+			currentTime.setText(currentTimeText);
+
+			if (!seekbar.isDisabled() && duration.greaterThan(Duration.ZERO) && !seekbar.isValueChanging()) {
+				seekbar.setValue(elapsed.toMillis() / duration.toMillis() * 100.0);
 			}
 		});
 
