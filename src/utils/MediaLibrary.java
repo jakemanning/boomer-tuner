@@ -2,12 +2,14 @@ package utils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import models.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MediaLibrary {
 	private static MediaLibrary instance = new MediaLibrary();
@@ -26,31 +28,36 @@ public class MediaLibrary {
 	}
 
 	public void importPath(Path folder) {
-		try {
-			Files.walk(folder, 5)
-					.forEach(path -> {
-						if (Song.accepts(path)) {
-							Song song = Song.from(path.toUri());
-							if (song != null && !songs.contains(song)) {
-								songs.add(song);
-								if (!artists.contains(song.getArtist())) {
-									artists.add(song.getArtist());
-								}
-								if (!albums.contains(song.getAlbum())) {
-									albums.add(song.getAlbum());
-								}
+		Task<Void> task = new Task<Void>() {
+			@Override
+			protected Void call() throws InterruptedException, IOException {
+				List<Path> paths = Files.walk(folder, 5).collect(Collectors.toList());
+				int size = paths.size();
+				for (int i = 0; i < size; i++) {
+					Path path = paths.get(i);
+					if (Song.accepts(path)) {
+						Song song = Song.from(path.toUri());
+						if (song != null && !songs.contains(song)) {
+							songs.add(song);
+							if (!artists.contains(song.getArtist())) {
+								artists.add(song.getArtist());
 							}
-						} else if (Video.accepts(path)) {
-							Video video = Video.from(path.toUri());
-							if (video != null && !videos.contains(video)) {
-								videos.add(video);
+							if (!albums.contains(song.getAlbum())) {
+								albums.add(song.getAlbum());
 							}
 						}
-					});
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+					} else if (Video.accepts(path)) {
+						Video video = Video.from(path.toUri());
+						if (video != null && !videos.contains(video)) {
+							videos.add(video);
+						}
+					}
+					updateProgress(i, size);
+				}
+				return null;
+			}
+		};
+		TaskRunner.run(task, "Importing Media...");
 	}
 
 	public void addPlaylist(List<Song> songs) {
