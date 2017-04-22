@@ -80,7 +80,7 @@ public class Song implements Category, Playable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(title, artist, track, length, uri, album);
+		return Objects.hash(title, artist.getName(), track, length, uri, album.getName());
 	}
 
 	@Override

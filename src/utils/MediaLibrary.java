@@ -33,8 +33,12 @@ public class MediaLibrary {
 							Song song = Song.from(path.toUri());
 							if (song != null && !songs.contains(song)) {
 								songs.add(song);
-								artists.add(song.getArtist());
-								albums.add(song.getAlbum());
+								if (!artists.contains(song.getArtist())) {
+									artists.add(song.getArtist());
+								}
+								if (!albums.contains(song.getAlbum())) {
+									albums.add(song.getAlbum());
+								}
 							}
 						} else if (Video.accepts(path)) {
 							Video video = Video.from(path.toUri());

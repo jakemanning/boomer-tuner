@@ -1,5 +1,8 @@
 package root;
 
+import artists.ArtistsController;
+import artists.ArtistsModel;
+import artists.ArtistsView;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -66,7 +69,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		lookupViews();
 
 		ObservableList<CategoryType> menuList = FXCollections.observableArrayList(CategoryType.Songs,
-				CategoryType.Albums, CategoryType.Playlists, CategoryType.Artists, CategoryType.Videos);
+				CategoryType.Playlists, CategoryType.Albums, CategoryType.Artists, CategoryType.Videos);
 		menu.setItems(menuList);
 
 		menu.getSelectionModel().selectedItemProperty().addListener(rootController.getMenuListener());
@@ -159,6 +162,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		case Albums:
 			break;
 		case Artists:
+			ArtistsModel model = new ArtistsModel();
+			newView = new ArtistsView(model, new ArtistsController(model));
 			break;
 		case Videos:
 			newView = new VideosView(new VideosController());

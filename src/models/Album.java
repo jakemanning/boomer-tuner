@@ -48,7 +48,7 @@ public class Album implements Category {
 	@Override
 	public int hashCode() {
 		int result = name.hashCode();
-		result = 31 * result + artist.hashCode();
+		result = 31 * result + artist.getName().hashCode();
 		result = 31 * result + songs.hashCode();
 		result = 31 * result + year;
 		return result;
