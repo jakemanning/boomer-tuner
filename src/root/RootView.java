@@ -138,13 +138,18 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		final MenuItem next = new MenuItem("Next");
 		next.setOnAction(e -> rootController.nextPressed());
 		next.setAccelerator(new KeyCodeCombination(KeyCode.RIGHT));
-		final MenuItem shuffle = new MenuItem("Toggle Shuffle");
+		final CheckMenuItem shuffle = new CheckMenuItem("Shuffle");
+		Player.instance().shuffleModeProperty().addListener((obs, old, val) -> shuffle.setSelected(val));
 		shuffle.setOnAction(e -> rootController.shufflePressed());
 		shuffle.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
-		final MenuItem loop = new MenuItem("Toggle Repeat");
+		final CheckMenuItem loop = new CheckMenuItem("Repeat");
+		Player.instance().loopModeProperty().addListener((obs, old, val) -> loop.setSelected(val));
 		loop.setOnAction(e -> rootController.loopPressed());
 		loop.setAccelerator(new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
-		controls.getItems().addAll(play, previous, next, shuffle, loop);
+		final CheckMenuItem crossfade = new CheckMenuItem("Crossfade");
+		Player.instance().crossfadeModeProperty().addListener((obs, old, val) -> crossfade.setSelected(val));
+		crossfade.setOnAction(e -> rootController.crossfadePressed());
+		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade);
 
 		menuBar.getMenus().addAll(file, controls);
 		setTop(menuBar);
@@ -258,5 +263,9 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		} else {
 			loop.setGraphic(loopImage);
 		}
+	}
+
+	@Override
+	public void crossfadeModeUpdated(boolean crossfade) {
 	}
 }

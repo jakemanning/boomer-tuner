@@ -78,4 +78,8 @@ public class RootController {
 	void loopPressed() {
 		Player.instance().toggleLoop();
 	}
+
+	void crossfadePressed() {
+		Player.instance().toggleCrossfade();
+	}
 }

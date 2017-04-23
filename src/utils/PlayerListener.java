@@ -18,4 +18,6 @@ public interface PlayerListener {
 	void shuffleModeUpdated(boolean shuffling);
 
 	void loopModeUpdated(boolean looping);
+
+	void crossfadeModeUpdated(boolean crossfade);
 }
