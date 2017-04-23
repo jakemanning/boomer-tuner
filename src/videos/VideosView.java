@@ -35,6 +35,9 @@ public class VideosView extends TableView<Video> implements CategoryView {
 		titleCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTitle()));
 		durationCol.setCellValueFactory(p -> p.getValue().durationProperty());
 
+		titleCol.prefWidthProperty().bind(widthProperty().multiply(0.7));
+		durationCol.prefWidthProperty().bind(widthProperty().multiply(0.3));
+
 		getSelectionModel().selectedItemProperty().addListener(videosController.selectionListener(getItems()));
 	}
 

@@ -175,13 +175,15 @@ public class Player {
 	public void previous() {
 		if (currentPlayer != null && currentPlayer.getCurrentTime().greaterThan(Duration.seconds(7))) {
 			currentPlayer.seek(Duration.ZERO);
-		} else {
+		} else if (currentPlayer != null) {
 			play(playQueue, previousIndex());
 		}
 	}
 
 	public void seek(double value) {
-		currentPlayer.seek(currentPlayer.getMedia().getDuration().multiply(value));
+		if (currentPlayer != null) {
+			currentPlayer.seek(currentPlayer.getMedia().getDuration().multiply(value));
+		}
 	}
 
 	public void next() {

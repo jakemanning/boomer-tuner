@@ -52,7 +52,7 @@
         </BorderPane>
     </bottom>
     <left>
-        <VBox prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="200.0" prefWidth="120.0" BorderPane.alignment="CENTER">
             <children>
                 <ListView fx:id="menu" prefHeight="576.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
             </children>
