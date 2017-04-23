@@ -40,7 +40,7 @@ public class AlbumsView extends SplitPane implements CategoryView {
 			detail.setPlaceholder(new Label("Choose a directory to view albums"));
 		}
 
-		detail.getColumns().remove(2); // remove album column
+		detail.getColumns().remove(3); // remove album column
 		model.selectedAlbumProperty().addListener((observable, oldValue, newValue) -> {
 			ObservableList<Song> items = MediaLibrary.instance().getSongs()
 					.filtered(song -> song.getAlbum().equals(newValue));
@@ -57,7 +57,7 @@ public class AlbumsView extends SplitPane implements CategoryView {
 		albums = new ListView<>();
 		detail = new SongsView(new SongsController());
 		getItems().addAll(albums, detail);
-		setDividerPositions(0.25f);
+		setDividerPositions(0.28f);
 	}
 
 	@Override

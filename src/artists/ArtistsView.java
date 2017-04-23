@@ -55,7 +55,7 @@ public class ArtistsView extends SplitPane implements CategoryView {
 		artists = new ListView<>();
 		detail = new SongsView(new SongsController());
 		getItems().addAll(artists, detail);
-		setDividerPositions(0.25f);
+		setDividerPositions(0.28f);
 	}
 
 	@Override
