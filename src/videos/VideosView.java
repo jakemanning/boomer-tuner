@@ -46,7 +46,7 @@ public class VideosView extends TableView<Video> implements CategoryView {
 
 	@Override
 	public void setRootModel(RootModel rootModel) {
-		rootModel.addPlaylistModeListener(newValue -> {
+		rootModel.setPlaylistModeListener(newValue -> {
 
         });
 	}

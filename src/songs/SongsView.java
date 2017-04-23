@@ -67,8 +67,8 @@ public class SongsView extends TableView<Song> implements CategoryView {
     }
 
     public void setRootModel(RootModel rootModel) {
-        rootModel.addPlaylistModeListener(this::playlistModeChanged);
-    }
+		rootModel.setPlaylistModeListener(this::playlistModeChanged);
+	}
 
     public void playlistModeChanged(boolean playlistMode) {
         if (playlistMode) {

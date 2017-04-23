@@ -9,8 +9,8 @@ public class RootModel {
     private boolean playlistMode = false;
     private boolean directorySelected = false;
     private CategoryType selectedCategory;
-    private List<PlaylistModeListener> playlistListeners = new ArrayList<>();
-    private List<SelectedCategoryListener> categoryListeners = new ArrayList<>();
+	private PlaylistModeListener playlistListener = null;
+	private List<SelectedCategoryListener> categoryListeners = new ArrayList<>();
 
     public boolean isPlaylistMode() {
         return playlistMode;
@@ -40,9 +40,10 @@ public class RootModel {
         categoryChanged();
     }
 
-    public void addPlaylistModeListener(PlaylistModeListener listener) {
-        playlistListeners.add(listener);
-    }
+	public void setPlaylistModeListener(PlaylistModeListener listener) {
+		playlistListener = listener;
+		playlistListener.playlistModeChanged(playlistMode);
+	}
 
     public void addSelectedCategoryListener(SelectedCategoryListener listener) {
         categoryListeners.add(listener);
@@ -55,8 +56,8 @@ public class RootModel {
     }
 
     private void playlistModeChanged() {
-        for (PlaylistModeListener listener : playlistListeners) {
-            listener.playlistModeChanged(playlistMode);
-        }
-    }
+		if (playlistListener != null) {
+			playlistListener.playlistModeChanged(playlistMode);
+		}
+	}
 }
