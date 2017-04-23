@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml">
+    <bottom>
+        <BorderPane fx:id="controlPane" maxHeight="100.0" minHeight="100.0" prefHeight="50.0" minWidth="600">
+            <left>
+                <HBox alignment="CENTER_LEFT" maxHeight="100.0" minHeight="100.0" prefHeight="100.0" maxWidth="150"
+                      minWidth="150">
+                    <VBox alignment="CENTER" maxHeight="100" minHeight="100" prefHeight="100">
+                        <ImageView fx:id="artwork" fitHeight="100.0" fitWidth="100" preserveRatio="true"/>
+                    </VBox>
+                </HBox>
+            </left>
+            <center>
+                <HBox alignment="CENTER" minWidth="300">
+                    <VBox alignment="CENTER" maxHeight="40" minHeight="40" prefHeight="40" minWidth="300"
+                          maxWidth="700">
+                        <HBox alignment="CENTER" maxHeight="20.0" minHeight="20.0" prefHeight="20.0">
+                            <Text fx:id="songTitle"/>
+                        </HBox>
+                        <HBox alignment="CENTER" maxHeight="20.0" minHeight="20.0" prefHeight="20.0">
+                            <Text fx:id="currentTime" text="0:00"/>
+                            <Slider fx:id="seekbar" prefWidth="500" HBox.hgrow="ALWAYS"/>
+                            <Text fx:id="songLength" text="0:00"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </center>
+            <bottom>
+                <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
+                    <Label fx:id="shuffle" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
+                    <Region minWidth="20.0" maxWidth="20.0"/>
+                    <Label fx:id="previous" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
+                    <Label fx:id="play" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
+                    <Label fx:id="next" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
+                    <Region minWidth="20.0" maxWidth="20.0"/>
+                    <Label fx:id="loop" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
+                </HBox>
+            </bottom>
+            <right>
+                <HBox alignment="CENTER_RIGHT" maxHeight="100.0" minHeight="100.0" prefHeight="100.0" maxWidth="150"
+                      minWidth="150">
+                    <VBox alignment="CENTER" maxHeight="100" minHeight="100" prefHeight="100">
+                        <Button fx:id="playlist" text="Create Playlist" translateX="-10" HBox.hgrow="NEVER"/>
+                    </VBox>
+                </HBox>
+            </right>
+        </BorderPane>
+    </bottom>
+    <left>
+        <VBox prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <ListView fx:id="menu" prefHeight="576.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
+            </children>
+        </VBox>
+    </left>
+</fx:root>

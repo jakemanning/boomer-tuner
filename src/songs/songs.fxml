@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<fx:root type="TableView" xmlns:fx="http://javafx.com/fxml" prefHeight="575.0" prefWidth="668.0">
+    <columns>
+        <TableColumn fx:id="trackCol" editable="false" prefWidth="50.0" text="Track"/>
+        <TableColumn fx:id="titleCol" editable="false" prefWidth="200.0" text="Title"/>
+        <TableColumn fx:id="artistCol" editable="false" prefWidth="200.0" text="Artist"/>
+        <TableColumn fx:id="albumCol" editable="false" prefWidth="200.0" text="Album"/>
+    </columns>
+</fx:root>
