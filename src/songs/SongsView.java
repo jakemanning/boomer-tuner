@@ -55,6 +55,11 @@ public class SongsView extends TableView<Song> implements CategoryView {
         artistCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getArtist()));
         albumCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getAlbum()));
 
+        trackCol.prefWidthProperty().bind(widthProperty().multiply(0.1));
+        titleCol.prefWidthProperty().bind(widthProperty().multiply(0.3));
+        artistCol.prefWidthProperty().bind(widthProperty().multiply(0.3));
+        albumCol.prefWidthProperty().bind(widthProperty().multiply(0.3));
+
         getSelectionModel().selectedItemProperty().addListener(songListener);
     }
 

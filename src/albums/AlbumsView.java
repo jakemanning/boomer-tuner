@@ -36,7 +36,7 @@ public class AlbumsView extends SplitPane implements CategoryView {
 	private void initializeDetailView() {
 		if (model.isDirectorySelected()){
 			detail.setPlaceholder(new Label("Select an album from the list"));
-		}else{
+		} else{
 			detail.setPlaceholder(new Label("Choose a directory to view albums"));
 		}
 
