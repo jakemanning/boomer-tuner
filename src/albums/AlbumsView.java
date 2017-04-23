@@ -62,10 +62,10 @@ public class AlbumsView extends SplitPane implements CategoryView {
 
 	@Override
 	public void setRootModel(RootModel rootModel) {
-		rootModel.addPlaylistModeListener(this::playlistModeChanged);
+		rootModel.setPlaylistModeListener(this::playlistModeChanged);
 	}
 
 	private void playlistModeChanged(boolean playlistMode) {
-
+		detail.playlistModeChanged(playlistMode);
 	}
 }

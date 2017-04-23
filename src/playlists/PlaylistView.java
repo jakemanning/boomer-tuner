@@ -60,15 +60,15 @@ public class PlaylistView extends SplitPane implements CategoryView {
         playlists = new ListView<>();
         detail = new SongsView(new SongsController());
         getItems().addAll(playlists, detail);
-        setDividerPositions(0.25f);
+        setDividerPositions(0.28f);
     }
 
     @Override
     public void setRootModel(RootModel rootModel) {
-        rootModel.addPlaylistModeListener(this::playlistModeChanged);
+        rootModel.setPlaylistModeListener(this::playlistModeChanged);
     }
 
     private void playlistModeChanged(boolean playlistMode) {
-
+        detail.playlistModeChanged(playlistMode);
     }
 }
