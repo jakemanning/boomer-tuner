@@ -1,5 +1,8 @@
 package root;
 
+import albums.AlbumsController;
+import albums.AlbumsModel;
+import albums.AlbumsView;
 import artists.ArtistsController;
 import artists.ArtistsModel;
 import artists.ArtistsView;
@@ -174,9 +177,13 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 			newView = new PlaylistView(playlistModel, new PlaylistController(playlistModel));
 			break;
 		case Albums:
+			AlbumsModel albumsModel = new AlbumsModel();
+			albumsModel.setDirectorySelected(rootModel.isDirectorySelected());
+			newView = new AlbumsView(albumsModel, new AlbumsController(albumsModel));
 			break;
 		case Artists:
 			ArtistsModel artistModel = new ArtistsModel();
+			artistModel.setDirectorySelected(rootModel.isDirectorySelected());
 			newView = new ArtistsView(artistModel, new ArtistsController(artistModel));
 			break;
 		case Videos:

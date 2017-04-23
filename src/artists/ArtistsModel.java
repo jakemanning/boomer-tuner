@@ -6,6 +6,15 @@ import models.Artist;
 
 public class ArtistsModel {
 	private ObjectProperty<Artist> selectedArtist = new SimpleObjectProperty<>();
+	private boolean directorySelected = false;
+
+	public void setDirectorySelected(boolean selected){
+		directorySelected = selected;
+	}
+
+	public boolean isDirectorySelected(){
+		return directorySelected;
+	}
 
 	public Artist getSelectedArtist() {
 		return selectedArtist.get();

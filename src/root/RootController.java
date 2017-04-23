@@ -61,6 +61,7 @@ public class RootController {
         } else {
             Path musicFolder = Paths.get(selectedDirectory.toURI());
 			MediaLibrary.instance().importPath(musicFolder);
+			rootModel.setDirectorySelection(true);
 		}
     }
 
@@ -76,7 +77,6 @@ public class RootController {
 			}
         };
 	}
-
 	void loopPressed() {
 		Player.instance().toggleLoop();
 	}

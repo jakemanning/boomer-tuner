@@ -7,6 +7,7 @@ import java.util.List;
 
 public class RootModel {
     private boolean playlistMode = false;
+    private boolean directorySelected = false;
     private CategoryType selectedCategory;
     private List<PlaylistModeListener> playlistListeners = new ArrayList<>();
     private List<SelectedCategoryListener> categoryListeners = new ArrayList<>();
@@ -18,6 +19,12 @@ public class RootModel {
     public void setPlaylistMode(boolean playlistMode) {
         this.playlistMode = playlistMode;
         playlistModeChanged();
+    }
+    public void setDirectorySelection(boolean selection){
+        directorySelected = selection;
+    }
+    public boolean isDirectorySelected(){
+        return directorySelected;
     }
 
     public void togglePlaylistMode() {

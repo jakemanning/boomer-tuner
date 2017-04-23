@@ -33,7 +33,11 @@ public class ArtistsView extends SplitPane implements CategoryView {
 	}
 
 	private void initializeDetailView() {
-		detail.setPlaceholder(new Label("Choose a directory to view artists"));
+		if(model.isDirectorySelected()){
+			detail.setPlaceholder(new Label("Select an artist from the list"));
+		}else {
+			detail.setPlaceholder(new Label("Choose a directory to view artists"));
+		}
 		detail.getColumns().remove(2); // remove artist column
 		model.selectedArtistProperty().addListener((observable, oldValue, newValue) -> {
 			ObservableList<Song> items = MediaLibrary.instance().getSongs()
