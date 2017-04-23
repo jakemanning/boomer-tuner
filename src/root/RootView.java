@@ -25,6 +25,9 @@ import javafx.util.Duration;
 import models.Playable;
 import models.Song;
 import models.Video;
+import playlists.PlaylistController;
+import playlists.PlaylistModel;
+import playlists.PlaylistView;
 import songs.SongsController;
 import songs.SongsView;
 import utils.*;
@@ -87,7 +90,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		play.setOnMouseClicked(e -> rootController.playPressed());
 		loop.setOnMouseClicked(e -> rootController.loopPressed());
 
-		playlist.setOnAction(e -> rootController.togglePlaylist());
+		playlist.setOnAction(e -> rootController.togglePlaylist(this));
 		seekbar.valueChangingProperty().addListener(rootController.seek(seekbar));
 	}
 
@@ -106,6 +109,10 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		seekbar = (Slider) lookup("#seekbar");
 		currentTime = (Text) lookup("#currentTime");
 		controlPane = (BorderPane) lookup("#controlPane");
+	}
+
+	public Button getPlaylist() {
+		return playlist;
 	}
 
 	private ImageView createScaledImage(Image img) {
@@ -163,12 +170,14 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 			newView = new SongsView(new SongsController());
 			break;
 		case Playlists:
+			PlaylistModel playlistModel = new PlaylistModel();
+			newView = new PlaylistView(playlistModel, new PlaylistController(playlistModel));
 			break;
 		case Albums:
 			break;
 		case Artists:
-			ArtistsModel model = new ArtistsModel();
-			newView = new ArtistsView(model, new ArtistsController(model));
+			ArtistsModel artistModel = new ArtistsModel();
+			newView = new ArtistsView(artistModel, new ArtistsController(artistModel));
 			break;
 		case Videos:
 			newView = new VideosView(new VideosController());
@@ -181,15 +190,21 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	}
 
 	@Override
-	public void newSong(Song song) {
+	public void newSong(final Song song) {
 		play.setGraphic(pauseImage);
 		artwork.setImage(song.getAlbum().getArtwork());
 		songLength.setText(song.getDuration());
-		songTitle.setText(song.getTitle());
+
+		final StringBuilder title = new StringBuilder(song.getTitle());
+
+		if (song.getArtist() != null) {
+			title.append(" - ").append(song.getArtist().getName());
+		}
+		songTitle.setText(title.toString());
 	}
 
 	@Override
-	public void newVideo(Video video) {
+	public void newVideo(final Video video) {
 		play.setGraphic(pauseImage);
 		songLength.setText(video.durationProperty().get());
 		songTitle.setText(video.getTitle());
@@ -197,7 +212,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		setVideoView(videoView);
 	}
 
-	private void setVideoView(MediaView videoView) {
+	private void setVideoView(final MediaView videoView) {
 		artwork.setImage(null);
 		VBox container = new VBox();
 		container.setBackground(new Background(new BackgroundFill(Paint.valueOf("black"), null, null)));
@@ -213,6 +228,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		widthProperty().addListener((o, old, w) -> videoView.setFitWidth(w.doubleValue() - menu.getWidth()));
 		heightProperty().addListener((o, old, h) -> videoView.setFitHeight(h.doubleValue() - controlPane.getHeight()));
 	}
+
+
 
 	@Override
 	public void playingStatusChanged(CategoryType type, MediaPlayer.Status status) {

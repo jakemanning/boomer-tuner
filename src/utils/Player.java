@@ -173,7 +173,7 @@ public class Player {
 	}
 
 	public void previous() {
-		if (currentPlayer.getCurrentTime().greaterThan(Duration.seconds(7))) {
+		if (currentPlayer != null && currentPlayer.getCurrentTime().greaterThan(Duration.seconds(7))) {
 			currentPlayer.seek(Duration.ZERO);
 		} else {
 			play(playQueue, previousIndex());
@@ -185,8 +185,10 @@ public class Player {
 	}
 
 	public void next() {
-		lastPlayed.addFirst(playQueue.get(currentIndex));
-		play(playQueue, nextIndex());
+		if (currentPlayer != null) {
+			lastPlayed.addFirst(playQueue.get(currentIndex));
+			play(playQueue, nextIndex());
+		}
 	}
 
 	public void addListener(PlayerListener listener) {

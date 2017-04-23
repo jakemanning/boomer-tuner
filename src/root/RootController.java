@@ -46,8 +46,10 @@ public class RootController {
 		Player.instance().next();
 	}
 
-    void togglePlaylist() {
+    void togglePlaylist(RootView rootView) {
         rootModel.togglePlaylistMode();
+
+        rootView.getPlaylist().setText(rootModel.isPlaylistMode() ? "Done" : "Create Playlist");
     }
 
     void chooseDirectory(Stage stage) {
