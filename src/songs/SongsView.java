@@ -4,14 +4,20 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import models.Album;
 import models.Artist;
+import models.Playlist;
 import models.Song;
 import root.RootModel;
+import utils.CategoryType;
 import utils.CategoryView;
 import utils.MediaLibrary;
 import utils.Player;
@@ -25,12 +31,14 @@ public class SongsView extends TableView<Song> implements CategoryView {
     private TableColumn<Song, String> titleCol;
     private TableColumn<Song, Artist> artistCol;
     private TableColumn<Song, Album> albumCol;
+    private RootModel rootModel;
     private ChangeListener<Song> songListener = (ov, oldValue, newValue) -> {
         if (newValue == null) {
             return; // If user selects new directory
         }
         Player.instance().playSongs(getItems(), getSelectionModel().getSelectedIndex());
     };
+
 
     public SongsView(SongsController controller) {
         songsController = controller;
@@ -46,11 +54,17 @@ public class SongsView extends TableView<Song> implements CategoryView {
 
 		setItems(MediaLibrary.instance().getSongs());
 
-        setPlaceholder(new Label("Choose a Directory to play music"));
+        setPlaceholder(new Label("Import media to view songs"));
         trackCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTrack()));
         titleCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTitle()));
         artistCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getArtist()));
         albumCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getAlbum()));
+
+		// Subtract 20 total to leave room for the scrollbar
+		trackCol.prefWidthProperty().bind(widthProperty().multiply(0.1).subtract(5));
+		titleCol.prefWidthProperty().bind(widthProperty().multiply(0.3).subtract(5));
+		artistCol.prefWidthProperty().bind(widthProperty().multiply(0.3).subtract(5));
+		albumCol.prefWidthProperty().bind(widthProperty().multiply(0.3).subtract(5));
 
         getSelectionModel().selectedItemProperty().addListener(songListener);
     }
@@ -64,8 +78,9 @@ public class SongsView extends TableView<Song> implements CategoryView {
     }
 
     public void setRootModel(RootModel rootModel) {
-        rootModel.addPlaylistModeListener(this::playlistModeChanged);
-    }
+		rootModel.setPlaylistModeListener(this::playlistModeChanged);
+        this.rootModel = rootModel;
+	}
 
     public void playlistModeChanged(boolean playlistMode) {
         if (playlistMode) {
@@ -74,11 +89,52 @@ public class SongsView extends TableView<Song> implements CategoryView {
         } else {
             ObservableList<Song> selectedCells = getSelectionModel().getSelectedItems();
             if (selectedCells.size() > 0) {
-                MediaLibrary.instance().addPlaylist(new ArrayList<>(selectedCells));
+                createPlaylistName(selectedCells);
             }
+        }
+    }
 
+    public void createPlaylistName(ObservableList<Song> selectedCells) {
+        Scene scene = new Scene(new Group());
+
+        TextField textField = new TextField ();
+        Button createButton = new Button("Create");
+
+        GridPane grid = new GridPane();
+        grid.setVgap(4);
+        grid.setHgap(10);
+        grid.setPadding(new Insets(5, 5, 5, 5));
+        grid.add(new Label("Playlist Name: "), 0, 0);
+        grid.add(textField, 1, 0);
+        grid.add(createButton, 2, 0);
+
+        Group root = (Group) scene.getRoot();
+        root.getChildren().add(grid);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Create Your Playlist");
+        stage.show();
+        stage.setOnCloseRequest(event -> {
             getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             getSelectionModel().selectedItemProperty().addListener(songListener);
-        }
+        });
+
+        createButton.setOnAction(e -> {
+            playlistCreated(textField.getText(), selectedCells, stage);
+        });
+
+        textField.setOnKeyPressed(ke -> {
+            if (ke.getCode().equals(KeyCode.ENTER)) {
+                playlistCreated(textField.getText(), selectedCells, stage);
+            }
+        });
+    }
+
+    public void playlistCreated(String text, ObservableList<Song> songs, Stage stage) {
+        Playlist playlist = MediaLibrary.instance().addPlaylist(text,new ArrayList<>(songs));
+        stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+        rootModel.setSelectedCategory(CategoryType.Playlists);
+        rootModel.playlistCreated(playlist);
     }
 }

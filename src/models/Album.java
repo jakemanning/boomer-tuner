@@ -2,6 +2,7 @@ package models;
 
 import javafx.embed.swing.SwingFXUtils;
 import org.jaudiotagger.tag.images.Artwork;
+import utils.Icon;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class Album implements Category {
 	@Override
 	public int hashCode() {
 		int result = name.hashCode();
-		result = 31 * result + artist.hashCode();
+		result = 31 * result + artist.getName().hashCode();
 		result = 31 * result + songs.hashCode();
 		result = 31 * result + year;
 		return result;
@@ -61,9 +62,9 @@ public class Album implements Category {
 	public javafx.scene.image.Image getArtwork() {
 		try {
 			return SwingFXUtils.toFXImage((BufferedImage) artwork.getImage(), null);
-		} catch (NullPointerException | IOException e) {
-			e.printStackTrace();
-			return null;
+		} catch (NullPointerException | IOException | IllegalArgumentException e) {
+			System.out.println("Failed to set artwork from music file");
+			return Icon.DEFAULT_ARTWORK.image();
 		}
 	}
 

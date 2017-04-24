@@ -14,4 +14,10 @@ public interface PlayerListener {
 	void playingStatusChanged(CategoryType type, MediaPlayer.Status status);
 	
 	void timeUpdated(Playable media, Duration elapsed, Duration duration);
+
+	void shuffleModeUpdated(boolean shuffling);
+
+	void loopModeUpdated(boolean looping);
+
+	void crossfadeModeUpdated(boolean crossfade);
 }

@@ -1,5 +1,6 @@
 package root;
 
+import models.Playlist;
 import utils.CategoryType;
 
 import java.util.ArrayList;
@@ -7,9 +8,10 @@ import java.util.List;
 
 public class RootModel {
     private boolean playlistMode = false;
+    private boolean directorySelected = false;
     private CategoryType selectedCategory;
-    private List<PlaylistModeListener> playlistListeners = new ArrayList<>();
-    private List<SelectedCategoryListener> categoryListeners = new ArrayList<>();
+	private PlaylistModeListener playlistListener = null;
+	private List<SelectedCategoryListener> categoryListeners = new ArrayList<>();
 
     public boolean isPlaylistMode() {
         return playlistMode;
@@ -18,6 +20,12 @@ public class RootModel {
     public void setPlaylistMode(boolean playlistMode) {
         this.playlistMode = playlistMode;
         playlistModeChanged();
+    }
+    public void setDirectorySelection(boolean selection){
+        directorySelected = selection;
+    }
+    public boolean isDirectorySelected(){
+        return directorySelected;
     }
 
     public void togglePlaylistMode() {
@@ -33,8 +41,16 @@ public class RootModel {
         categoryChanged();
     }
 
-    public void addPlaylistModeListener(PlaylistModeListener listener) {
-        playlistListeners.add(listener);
+	public void setPlaylistModeListener(PlaylistModeListener listener) {
+		playlistListener = listener;
+		playlistListener.playlistModeChanged(playlistMode);
+	}
+
+	public void playlistCreated(Playlist playlist) {
+        this.selectedCategory = CategoryType.Playlists;
+        for (SelectedCategoryListener listener: categoryListeners) {
+            listener.playlistCreated(playlist);
+        }
     }
 
     public void addSelectedCategoryListener(SelectedCategoryListener listener) {
@@ -48,8 +64,8 @@ public class RootModel {
     }
 
     private void playlistModeChanged() {
-        for (PlaylistModeListener listener : playlistListeners) {
-            listener.playlistModeChanged(playlistMode);
-        }
-    }
+		if (playlistListener != null) {
+			playlistListener.playlistModeChanged(playlistMode);
+		}
+	}
 }

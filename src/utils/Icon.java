@@ -17,7 +17,8 @@ public enum Icon {
 	LOOP_PRESSED ("res/playercontrols/loop_pressed.png"),
 	VOLUP ("res/playercontrols/volup.png"), 
 	PREVIOUS ("res/playercontrols/rewind.png"),
-	NEXT ("res/playercontrols/fastforward.png");
+	NEXT("res/playercontrols/fastforward.png"),
+	DEFAULT_ARTWORK("res/artwork.png");
 	
 	private Image image;
 	

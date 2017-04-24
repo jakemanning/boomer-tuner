@@ -42,4 +42,10 @@ public class Artist implements Category {
 	public String getName() {
 		return name;
 	}
+
+	public List<Song> getSongs() {
+		List<Song> songs = new ArrayList<>();
+		albums.forEach(alb -> songs.addAll(alb.getSongs()));
+		return songs;
+	}
 }

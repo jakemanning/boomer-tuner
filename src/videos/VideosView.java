@@ -1,7 +1,6 @@
 package videos;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -10,7 +9,6 @@ import models.Video;
 import root.RootModel;
 import utils.CategoryView;
 import utils.MediaLibrary;
-import utils.Player;
 
 import java.io.IOException;
 
@@ -18,12 +16,6 @@ public class VideosView extends TableView<Video> implements CategoryView {
 	private VideosController videosController;
 	private TableColumn<Video, String> titleCol;
 	private TableColumn<Video, String> durationCol;
-	private ChangeListener<Video> selectionListener = (ov, oldValue, newValue) -> {
-		if (newValue == null) {
-			return; // If user selects new directory
-		}
-		Player.instance().playVideos(getItems(), getSelectionModel().getSelectedIndex());
-	};
 
 	public VideosView(VideosController controller) {
 		videosController = controller;
@@ -41,9 +33,13 @@ public class VideosView extends TableView<Video> implements CategoryView {
 
 		setPlaceholder(new Label("Choose a Directory to play videos"));
 		titleCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTitle()));
-		durationCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getDuration()));
+		durationCol.setCellValueFactory(p -> p.getValue().durationProperty());
 
-		getSelectionModel().selectedItemProperty().addListener(selectionListener);
+		// Subtract 20 total to leave room for the scrollbar
+		titleCol.prefWidthProperty().bind(widthProperty().multiply(0.7).subtract(10));
+		durationCol.prefWidthProperty().bind(widthProperty().multiply(0.3).subtract(10));
+
+		getSelectionModel().selectedItemProperty().addListener(videosController.selectionListener(getItems()));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -54,7 +50,7 @@ public class VideosView extends TableView<Video> implements CategoryView {
 
 	@Override
 	public void setRootModel(RootModel rootModel) {
-		rootModel.addPlaylistModeListener(newValue -> {
+		rootModel.setPlaylistModeListener(newValue -> {
 
         });
 	}

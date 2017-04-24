@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Text?>
 <fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml">
     <bottom>
-        <BorderPane maxHeight="100.0" minHeight="100.0" prefHeight="50.0" minWidth="600">
+        <BorderPane fx:id="controlPane" maxHeight="100.0" minHeight="100.0" prefHeight="50.0" minWidth="600">
             <left>
                 <HBox alignment="CENTER_LEFT" maxHeight="100.0" minHeight="100.0" prefHeight="100.0" maxWidth="150"
                       minWidth="150">
@@ -46,15 +46,13 @@
                       minWidth="150">
                     <VBox alignment="CENTER" maxHeight="100" minHeight="100" prefHeight="100">
                         <Button fx:id="playlist" text="Create Playlist" translateX="-10" HBox.hgrow="NEVER"/>
-                        <ToggleButton fx:id="shuffleButton" text="Shuffle" translateX="-10" translateY="10"
-                                      HBox.hgrow="NEVER"/>
                     </VBox>
                 </HBox>
             </right>
         </BorderPane>
     </bottom>
     <left>
-        <VBox prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="200.0" prefWidth="120.0" BorderPane.alignment="CENTER">
             <children>
                 <ListView fx:id="menu" prefHeight="576.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
             </children>

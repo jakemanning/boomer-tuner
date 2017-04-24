@@ -6,10 +6,11 @@ import java.util.Objects;
 
 public class Playlist implements Category {
 	private String name;
-	private List<Song> songs = new ArrayList<>();
+	private List<Playable> items = new ArrayList<>();
 
-	public Playlist(List<Song> songs) {
-		this.songs.addAll(songs);
+	public Playlist(final String name, List<? extends Playable> items) {
+		this.name = name;
+		this.items.addAll(items);
 	}
 
 	@Override
@@ -21,13 +22,13 @@ public class Playlist implements Category {
 
 		Playlist playlist = (Playlist) o;
 
-		return Objects.equals(name, playlist.name) && Objects.equals(songs, playlist.songs);
+		return Objects.equals(name, playlist.name) && Objects.equals(items, playlist.items);
 	}
 
 	@Override
 	public int hashCode() {
 		int result = name.hashCode();
-		result = 31 * result + songs.hashCode();
+		result = 31 * result + items.hashCode();
 		return result;
 	}
 
@@ -36,7 +37,9 @@ public class Playlist implements Category {
 		return name;
 	}
 
-	public List<Song> getSongs() {
-		return songs;
+	public String getName() { return name; }
+
+	public List<Playable> getItems() {
+		return items;
 	}
 }

@@ -1,11 +1,6 @@
 package models;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Path;
-import java.util.Objects;
-
+import javafx.util.Duration;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -16,13 +11,17 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.images.Artwork;
 
-import javafx.util.Duration;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Path;
+import java.util.Objects;
 
 public class Song implements Category, Playable {
 	private final String title;
 	private final Artist artist;
 	private final int track;
-	private final Integer length;
+	private final int length;
 	private final URI uri;
 	private final Album album;
 
@@ -82,7 +81,7 @@ public class Song implements Category, Playable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(title, artist, track, length, uri, album);
+		return Objects.hash(title, artist.getName(), track, length, uri, album.getName());
 	}
 
 	@Override
@@ -107,32 +106,10 @@ public class Song implements Category, Playable {
 	}
 
 	public String getDuration() {
-		Integer minutes = (int) (length / 60.0);
-		String minutesOutput = "00";
-		if (minutes != 0) {
-			minutesOutput = minutes.toString();
-		}
-		Integer seconds = (int) (length % 60);
-		String secondsOutput = seconds.toString();
-		if (seconds < 10) {
-			secondsOutput = "0" + seconds;
-		}
-		return (minutesOutput + ":" + secondsOutput);
+		return Playable.format(Duration.seconds(length));
 	}
 
 	public URI getUri() {
 		return uri;
-	}
-
-	public String format(Duration elapsed) {
-		int secondsElapsed = (int) Math.floor(elapsed.toSeconds());
-		if (secondsElapsed >= 3600) {
-			return String.format("%d:%02d:%02d", secondsElapsed / 3600, (secondsElapsed % 3600) / 60,
-					secondsElapsed % 60);
-		} else if (secondsElapsed >= 600) {
-			return String.format("%02d:%02d", (secondsElapsed % 3600) / 60, secondsElapsed % 60);
-		} else {
-			return String.format("%2d:%02d", (secondsElapsed % 3600) / 60, secondsElapsed % 60);
-		}
 	}
 }
