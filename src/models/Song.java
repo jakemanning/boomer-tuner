@@ -21,7 +21,7 @@ public class Song implements Category, Playable {
 	private final String title;
 	private final Artist artist;
 	private final int track;
-	private final Integer length;
+	private final int length;
 	private final URI uri;
 	private final Album album;
 

@@ -55,13 +55,13 @@ public class Video implements Category, Playable {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Video video = (Video) o;
-		return Objects.equals(title, video.title) && Objects.equals(duration.get(), video.duration.get())
-				&& Objects.equals(uri, video.uri);
+		return Objects.equals(title, video.title) &&
+				Objects.equals(uri, video.uri);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(title, duration.get(), uri);
+		return Objects.hash(title, uri);
 	}
 
 	@Override
