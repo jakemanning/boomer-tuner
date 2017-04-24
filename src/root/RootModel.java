@@ -2,6 +2,7 @@ package root;
 
 import models.Playlist;
 import utils.CategoryType;
+import utils.DirectoryListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ public class RootModel {
     private boolean directorySelected = false;
     private CategoryType selectedCategory;
 	private PlaylistModeListener playlistListener = null;
+	private List<DirectoryListener> directoryListeners = new ArrayList<>();
 	private List<SelectedCategoryListener> categoryListeners = new ArrayList<>();
 
     public boolean isPlaylistMode() {
@@ -23,6 +25,11 @@ public class RootModel {
     }
     public void setDirectorySelection(boolean selection){
         directorySelected = selection;
+        directorySelectionChanged();
+    }
+    public void addDirectoryListener(DirectoryListener listener){
+        directoryListeners.add(listener);
+        directorySelectionChanged();
     }
     public boolean isDirectorySelected(){
         return directorySelected;
@@ -68,4 +75,9 @@ public class RootModel {
 			playlistListener.playlistModeChanged(playlistMode);
 		}
 	}
+	private  void directorySelectionChanged(){
+        for(DirectoryListener listener : directoryListeners){
+            listener.directorySet(directorySelected);
+        }
+    }
 }

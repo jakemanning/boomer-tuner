@@ -10,15 +10,16 @@ import root.RootModel;
 import songs.SongsController;
 import songs.SongsView;
 import utils.CategoryView;
+import utils.DirectoryListener;
 import utils.MediaLibrary;
 
-public class AlbumsView extends SplitPane implements CategoryView {
+public class AlbumsView extends SplitPane implements CategoryView, DirectoryListener {
 	private final AlbumsModel model;
 	private final AlbumsController controller;
 	private ListView<Album> albums;
 	private SongsView detail;
 
-	public AlbumsView(AlbumsModel model, AlbumsController controller) {
+	public AlbumsView(AlbumsModel model, AlbumsController controller, RootModel rootModel) {
 		this.model = model;
 		this.controller = controller;
 
@@ -26,6 +27,8 @@ public class AlbumsView extends SplitPane implements CategoryView {
 
 		initializeAlbums();
 		initializeDetailView();
+
+		rootModel.addDirectoryListener(this::directorySet);
 	}
 
 	private void initializeAlbums() {
@@ -34,12 +37,7 @@ public class AlbumsView extends SplitPane implements CategoryView {
 	}
 
 	private void initializeDetailView() {
-		if (model.isDirectorySelected() && MediaLibrary.instance().getAlbums().size() > 0){
-			detail.setPlaceholder(new Label("Select an album from the list"));
-		} else {
-			detail.setPlaceholder(new Label("Import media to view albums"));
-		}
-
+		detail.setPlaceholder(new Label("Import media to view albums"));
 		detail.getColumns().remove(3); // remove album column
 		model.selectedAlbumProperty().addListener((observable, oldValue, newValue) -> {
 			ObservableList<Song> items = MediaLibrary.instance().getSongs()
@@ -67,5 +65,12 @@ public class AlbumsView extends SplitPane implements CategoryView {
 
 	private void playlistModeChanged(boolean playlistMode) {
 		detail.playlistModeChanged(playlistMode);
+	}
+
+	@Override
+	public void directorySet(boolean set) {
+		if(set) {
+			detail.setPlaceholder(new Label("Select an album from the list"));
+		}
 	}
 }

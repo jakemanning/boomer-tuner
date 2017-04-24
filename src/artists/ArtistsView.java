@@ -10,21 +10,23 @@ import root.RootModel;
 import songs.SongsController;
 import songs.SongsView;
 import utils.CategoryView;
+import utils.DirectoryListener;
 import utils.MediaLibrary;
 
-public class ArtistsView extends SplitPane implements CategoryView {
+public class ArtistsView extends SplitPane implements CategoryView, DirectoryListener {
 	private final ArtistsModel model;
 	private final ArtistsController controller;
 	private ListView<Artist> artists;
 	private SongsView detail;
 
-	public ArtistsView(ArtistsModel model, ArtistsController controller) {
+	public ArtistsView(ArtistsModel model, ArtistsController controller, RootModel rootModel) {
 		this.model = model;
 		this.controller = controller;
 		initializeViews();
 
 		initializeArtists();
 		initializeDetailView();
+		rootModel.addDirectoryListener(this::directorySet);
 	}
 
 	private void initializeArtists() {
@@ -65,5 +67,12 @@ public class ArtistsView extends SplitPane implements CategoryView {
 
 	private void playlistModeChanged(boolean playlistMode) {
 		detail.playlistModeChanged(playlistMode);
+	}
+
+	@Override
+	public void directorySet(boolean set) {
+		if(set) {
+			detail.setPlaceholder(new Label("Select an artist from the list"));
+		}
 	}
 }
