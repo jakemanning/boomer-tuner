@@ -1,17 +1,10 @@
 package root;
 
-import albums.AlbumsController;
-import albums.AlbumsModel;
-import albums.AlbumsView;
-import artists.ArtistsController;
-import artists.ArtistsModel;
-import artists.ArtistsView;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,14 +22,10 @@ import models.Playable;
 import models.Playlist;
 import models.Song;
 import models.Video;
-import playlists.PlaylistController;
-import playlists.PlaylistModel;
-import playlists.PlaylistView;
-import songs.SongsController;
-import songs.SongsView;
-import utils.*;
-import videos.VideosController;
-import videos.VideosView;
+import utils.CategoryType;
+import utils.Icon;
+import utils.Player;
+import utils.PlayerListener;
 
 import java.io.IOException;
 
@@ -168,44 +157,12 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 
 	@Override
 	public void selectedCategoryChanged(CategoryType value) {
-		CategoryView newView = null;
-		switch (value) {
-		case Songs:
-			newView = new SongsView(new SongsController());
-			break;
-		case Playlists:
-			PlaylistModel playlistModel = new PlaylistModel();
-			newView = new PlaylistView(playlistModel, new PlaylistController(playlistModel));
-			break;
-		case Albums:
-			AlbumsModel albumsModel = new AlbumsModel();
-			newView = new AlbumsView(albumsModel, new AlbumsController(albumsModel), rootModel);
-			break;
-		case Artists:
-			ArtistsModel artistModel = new ArtistsModel();
-			newView = new ArtistsView(artistModel, new ArtistsController(artistModel), rootModel);
-			break;
-		case Videos:
-			newView = new VideosView(new VideosController());
-			break;
-		}
-		if (newView != null) {
-			newView.setRootModel(rootModel);
-			setCenter((Node) newView);
-		}
+		rootController.updateCategoryView(this, value);
 	}
-
+	@Override
 	public void playlistCreated(Playlist playlist) {
-		PlaylistModel playlistModel = new PlaylistModel();
-		playlistModel.setDirectorySelected(rootModel.isDirectorySelected());
-		playlistModel.setSelectedPlaylist(playlist);
-		CategoryView newView = new PlaylistView(playlistModel, new PlaylistController(playlistModel));
-		setCenter((Node) newView);
-		menu.getSelectionModel().selectedItemProperty().removeListener(rootController.getMenuListener());
-		menu.getSelectionModel().select(CategoryType.Playlists);
-		menu.getSelectionModel().selectedItemProperty().addListener(rootController.getMenuListener());
+		rootController.createPlaylist(this, menu, playlist);
 	}
-
 	@Override
 	public void newSong(final Song song) {
 		play.setGraphic(pauseImage);

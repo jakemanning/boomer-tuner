@@ -1,14 +1,31 @@
 package root;
 
+import albums.AlbumsController;
+import albums.AlbumsModel;
+import albums.AlbumsView;
+import artists.ArtistsController;
+import artists.ArtistsModel;
+import artists.ArtistsView;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.Node;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import models.Playlist;
+import playlists.PlaylistController;
+import playlists.PlaylistModel;
+import playlists.PlaylistView;
+import songs.SongsController;
+import songs.SongsView;
 import utils.CategoryType;
+import utils.CategoryView;
 import utils.MediaLibrary;
 import utils.Player;
+import videos.VideosController;
+import videos.VideosView;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -82,5 +99,44 @@ public class RootController {
 
 	void crossfadePressed() {
 		Player.instance().toggleCrossfade();
+	}
+
+	public void updateCategoryView(RootView view, CategoryType value) {
+		CategoryView newView = null;
+		switch (value) {
+			case Songs:
+				newView = new SongsView(new SongsController());
+				break;
+			case Playlists:
+				PlaylistModel playlistModel = new PlaylistModel();
+				newView = new PlaylistView(playlistModel, new PlaylistController(playlistModel));
+				break;
+			case Albums:
+				AlbumsModel albumsModel = new AlbumsModel();
+				newView = new AlbumsView(albumsModel, new AlbumsController(albumsModel), rootModel);
+				break;
+			case Artists:
+				ArtistsModel artistModel = new ArtistsModel();
+				newView = new ArtistsView(artistModel, new ArtistsController(artistModel), rootModel);
+				break;
+			case Videos:
+				newView = new VideosView(new VideosController());
+				break;
+		}
+		if (newView != null) {
+			newView.setRootModel(rootModel);
+			view.setCenter((Node) newView);
+		}
+	}
+
+	public void createPlaylist(RootView rootView, ListView<CategoryType> menu, Playlist playlist) {
+		PlaylistModel playlistModel = new PlaylistModel();
+		playlistModel.setDirectorySelected(rootModel.isDirectorySelected());
+		playlistModel.setSelectedPlaylist(playlist);
+		CategoryView newView = new PlaylistView(playlistModel, new PlaylistController(playlistModel));
+		rootView.setCenter((Node) newView);
+		menu.getSelectionModel().selectedItemProperty().removeListener(getMenuListener());
+		menu.getSelectionModel().select(CategoryType.Playlists);
+		menu.getSelectionModel().selectedItemProperty().addListener(getMenuListener());
 	}
 }
