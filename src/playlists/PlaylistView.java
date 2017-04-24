@@ -45,15 +45,23 @@ public class PlaylistView extends SplitPane implements CategoryView {
         }
 
         model.selectedPlaylistProperty().addListener((observable, oldValue, newValue) -> {
-            ObservableList<Song> items = FXCollections.observableArrayList();
-            newValue.getItems().forEach(playable -> {
-                items.add((Song)playable);
-            });
-            detail.setItems(items);
+            setItems(newValue);
         });
+
         if (model.getSelectedPlaylist() == null) {
             detail.setItems(null);
+        } else {
+            setItems(model.getSelectedPlaylist());
         }
+    }
+
+    private void setItems(Playlist playlist) {
+        playlists.getSelectionModel().select(playlist);
+        ObservableList<Song> items = FXCollections.observableArrayList();
+        playlist.getItems().forEach(playable -> {
+            items.add((Song)playable);
+        });
+        detail.setItems(items);
     }
 
     private void initializeViews() {

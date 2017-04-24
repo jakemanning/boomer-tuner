@@ -1,5 +1,6 @@
 package root;
 
+import models.Playlist;
 import utils.CategoryType;
 
 import java.util.ArrayList;
@@ -44,6 +45,13 @@ public class RootModel {
 		playlistListener = listener;
 		playlistListener.playlistModeChanged(playlistMode);
 	}
+
+	public void playlistCreated(Playlist playlist) {
+        this.selectedCategory = CategoryType.Playlists;
+        for (SelectedCategoryListener listener: categoryListeners) {
+            listener.playlistCreated(playlist);
+        }
+    }
 
     public void addSelectedCategoryListener(SelectedCategoryListener listener) {
         categoryListeners.add(listener);

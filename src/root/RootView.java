@@ -26,6 +26,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import models.Playable;
+import models.Playlist;
 import models.Song;
 import models.Video;
 import playlists.PlaylistController;
@@ -195,6 +196,17 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 			newView.setRootModel(rootModel);
 			setCenter((Node) newView);
 		}
+	}
+
+	public void playlistCreated(Playlist playlist) {
+		PlaylistModel playlistModel = new PlaylistModel();
+		playlistModel.setDirectorySelected(rootModel.isDirectorySelected());
+		playlistModel.setSelectedPlaylist(playlist);
+		CategoryView newView = new PlaylistView(playlistModel, new PlaylistController(playlistModel));
+		setCenter((Node) newView);
+		menu.getSelectionModel().selectedItemProperty().removeListener(rootController.getMenuListener());
+		menu.getSelectionModel().select(CategoryType.Playlists);
+		menu.getSelectionModel().selectedItemProperty().addListener(rootController.getMenuListener());
 	}
 
 	@Override

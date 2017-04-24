@@ -60,9 +60,10 @@ public class MediaLibrary {
 		TaskRunner.run(task, "Importing Media...");
 	}
 
-	public void addPlaylist(String name, List<? extends Playable> items) {
+	public Playlist addPlaylist(String name, List<? extends Playable> items) {
 		Playlist playlist = new Playlist(name, items);
 		playlists.add(playlist);
+		return playlist;
 	}
 
 	public ObservableList<Song> getSongs() {
