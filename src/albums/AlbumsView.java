@@ -34,10 +34,10 @@ public class AlbumsView extends SplitPane implements CategoryView {
 	}
 
 	private void initializeDetailView() {
-		if (model.isDirectorySelected()){
+		if (model.isDirectorySelected() && MediaLibrary.instance().getAlbums().size() > 0){
 			detail.setPlaceholder(new Label("Select an album from the list"));
-		} else{
-			detail.setPlaceholder(new Label("Choose a directory to view albums"));
+		} else {
+			detail.setPlaceholder(new Label("Import media to view albums"));
 		}
 
 		detail.getColumns().remove(3); // remove album column

@@ -174,6 +174,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 			break;
 		case Playlists:
 			PlaylistModel playlistModel = new PlaylistModel();
+			playlistModel.setDirectorySelected(rootModel.isDirectorySelected());
 			newView = new PlaylistView(playlistModel, new PlaylistController(playlistModel));
 			break;
 		case Albums:

@@ -1,5 +1,6 @@
 package models;
 
+import javafx.util.Duration;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -105,17 +106,7 @@ public class Song implements Category, Playable {
 	}
 
 	public String getDuration() {
-		Integer minutes = (int) (length / 60.0);
-		String minutesOutput = "00";
-		if (minutes != 0) {
-			minutesOutput = minutes.toString();
-		}
-		Integer seconds = (int) (length % 60);
-		String secondsOutput = seconds.toString();
-		if (seconds < 10) {
-			secondsOutput = "0" + seconds;
-		}
-		return (minutesOutput + ":" + secondsOutput);
+		return Playable.format(Duration.seconds(length));
 	}
 
 	public URI getUri() {

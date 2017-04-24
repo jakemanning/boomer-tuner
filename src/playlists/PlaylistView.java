@@ -38,8 +38,11 @@ public class PlaylistView extends SplitPane implements CategoryView {
     }
 
     private void initializeDetailView() {
-        detail.setPlaceholder(new Label("Select a playlist from the list"));
-        detail.getColumns().remove(2); // remove artist column
+        if (model.isDirectorySelected() && MediaLibrary.instance().getPlaylists().size() > 0){
+            detail.setPlaceholder(new Label("Select a playlist from the list"));
+        } else{
+            detail.setPlaceholder(new Label("Create a playlist to view playlists"));
+        }
 
         model.selectedPlaylistProperty().addListener((observable, oldValue, newValue) -> {
             ObservableList<Song> items = FXCollections.observableArrayList();

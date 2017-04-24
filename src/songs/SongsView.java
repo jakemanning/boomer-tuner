@@ -49,7 +49,7 @@ public class SongsView extends TableView<Song> implements CategoryView {
 
 		setItems(MediaLibrary.instance().getSongs());
 
-        setPlaceholder(new Label("Choose a Directory to play music"));
+        setPlaceholder(new Label("Import media to view songs"));
         trackCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTrack()));
         titleCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTitle()));
         artistCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getArtist()));
@@ -84,8 +84,6 @@ public class SongsView extends TableView<Song> implements CategoryView {
             if (selectedCells.size() > 0) {
                 createPlaylistName(selectedCells);
             }
-
-
         }
     }
 

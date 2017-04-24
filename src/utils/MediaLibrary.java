@@ -45,7 +45,7 @@ public class MediaLibrary {
 							if (!albums.contains(song.getAlbum())) {
 								albums.add(song.getAlbum());
 							}
-						}
+				 		}
 					} else if (Video.accepts(path)) {
 						Video video = Video.from(path.toUri());
 						if (video != null && !videos.contains(video)) {
