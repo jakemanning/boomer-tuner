@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.CacheHint;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,19 +35,24 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private RootController rootController;
 	private Button playlist;
 	private ListView<CategoryType> menu;
+	private Label volDown;
+	private Slider volSlider;
+	private Label volUp;
 	private Label shuffle;
 	private Label previous;
 	private Label play;
 	private Label next;
 	private Label loop;
-	private final ImageView shuffleImage = createScaledImage(Icon.SHUFFLE.image());
-    private final ImageView shufflePressedImage = createScaledImage(Icon.SHUFFLE_PRESSED.image());
-	private final ImageView previousImage = createScaledImage(Icon.PREVIOUS.image());
-	private final ImageView pauseImage = createScaledImage(Icon.PAUSE.image());
-	private final ImageView playImage = createScaledImage(Icon.PLAY.image());
-	private final ImageView nextImage = createScaledImage(Icon.NEXT.image());
-	private final ImageView loopImage = createScaledImage(Icon.LOOP.image());
-    private final ImageView loopPressedImage = createScaledImage(Icon.LOOP_PRESSED.image());
+	private final ImageView volDownImage = createScaledImage(Icon.VOLDOWN.image(), 30);
+	private final ImageView volUpImage = createScaledImage(Icon.VOLUP.image(), 30);
+	private final ImageView shuffleImage = createScaledImage(Icon.SHUFFLE.image(), 40);
+    private final ImageView shufflePressedImage = createScaledImage(Icon.SHUFFLE_PRESSED.image(), 40);
+	private final ImageView previousImage = createScaledImage(Icon.PREVIOUS.image(), 40);
+	private final ImageView pauseImage = createScaledImage(Icon.PAUSE.image(), 40);
+	private final ImageView playImage = createScaledImage(Icon.PLAY.image(), 40);
+	private final ImageView nextImage = createScaledImage(Icon.NEXT.image(), 40);
+	private final ImageView loopImage = createScaledImage(Icon.LOOP.image(), 40);
+    private final ImageView loopPressedImage = createScaledImage(Icon.LOOP_PRESSED.image(), 40);
 	private ImageView artwork;
 	private Text songTitle;
 	private Text songLength;
@@ -71,6 +77,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		menu.getSelectionModel().selectedItemProperty().addListener(rootController.getMenuListener());
 		menu.getSelectionModel().select(CategoryType.Songs);
 
+		volDown.setGraphic(volDownImage);
+		volUp.setGraphic(volUpImage);
 		shuffle.setGraphic(shuffleImage);
 		previous.setGraphic(previousImage);
 		play.setGraphic(playImage);
@@ -91,6 +99,9 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private void lookupViews() {
 		playlist = (Button) lookup("#playlist");
 		menu = (ListView<CategoryType>) lookup("#menu");
+		volDown = (Label) lookup("#volumeDown");
+		volSlider = (Slider) lookup("#volumeSlider");
+		volUp = (Label) lookup("#volumeUp");
 		shuffle = (Label) lookup("#shuffle");
 		previous = (Label) lookup("#previous");
 		play = (Label) lookup("#play");
@@ -104,13 +115,13 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		controlPane = (BorderPane) lookup("#controlPane");
 	}
 
-	public Button getPlaylist() {
+	public Button getPlaylistButton() {
 		return playlist;
 	}
 
-	private ImageView createScaledImage(Image img) {
+	private ImageView createScaledImage(Image img, int width) {
 		ImageView iView = new ImageView(img);
-		iView.setFitWidth(40);
+		iView.setFitWidth(width);
 		iView.setPreserveRatio(true);
 		return iView;
 	}
@@ -167,6 +178,11 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	public void newSong(final Song song) {
 		play.setGraphic(pauseImage);
 		artwork.setImage(song.getAlbum().getArtwork());
+		artwork.setSmooth(true);
+		artwork.setCache(true);
+		artwork.setCacheHint(CacheHint.QUALITY);
+		artwork.setPreserveRatio(true);
+		artwork.setFitWidth(100);
 		songLength.setText(song.getDuration());
 
 		final StringBuilder title = new StringBuilder(song.getTitle());

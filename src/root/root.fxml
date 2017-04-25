@@ -11,7 +11,7 @@
                 <HBox alignment="CENTER_LEFT" maxHeight="100.0" minHeight="100.0" prefHeight="100.0" maxWidth="150"
                       minWidth="150">
                     <VBox alignment="CENTER" maxHeight="100" minHeight="100" prefHeight="100">
-                        <ImageView fx:id="artwork" fitHeight="100.0" fitWidth="100" preserveRatio="true"/>
+                        <ImageView fx:id="artwork" />
                     </VBox>
                 </HBox>
             </left>
@@ -32,6 +32,11 @@
             </center>
             <bottom>
                 <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
+                    <Label fx:id="volumeDown" minHeight="40.0" maxHeight="40.0" minWidth="30" maxWidth="30" HBox.hgrow="NEVER"/>
+                    <Slider fx:id="volumeSlider" prefWidth="120" HBox.hgrow="NEVER"/>
+                    <Label fx:id="volumeUp" minHeight="40.0" maxHeight="40.0" minWidth="30" maxWidth="30" HBox.hgrow="NEVER"/>
+                    <Region minWidth="20.0" maxWidth="20.0"/>
+
                     <Label fx:id="shuffle" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
                     <Region minWidth="20.0" maxWidth="20.0"/>
                     <Label fx:id="previous" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
@@ -39,6 +44,7 @@
                     <Label fx:id="next" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
                     <Region minWidth="20.0" maxWidth="20.0"/>
                     <Label fx:id="loop" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
+                    <Region minWidth="200.0" maxWidth="200.0"/>
                 </HBox>
             </bottom>
             <right>
