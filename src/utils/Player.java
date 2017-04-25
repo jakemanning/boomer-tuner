@@ -5,7 +5,9 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -27,6 +29,7 @@ public class Player {
 	private BooleanProperty shuffleMode = new SimpleBooleanProperty(false);
 	private BooleanProperty loopMode = new SimpleBooleanProperty(false);
 	private BooleanProperty crossfadeMode = new SimpleBooleanProperty(false);
+	private DoubleProperty volume = new SimpleDoubleProperty(1.00);
 	private Random random = new Random();
 
 	private Player() {
@@ -63,6 +66,7 @@ public class Player {
 		currentPlayer.currentTimeProperty().addListener(ov -> timeUpdated());
 		currentPlayer.currentTimeProperty().addListener(crossfadeTimeListener());
 		currentPlayer.setOnReady(this::timeUpdated);
+		currentPlayer.volumeProperty().bind(volume);
 	}
 
 	private void play(List<? extends Playable> items, int index) {
@@ -210,6 +214,18 @@ public class Player {
 
 	public BooleanProperty crossfadeModeProperty() {
 		return crossfadeMode;
+	}
+
+	public double getVolume() {
+		return volume.get();
+	}
+
+	public DoubleProperty volumeProperty() {
+		return volume;
+	}
+
+	public void setVolume(double volume) {
+		this.volume.set(volume);
 	}
 
 	private void playingStatusChanged(MediaPlayer.Status status) {

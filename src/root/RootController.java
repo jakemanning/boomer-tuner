@@ -101,6 +101,24 @@ public class RootController {
 		Player.instance().toggleCrossfade();
 	}
 
+	public void volDownPressed() {
+		double currentVolume = Player.instance().getVolume();
+		if (currentVolume >= 0.0625) {
+			Player.instance().setVolume(currentVolume - 0.0625);
+		} else {
+			Player.instance().setVolume(0);
+		}
+	}
+
+	public void volUpPressed() {
+		double currentVolume = Player.instance().getVolume();
+		if (currentVolume <= 0.9375) {
+			Player.instance().setVolume(currentVolume + 0.0625);
+		} else {
+			Player.instance().setVolume(1.00);
+		}
+	}
+
 	public void updateCategoryView(RootView view, CategoryType value) {
 		CategoryView newView = null;
 		switch (value) {

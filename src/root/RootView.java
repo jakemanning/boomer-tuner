@@ -93,6 +93,12 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 
 		playlist.setOnAction(e -> rootController.togglePlaylist(this));
 		seekbar.valueChangingProperty().addListener(rootController.seek(seekbar));
+
+		volSlider.valueProperty().bindBidirectional(Player.instance().volumeProperty());
+		volDown.setOnMouseClicked(e -> rootController.volDownPressed());
+		volDownImage.setOnMouseClicked(e -> rootController.volDownPressed());
+		volUp.setOnMouseClicked(e -> rootController.volUpPressed());
+		volUpImage.setOnMouseClicked(e -> rootController.volUpPressed());
 	}
 
 	@SuppressWarnings("unchecked")
