@@ -150,7 +150,12 @@ public class Player {
 			return currentIndex;
 		}
 		if (shuffleMode.get()) {
-			return random.nextInt(playQueue.size());
+			int nextIndex = (random.nextInt(playQueue.size()));
+			while(playQueue.size() >1 && nextIndex == currentIndex){
+				nextIndex = (random.nextInt(playQueue.size()));
+			}
+			return nextIndex;
+
 		}
 		return (currentIndex + 1) % playQueue.size();
 	}
