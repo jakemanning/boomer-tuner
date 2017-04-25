@@ -3,6 +3,7 @@ package utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+//import javafx.scene.image.Image;
 import models.*;
 
 import java.io.*;
@@ -20,6 +21,7 @@ public class MediaLibrary {
 	private ObservableList<Album> albums = FXCollections.observableArrayList();
 	private ObservableList<Artist> artists = FXCollections.observableArrayList();
 	private ObservableList<Video> videos = FXCollections.observableArrayList();
+	private ObservableList<Image> images = FXCollections.observableArrayList();
 
 	public static MediaLibrary instance() {
 		return instance;
@@ -40,6 +42,7 @@ public class MediaLibrary {
 		albums.clear();
 		artists.clear();
 		videos.clear();
+		images.clear();
 		if (!saveLocation().delete()) {
 			System.out.println("Unable to delete library.bin");
 		}
@@ -59,6 +62,7 @@ public class MediaLibrary {
 			songs = FXCollections.observableList((List<Song>) in.readObject());
 			playlists = FXCollections.observableList((List<Playlist>) in.readObject());
 			videos = FXCollections.observableList((List<Video>) in.readObject());
+			images = FXCollections.observableList((List<Image>) in.readObject());
 			for (Song song : songs) {
 				if (!artists.contains(song.getArtist())) {
 					artists.add(song.getArtist());
@@ -81,6 +85,7 @@ public class MediaLibrary {
 			out.writeObject(new ArrayList<>(songs));
 			out.writeObject(new ArrayList<>(playlists));
 			out.writeObject(new ArrayList<>(videos));
+			out.writeObject(new ArrayList<>(images));
 			out.close();
 			fileOut.close();
 			System.out.printf("Serialized data is saved in " + saveLocation());
@@ -113,9 +118,16 @@ public class MediaLibrary {
 						if (video != null && !videos.contains(video)) {
 							videos.add(video);
 						}
+					} else if(Image.accepts(path)){
+						Image image = Image.from(path.toUri());
+						//System.out.println("Image Found" + image);
+						if(image != null && !images.contains(image)){
+							images.add(image);
+						}
 					}
 					updateProgress(i, size);
 				}
+				//System.out.println(images);
 				return null;
 			}
 		};
@@ -148,5 +160,9 @@ public class MediaLibrary {
 
 	public ObservableList<Video> getVideos() {
 		return videos;
+	}
+	
+	public ObservableList<Image> getImages() {
+		return images;
 	}
 }

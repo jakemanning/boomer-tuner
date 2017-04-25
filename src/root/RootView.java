@@ -68,7 +68,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		lookupViews();
 
 		ObservableList<CategoryType> menuList = FXCollections.observableArrayList(CategoryType.Songs,
-				CategoryType.Playlists, CategoryType.Albums, CategoryType.Artists, CategoryType.Videos);
+				CategoryType.Playlists, CategoryType.Albums, CategoryType.Artists, CategoryType.Videos, CategoryType.Images);
 		menu.setItems(menuList);
 
 		menu.getSelectionModel().selectedItemProperty().addListener(rootController.getMenuListener());

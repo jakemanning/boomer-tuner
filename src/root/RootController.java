@@ -6,6 +6,8 @@ import albums.AlbumsView;
 import artists.ArtistsController;
 import artists.ArtistsModel;
 import artists.ArtistsView;
+import images.ImagesController;
+import images.ImagesView;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -139,6 +141,9 @@ public class RootController {
 				break;
 			case Videos:
 				newView = new VideosView(new VideosController());
+				break;
+			case Images:
+				newView = new ImagesView(new ImagesController());
 				break;
 		}
 		if (newView != null) {
