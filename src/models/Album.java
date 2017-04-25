@@ -6,13 +6,14 @@ import utils.Icon;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Album implements Category {
+public class Album implements Category, Serializable {
 	private final String name;
-	private final Artwork artwork;
+	private transient Artwork artwork;
 	private Artist artist;
 	private List<Song> songs = new ArrayList<>();
 	private int year;
@@ -60,6 +61,9 @@ public class Album implements Category {
 	}
 
 	public javafx.scene.image.Image getArtwork() {
+		if (artwork == null) {
+			artwork = songs.get(0).getArtwork();
+		}
 		try {
 			return SwingFXUtils.toFXImage((BufferedImage) artwork.getImage(), null);
 		} catch (NullPointerException | IOException | IllegalArgumentException e) {

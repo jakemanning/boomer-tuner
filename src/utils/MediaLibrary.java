@@ -5,9 +5,10 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import models.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,11 +25,72 @@ public class MediaLibrary {
 		return instance;
 	}
 
+	private File saveLocation() {
+		File userDir = new File(System.getProperty("user.home"));
+		File storageDir = new File(userDir, ".boomertuner");
+		if (!storageDir.exists()) {
+			storageDir.mkdir();
+		}
+		return new File(storageDir, "library.bin");
+	}
+
+	public void clearLibrary() {
+		songs.clear();
+		playlists.clear();
+		albums.clear();
+		artists.clear();
+		videos.clear();
+		if (!saveLocation().delete()) {
+			System.out.println("Unable to delete library.bin");
+		}
+	}
+
 	private MediaLibrary() {
+		if (saveLocation().exists()) {
+			readSerializedLibrary(saveLocation());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void readSerializedLibrary(File location) {
+		try {
+			FileInputStream fileIn = new FileInputStream(location);
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			songs = FXCollections.observableList((List<Song>) in.readObject());
+			playlists = FXCollections.observableList((List<Playlist>) in.readObject());
+			videos = FXCollections.observableList((List<Video>) in.readObject());
+			for (Song song : songs) {
+				if (!artists.contains(song.getArtist())) {
+					artists.add(song.getArtist());
+				}
+				if (!albums.contains(song.getAlbum())) {
+					albums.add(song.getAlbum());
+				}
+			}
+			in.close();
+			fileIn.close();
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void writeSerializedLibrary() {
+		try {
+			FileOutputStream fileOut = new FileOutputStream(saveLocation());
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(new ArrayList<>(songs));
+			out.writeObject(new ArrayList<>(playlists));
+			out.writeObject(new ArrayList<>(videos));
+			out.close();
+			fileOut.close();
+			System.out.printf("Serialized data is saved in " + saveLocation());
+		} catch (IOException i) {
+			i.printStackTrace();
+		}
 	}
 
 	public void importPath(Path folder) {
-		Task<Void> task = new Task<Void>() {
+		Task<Void> importTask = new Task<Void>() {
 			@Override
 			protected Void call() throws InterruptedException, IOException {
 				List<Path> paths = Files.walk(folder, 5).collect(Collectors.toList());
@@ -57,12 +119,14 @@ public class MediaLibrary {
 				return null;
 			}
 		};
-		TaskRunner.run(task, "Importing Media...");
+		Runnable serialize = this::writeSerializedLibrary;
+		TaskRunner.run(importTask, "Importing Media...", serialize);
 	}
 
 	public Playlist addPlaylist(String name, List<? extends Playable> items) {
 		Playlist playlist = new Playlist(name, items);
 		playlists.add(playlist);
+		writeSerializedLibrary();
 		return playlist;
 	}
 

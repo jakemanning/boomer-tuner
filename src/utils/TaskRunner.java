@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 class TaskRunner {
-	static void run(Task task, String title) {
+	static void run(Task task, String title, Runnable onSuccess) {
 		Stage stage = new Stage();
 		stage.setTitle("Please wait...");
 		stage.initModality(Modality.WINDOW_MODAL);
@@ -32,7 +32,10 @@ class TaskRunner {
 		Scene scene = new Scene(box);
 		stage.setScene(scene);
 
-		task.setOnSucceeded(event -> stage.close());
+		task.setOnSucceeded(event -> {
+			stage.close();
+			onSuccess.run();
+		});
 
 		Thread thread = new Thread(task);
 		thread.start();

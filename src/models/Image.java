@@ -1,4 +1,6 @@
 package models;
 
-public class Image implements Category {
+import java.io.Serializable;
+
+public class Image implements Category, Serializable {
 }

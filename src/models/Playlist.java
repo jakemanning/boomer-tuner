@@ -1,10 +1,11 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Playlist implements Category {
+public class Playlist implements Category, Serializable {
 	private String name;
 	private List<Playable> items = new ArrayList<>();
 

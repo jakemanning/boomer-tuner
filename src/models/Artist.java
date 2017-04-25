@@ -1,10 +1,11 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Artist implements Category {
+public class Artist implements Category, Serializable {
 	private final String name;
 	private List<Album> albums = new ArrayList<>();
 

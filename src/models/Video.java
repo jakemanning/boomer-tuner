@@ -6,20 +6,24 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-public class Video implements Category, Playable {
+public class Video implements Category, Playable, Serializable {
 	private final String title;
-	private final StringProperty duration = new SimpleStringProperty(Playable.format(Duration.ZERO));
+	private transient StringProperty duration = new SimpleStringProperty(Playable.format(Duration.ZERO));
 
 	public String getTitle() {
 		return title;
 	}
 
 	public StringProperty durationProperty() {
+		if (duration == null) {
+			duration = Video.from(this.uri).duration;
+		}
 		return duration;
 	}
 

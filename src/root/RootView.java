@@ -23,10 +23,7 @@ import models.Playable;
 import models.Playlist;
 import models.Song;
 import models.Video;
-import utils.CategoryType;
-import utils.Icon;
-import utils.Player;
-import utils.PlayerListener;
+import utils.*;
 
 import java.io.IOException;
 
@@ -143,7 +140,9 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		final MenuItem open = new MenuItem("Import Media...");
 		open.setOnAction(e -> rootController.chooseDirectory(stage));
 		open.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
-		file.getItems().add(open);
+		final MenuItem clear = new MenuItem("Delete Library");
+		clear.setOnAction(e -> MediaLibrary.instance().clearLibrary());
+		file.getItems().addAll(open, clear);
 
 		final Menu controls = new Menu("Controls");
 		final MenuItem play = new MenuItem("Play/Pause");
