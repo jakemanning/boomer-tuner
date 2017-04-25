@@ -66,11 +66,11 @@ public class Player {
 		currentPlayer.currentTimeProperty().addListener(ov -> timeUpdated());
 		currentPlayer.currentTimeProperty().addListener(crossfadeTimeListener());
 		currentPlayer.setOnReady(this::timeUpdated);
-		currentPlayer.volumeProperty().bind(volume);
+		currentPlayer.volumeProperty().bindBidirectional(volume);
 	}
 
 	private void play(List<? extends Playable> items, int index) {
-		if (currentPlayer != null && currentPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
+		if (currentPlayer != null) {
 			currentPlayer.stop();
 		}
 		playQueue = new ArrayList<>(items);
@@ -151,7 +151,7 @@ public class Player {
 		}
 		if (shuffleMode.get()) {
 			int nextIndex = (random.nextInt(playQueue.size()));
-			while(playQueue.size() >1 && nextIndex == currentIndex){
+			while(playQueue.size() > 1 && nextIndex == currentIndex) {
 				nextIndex = (random.nextInt(playQueue.size()));
 			}
 			return nextIndex;

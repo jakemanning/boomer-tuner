@@ -34,6 +34,7 @@ public class AlbumsView extends SplitPane implements CategoryView, DirectoryList
 	private void initializeAlbums() {
 		albums.setItems(MediaLibrary.instance().getAlbums());
 		albums.getSelectionModel().selectedItemProperty().addListener(controller.albumSelectionListener());
+		// TODO: Ensure is sorted. Artist is only sorted initially since music is probably sorted in artist order. Need to implement Comparable in Album/Artist/PLaylist/etc.
 	}
 
 	private void initializeDetailView() {
