@@ -30,6 +30,7 @@ public class Player {
 	private BooleanProperty loopMode = new SimpleBooleanProperty(false);
 	private BooleanProperty crossfadeMode = new SimpleBooleanProperty(false);
 	private DoubleProperty volume = new SimpleDoubleProperty(1.00);
+	private static final int CROSSFADE_DURATION = 3;
 	private Random random = new Random();
 
 	private Player() {
@@ -66,7 +67,7 @@ public class Player {
 		currentPlayer.currentTimeProperty().addListener(ov -> timeUpdated());
 		currentPlayer.currentTimeProperty().addListener(crossfadeTimeListener());
 		currentPlayer.setOnReady(this::timeUpdated);
-		currentPlayer.volumeProperty().bindBidirectional(volume);
+		currentPlayer.volumeProperty().bind(volume);
 	}
 
 	private void play(List<? extends Playable> items, int index) {
@@ -82,16 +83,19 @@ public class Player {
 	private void playCrossfade(List<? extends Playable> items, int index) {
 		MediaPlayer oldPlayer = currentPlayer;
 		final double currentVolume = oldPlayer.getVolume();
+		oldPlayer.volumeProperty().unbind();
 		playQueue = new ArrayList<>(items);
 		currentIndex = index;
 		MediaPlayer newPlayer = new MediaPlayer(new Media(playQueue.get(currentIndex).getUri().toString()));
 		newPlayer.setVolume(0);
-		setCurrentPlayer(newPlayer);
 		newPlayer.play();
-		Timeline crossfade = new Timeline(new KeyFrame(Duration.seconds(3),
+		Timeline crossfade = new Timeline(new KeyFrame(Duration.seconds(CROSSFADE_DURATION),
 				new KeyValue(oldPlayer.volumeProperty(), 0),
 				new KeyValue(newPlayer.volumeProperty(), currentVolume)));
-		crossfade.setOnFinished(event -> oldPlayer.stop());
+		crossfade.setOnFinished(event -> {
+			oldPlayer.stop();
+			setCurrentPlayer(newPlayer);
+		});
 		crossfade.play();
 	}
 
@@ -103,10 +107,14 @@ public class Player {
 			public void invalidated(javafx.beans.Observable observable) {
 				// Run once when less than 3 seconds away from the end of the song
 				if (currentPlayer.getCurrentTime()
-						.greaterThan(currentPlayer.getMedia().getDuration().subtract(Duration.seconds(3)))
+						.greaterThan(currentPlayer.getMedia().getDuration()
+								.subtract(Duration.seconds(CROSSFADE_DURATION)))
 						&& !run && crossfadeMode.get()) {
 					run = true;
 					currentPlayer.setOnEndOfMedia(() -> {
+						// clear out the normal behaviour for the end of a song
+						// playCrossfade will start the next song a little early
+						// so there's no need to do anything once the current song ends
 					});
 					lastPlayed.addFirst(playQueue.get(currentIndex));
 					playCrossfade(playQueue, nextIndex());
