@@ -1,11 +1,10 @@
 package images;
 
-import java.util.List;
-
 import javafx.beans.value.ChangeListener;
-import javafx.scene.image.Image;
-import models.Video;
-import utils.Player;
+import models.Image;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 public class ImagesController {
 
@@ -16,6 +15,13 @@ public class ImagesController {
 			}
 			//DISPLAY IMAAGE
 			//Player.instance().playVideos(images, videos.indexOf(newValue));
+		};
+	}
+
+	Predicate<Image> searchFilter(String searchText) {
+		return image -> {
+			String search = searchText.toLowerCase();
+			return image.getName().toLowerCase().contains(search);
 		};
 	}
 }

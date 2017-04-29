@@ -14,10 +14,12 @@ public class RootModel {
 	private PlaylistModeListener playlistListener = null;
 	private List<DirectoryListener> directoryListeners = new ArrayList<>();
 	private List<SelectedCategoryListener> categoryListeners = new ArrayList<>();
+	private SearchListener searchListener = null;
+	private String searchText = "";
 
-    public boolean isPlaylistMode() {
-        return playlistMode;
-    }
+	public boolean isPlaylistMode() {
+		return playlistMode;
+	}
 
     public void setPlaylistMode(boolean playlistMode) {
         this.playlistMode = playlistMode;
@@ -80,4 +82,16 @@ public class RootModel {
             listener.directorySet(directorySelected);
         }
     }
+
+	public void setSearchListener(SearchListener listener) {
+		searchListener = listener;
+		searchListener.searchTextUpdated(searchText);
+	}
+
+	public void setSearchText(String searchText) {
+		this.searchText = searchText;
+		if (searchListener != null) {
+			searchListener.searchTextUpdated(searchText);
+		}
+	}
 }

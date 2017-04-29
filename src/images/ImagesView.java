@@ -1,20 +1,17 @@
 package images;
 
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import models.Image;
 import root.RootModel;
 import utils.CategoryView;
 import utils.MediaLibrary;
+
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 public class ImagesView extends TilePane implements CategoryView{
 	private ImagesController imagesController;
@@ -36,25 +33,28 @@ public class ImagesView extends TilePane implements CategoryView{
 		System.out.println(ims);
 		
 		images = new ArrayList<Image>();
-		
+
 		for(Image i: ims){
 			images.add(i);
 		}
 		
 		for(Image i: images){
-			try {				
-				this.getChildren().add(new ImageView(i.getUri().toURL().toString()));
-			} catch (MalformedURLException e) {
-				System.out.println("URL Conversion didn't work");
-				e.printStackTrace();
-			}
+			addImageView(i);
 		}
-		
+
 		System.out.println(images);
 		this.setVisible(true);
-		
-		
-		
+
+
+	}
+
+	private void addImageView(Image i) {
+		try {
+			this.getChildren().add(new ImageView(i.getUri().toURL().toString()));
+		} catch (MalformedURLException e) {
+			System.out.println("URL Conversion didn't work");
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -62,6 +62,13 @@ public class ImagesView extends TilePane implements CategoryView{
 		rootModel.setPlaylistModeListener(newValue -> {
 
         });
-		
+		rootModel.setSearchListener(searchText -> {
+			getChildren().clear();
+			for (Image i : images) {
+				if (imagesController.searchFilter(searchText).test(i)) {
+					addImageView(i);
+				}
+			}
+		});
 	}
 }

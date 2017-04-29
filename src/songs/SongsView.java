@@ -80,7 +80,8 @@ public class SongsView extends TableView<Song> implements CategoryView {
     public void setRootModel(RootModel rootModel) {
 		rootModel.setPlaylistModeListener(this::playlistModeChanged);
         this.rootModel = rootModel;
-	}
+        rootModel.setSearchListener(this::filterSongs);
+    }
 
     public void playlistModeChanged(boolean playlistMode) {
         if (playlistMode) {
@@ -136,5 +137,10 @@ public class SongsView extends TableView<Song> implements CategoryView {
         stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
         rootModel.setSelectedCategory(CategoryType.Playlists);
         rootModel.playlistCreated(playlist);
+    }
+
+    private void filterSongs(String searchText) {
+        getSelectionModel().clearSelection();
+        setItems(MediaLibrary.instance().getSongs().filtered(songsController.searchFilter(searchText)));
     }
 }

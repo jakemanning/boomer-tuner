@@ -62,10 +62,15 @@ public class AlbumsView extends SplitPane implements CategoryView, DirectoryList
 	@Override
 	public void setRootModel(RootModel rootModel) {
 		rootModel.setPlaylistModeListener(this::playlistModeChanged);
+		rootModel.setSearchListener(this::searchTermChanged);
 	}
 
 	private void playlistModeChanged(boolean playlistMode) {
 		detail.playlistModeChanged(playlistMode);
+	}
+
+	private void searchTermChanged(String searchTerm) {
+		albums.setItems(MediaLibrary.instance().getAlbums().filtered(controller.searchFilter(searchTerm)));
 	}
 
 	@Override

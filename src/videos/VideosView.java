@@ -16,6 +16,7 @@ public class VideosView extends TableView<Video> implements CategoryView {
 	private VideosController videosController;
 	private TableColumn<Video, String> titleCol;
 	private TableColumn<Video, String> durationCol;
+	private RootModel rootModel;
 
 	public VideosView(VideosController controller) {
 		videosController = controller;
@@ -53,5 +54,9 @@ public class VideosView extends TableView<Video> implements CategoryView {
 		rootModel.setPlaylistModeListener(newValue -> {
 
         });
+		rootModel.setSearchListener(searchText -> {
+			getSelectionModel().clearSelection();
+			setItems(MediaLibrary.instance().getVideos().filtered(videosController.searchFilter(searchText)));
+		});
 	}
 }

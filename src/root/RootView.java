@@ -23,6 +23,7 @@ import models.Playable;
 import models.Playlist;
 import models.Song;
 import models.Video;
+import org.controlsfx.control.textfield.CustomTextField;
 import utils.*;
 
 import java.io.IOException;
@@ -32,6 +33,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private RootController rootController;
 	private Button playlist;
 	private ListView<CategoryType> menu;
+	private CustomTextField searchField;
+	private Label clearSearch;
 	private Label volDown;
 	private Slider volSlider;
 	private Label volUp;
@@ -63,6 +66,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("root.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.load();
+		getStylesheets().add("root/root.css");
 		rootModel.addSelectedCategoryListener(this);
 		Player.instance().addListener(this);
 		lookupViews();
@@ -73,6 +77,10 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 
 		menu.getSelectionModel().selectedItemProperty().addListener(rootController.getMenuListener());
 		menu.getSelectionModel().select(CategoryType.Songs);
+
+		searchField.textProperty().addListener(obs -> rootController.searchTextChanged(searchField.getText()));
+		clearSearch.setOnMouseClicked(obs -> searchField.clear());
+		clearSearch.visibleProperty().bind(searchField.textProperty().isNotEmpty());
 
 		volDown.setGraphic(volDownImage);
 		volUp.setGraphic(volUpImage);
@@ -102,6 +110,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private void lookupViews() {
 		playlist = (Button) lookup("#playlist");
 		menu = (ListView<CategoryType>) lookup("#menu");
+		searchField = (CustomTextField) lookup("#searchField");
+		clearSearch = (Label) searchField.getRight();
 		volDown = (Label) lookup("#volumeDown");
 		volSlider = (Slider) lookup("#volumeSlider");
 		volUp = (Label) lookup("#volumeUp");
@@ -130,7 +140,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	}
 
 	public void initializeMenuBar(final Stage stage) {
-		final MenuBar menuBar = new MenuBar();
+		final MenuBar menuBar = (MenuBar) lookup("#menuBar");
 		final String os = System.getProperty("os.name");
 		if (os != null && os.startsWith("Mac")) {
 			menuBar.setUseSystemMenuBar(true);
@@ -168,7 +178,6 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade);
 
 		menuBar.getMenus().addAll(file, controls);
-		setTop(menuBar);
 	}
 
 	@Override

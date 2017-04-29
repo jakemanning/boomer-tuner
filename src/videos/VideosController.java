@@ -5,6 +5,7 @@ import models.Video;
 import utils.Player;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public class VideosController {
 
@@ -15,5 +16,10 @@ public class VideosController {
 			}
 			Player.instance().playVideos(videos, videos.indexOf(newValue));
 		};
+	}
+
+	public Predicate<Video> searchFilter(String searchText) {
+		String search = searchText.toLowerCase();
+		return video -> video.getTitle().toLowerCase().contains(search);
 	}
 }

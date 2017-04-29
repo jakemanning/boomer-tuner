@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
 <fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <VBox>
+            <MenuBar fx:id="menuBar"/>
+            <HBox alignment="CENTER_RIGHT" maxHeight="40" minHeight="40" prefHeight="40">
+                <padding>
+                    <Insets right="20"/>
+                </padding>
+                <!--Source: https://vocabhunter.github.io/2017/01/15/Search-Bar.html-->
+                <CustomTextField fx:id="searchField">
+                    <left>
+                        <Label styleClass="searchBoxLabel">
+                            <graphic>
+                                <FontAwesomeIconView styleClass="searchBoxLabelIcon"/>
+                            </graphic>
+                        </Label>
+                    </left>
+                    <right>
+                        <Label fx:id="clearSearch" styleClass="clearSearchLabel">
+                            <graphic>
+                                <FontAwesomeIconView styleClass="clearSearchLabelIcon"/>
+                            </graphic>
+                        </Label>
+                    </right>
+                </CustomTextField>
+            </HBox>
+        </VBox>
+    </top>
     <bottom>
         <BorderPane fx:id="controlPane" maxHeight="100.0" minHeight="100.0" prefHeight="50.0" minWidth="600">
             <left>

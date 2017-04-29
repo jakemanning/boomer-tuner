@@ -146,10 +146,8 @@ public class RootController {
 				newView = new ImagesView(new ImagesController());
 				break;
 		}
-		if (newView != null) {
-			newView.setRootModel(rootModel);
-			view.setCenter((Node) newView);
-		}
+		newView.setRootModel(rootModel);
+		view.setCenter((Node) newView);
 	}
 
 	public void createPlaylist(RootView rootView, ListView<CategoryType> menu, Playlist playlist) {
@@ -161,5 +159,9 @@ public class RootController {
 		menu.getSelectionModel().selectedItemProperty().removeListener(getMenuListener());
 		menu.getSelectionModel().select(CategoryType.Playlists);
 		menu.getSelectionModel().selectedItemProperty().addListener(getMenuListener());
+	}
+
+	public void searchTextChanged(String searchText) {
+		rootModel.setSearchText(searchText);
 	}
 }

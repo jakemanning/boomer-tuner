@@ -59,10 +59,15 @@ public class ArtistsView extends SplitPane implements CategoryView, DirectoryLis
 	@Override
 	public void setRootModel(RootModel rootModel) {
 		rootModel.setPlaylistModeListener(this::playlistModeChanged);
+		rootModel.setSearchListener(this::searchTermChanged);
 	}
 
 	private void playlistModeChanged(boolean playlistMode) {
 		detail.playlistModeChanged(playlistMode);
+	}
+
+	private void searchTermChanged(String searchTerm) {
+		artists.setItems(MediaLibrary.instance().getArtists().filtered(controller.searchFilter(searchTerm)));
 	}
 
 	@Override

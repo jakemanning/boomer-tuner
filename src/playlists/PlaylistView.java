@@ -76,9 +76,14 @@ public class PlaylistView extends SplitPane implements CategoryView {
     @Override
     public void setRootModel(RootModel rootModel) {
         rootModel.setPlaylistModeListener(this::playlistModeChanged);
-    }
+		rootModel.setSearchListener(this::searchTermChanged);
+	}
 
     private void playlistModeChanged(boolean playlistMode) {
         detail.playlistModeChanged(playlistMode);
     }
+
+	private void searchTermChanged(String searchTerm) {
+		playlists.setItems(MediaLibrary.instance().getPlaylists().filtered(controller.searchFilter(searchTerm)));
+	}
 }
