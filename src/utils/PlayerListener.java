@@ -11,13 +11,13 @@ public interface PlayerListener {
 
 	void newVideo(Video video);
 
-	void playingStatusChanged(CategoryType type, MediaPlayer.Status status);
+	void playingStatusChanged(final CategoryType type, final MediaPlayer.Status status);
 	
-	void timeUpdated(Playable media, Duration elapsed, Duration duration);
+	void timeUpdated(final Playable media, final Duration elapsed, final Duration duration);
 
-	void shuffleModeUpdated(boolean shuffling);
+	void shuffleModeUpdated(final boolean shuffling);
 
-	void loopModeUpdated(boolean looping);
+	void loopModeUpdated(final boolean looping);
 
-	void crossfadeModeUpdated(boolean crossfade);
+	void crossfadeModeUpdated(final boolean crossfade);
 }

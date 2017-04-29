@@ -40,7 +40,7 @@ public class SongsView extends TableView<Song> implements CategoryView {
     };
 
 
-    public SongsView(SongsController controller) {
+    public SongsView(final SongsController controller) {
         songsController = controller;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("songs.fxml"));
         fxmlLoader.setRoot(this);
@@ -77,13 +77,17 @@ public class SongsView extends TableView<Song> implements CategoryView {
         albumCol = (TableColumn<Song, Album>) getVisibleLeafColumn(3);
     }
 
-    public void setRootModel(RootModel rootModel) {
-		rootModel.setPlaylistModeListener(this::playlistModeChanged);
+
+    public void setRootModel(final RootModel rootModel) {
         this.rootModel = rootModel;
+    }
+
+    public void setListeners(final RootModel rootModel) {
+		rootModel.setPlaylistModeListener(this::playlistModeChanged);
         rootModel.setSearchListener(this::filterSongs);
     }
 
-    public void playlistModeChanged(boolean playlistMode) {
+    public void playlistModeChanged(final boolean playlistMode) {
         if (playlistMode) {
             getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             getSelectionModel().selectedItemProperty().removeListener(songListener);
@@ -95,7 +99,7 @@ public class SongsView extends TableView<Song> implements CategoryView {
         }
     }
 
-    public void createPlaylistName(ObservableList<Song> selectedCells) {
+    public void createPlaylistName(final ObservableList<Song> selectedCells) {
         Scene scene = new Scene(new Group());
 
         TextField textField = new TextField ();
@@ -132,7 +136,7 @@ public class SongsView extends TableView<Song> implements CategoryView {
         });
     }
 
-    public void playlistCreated(String text, ObservableList<Song> songs, Stage stage) {
+    public void playlistCreated(final String text, final ObservableList<Song> songs, Stage stage) {
         Playlist playlist = MediaLibrary.instance().addPlaylist(text,new ArrayList<>(songs));
         stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
         rootModel.setSelectedCategory(CategoryType.Playlists);

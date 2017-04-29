@@ -55,7 +55,7 @@ public class PlaylistView extends SplitPane implements CategoryView {
         }
     }
 
-    private void setItems(Playlist playlist) {
+    private void setItems(final Playlist playlist) {
         playlists.getSelectionModel().select(playlist);
         ObservableList<Song> items = FXCollections.observableArrayList();
         playlist.getItems().forEach(playable -> {
@@ -74,16 +74,18 @@ public class PlaylistView extends SplitPane implements CategoryView {
     }
 
     @Override
-    public void setRootModel(RootModel rootModel) {
+    public void setListeners(final RootModel rootModel) {
         rootModel.setPlaylistModeListener(this::playlistModeChanged);
 		rootModel.setSearchListener(this::searchTermChanged);
+		detail.setRootModel(rootModel);
 	}
 
-    private void playlistModeChanged(boolean playlistMode) {
+    private void playlistModeChanged(final boolean playlistMode) {
         detail.playlistModeChanged(playlistMode);
     }
 
-	private void searchTermChanged(String searchTerm) {
+	private void searchTermChanged(final String searchTerm) {
+        // FIXME: Search doesn't work
 		playlists.setItems(MediaLibrary.instance().getPlaylists().filtered(controller.searchFilter(searchTerm)));
 	}
 }

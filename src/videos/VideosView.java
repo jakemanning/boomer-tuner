@@ -18,7 +18,7 @@ public class VideosView extends TableView<Video> implements CategoryView {
 	private TableColumn<Video, String> durationCol;
 	private RootModel rootModel;
 
-	public VideosView(VideosController controller) {
+	public VideosView(final VideosController controller) {
 		videosController = controller;
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("videos.fxml"));
 		fxmlLoader.setRoot(this);
@@ -50,7 +50,7 @@ public class VideosView extends TableView<Video> implements CategoryView {
 	}
 
 	@Override
-	public void setRootModel(RootModel rootModel) {
+	public void setListeners(final RootModel rootModel) {
 		rootModel.setPlaylistModeListener(newValue -> {
 
         });

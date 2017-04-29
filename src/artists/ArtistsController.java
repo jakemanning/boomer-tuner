@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 public class ArtistsController {
 	private final ArtistsModel model;
 
-	public ArtistsController(ArtistsModel model) {
+	public ArtistsController(final ArtistsModel model) {
 		this.model = model;
 	}
 
@@ -18,7 +18,7 @@ public class ArtistsController {
 		};
 	}
 
-	Predicate<Artist> searchFilter(String searchText) {
+	Predicate<Artist> searchFilter(final String searchText) {
 		return artist -> {
 			String search = searchText.toLowerCase();
 			String name = artist.getName().toLowerCase();

@@ -50,7 +50,7 @@ class TaskRunner {
 		});
 	}
 
-	static Task<Void> sleepTask(int millis) {
+	static Task<Void> sleepTask(final int millis) {
 		return new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {

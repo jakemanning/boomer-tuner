@@ -33,7 +33,7 @@ public class Video implements Category, Playable, Serializable {
 
 	private final URI uri;
 
-	private Video(String title, URI uri) {
+	private Video(final String title, final URI uri) {
 		this.title = title;
 		this.uri = uri;
 	}
@@ -53,7 +53,7 @@ public class Video implements Category, Playable, Serializable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())

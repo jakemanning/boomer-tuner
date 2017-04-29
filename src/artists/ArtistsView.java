@@ -19,7 +19,7 @@ public class ArtistsView extends SplitPane implements CategoryView, DirectoryLis
 	private ListView<Artist> artists;
 	private SongsView detail;
 
-	public ArtistsView(ArtistsModel model, ArtistsController controller, RootModel rootModel) {
+	public ArtistsView(final ArtistsModel model, final ArtistsController controller, final RootModel rootModel) {
 		this.model = model;
 		this.controller = controller;
 		initializeViews();
@@ -57,12 +57,13 @@ public class ArtistsView extends SplitPane implements CategoryView, DirectoryLis
 	}
 
 	@Override
-	public void setRootModel(RootModel rootModel) {
+	public void setListeners(final RootModel rootModel) {
 		rootModel.setPlaylistModeListener(this::playlistModeChanged);
 		rootModel.setSearchListener(this::searchTermChanged);
+		detail.setRootModel(rootModel);
 	}
 
-	private void playlistModeChanged(boolean playlistMode) {
+	private void playlistModeChanged(final boolean playlistMode) {
 		detail.playlistModeChanged(playlistMode);
 	}
 
@@ -71,7 +72,7 @@ public class ArtistsView extends SplitPane implements CategoryView, DirectoryLis
 	}
 
 	@Override
-	public void directorySet(boolean set) {
+	public void directorySet(final boolean set) {
 		if(set) {
 			detail.setPlaceholder(new Label("Select an artist from the list"));
 		}

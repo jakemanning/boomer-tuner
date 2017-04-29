@@ -21,15 +21,15 @@ public class RootModel {
 		return playlistMode;
 	}
 
-    public void setPlaylistMode(boolean playlistMode) {
+    public void setPlaylistMode(final boolean playlistMode) {
         this.playlistMode = playlistMode;
         playlistModeChanged();
     }
-    public void setDirectorySelection(boolean selection){
+    public void setDirectorySelection(final boolean selection){
         directorySelected = selection;
         directorySelectionChanged();
     }
-    public void addDirectoryListener(DirectoryListener listener){
+    public void addDirectoryListener(final DirectoryListener listener){
         directoryListeners.add(listener);
         directorySelectionChanged();
     }
@@ -45,24 +45,24 @@ public class RootModel {
         return selectedCategory;
     }
 
-    public void setSelectedCategory(CategoryType selectedCategory) {
+    public void setSelectedCategory(final CategoryType selectedCategory) {
         this.selectedCategory = selectedCategory;
         categoryChanged();
     }
 
-	public void setPlaylistModeListener(PlaylistModeListener listener) {
+	public void setPlaylistModeListener(final PlaylistModeListener listener) {
 		playlistListener = listener;
 		playlistListener.playlistModeChanged(playlistMode);
 	}
 
-	public void playlistCreated(Playlist playlist) {
+	public void playlistCreated(final Playlist playlist) {
         this.selectedCategory = CategoryType.Playlists;
         for (SelectedCategoryListener listener: categoryListeners) {
             listener.playlistCreated(playlist);
         }
     }
 
-    public void addSelectedCategoryListener(SelectedCategoryListener listener) {
+    public void addSelectedCategoryListener(final SelectedCategoryListener listener) {
         categoryListeners.add(listener);
     }
 
@@ -77,18 +77,18 @@ public class RootModel {
 			playlistListener.playlistModeChanged(playlistMode);
 		}
 	}
-	private  void directorySelectionChanged(){
+	private  void directorySelectionChanged() {
         for(DirectoryListener listener : directoryListeners){
             listener.directorySet(directorySelected);
         }
     }
 
-	public void setSearchListener(SearchListener listener) {
+	public void setSearchListener(final SearchListener listener) {
 		searchListener = listener;
 		searchListener.searchTextUpdated(searchText);
 	}
 
-	public void setSearchText(String searchText) {
+	public void setSearchText(final String searchText) {
 		this.searchText = searchText;
 		if (searchListener != null) {
 			searchListener.searchTextUpdated(searchText);

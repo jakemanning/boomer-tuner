@@ -7,7 +7,7 @@ import java.net.URI;
 public interface Playable extends Category {
 	URI getUri();
 
-	static String format(Duration elapsed) {
+	static String format(final Duration elapsed) {
 		int secondsElapsed = (int) Math.floor(elapsed.toSeconds());
 		if (secondsElapsed >= 3600) {
 			return String.format("%d:%02d:%02d", secondsElapsed / 3600, (secondsElapsed % 3600) / 60,

@@ -17,7 +17,7 @@ public class ImagesView extends TilePane implements CategoryView{
 	private ImagesController imagesController;
 	private ArrayList<Image> images;
 	
-	public ImagesView(ImagesController ic){
+	public ImagesView(final ImagesController ic){
 		
 		imagesController  = ic;
 		this.prefHeight(575);
@@ -48,7 +48,7 @@ public class ImagesView extends TilePane implements CategoryView{
 
 	}
 
-	private void addImageView(Image i) {
+	private void addImageView(final Image i) {
 		try {
 			this.getChildren().add(new ImageView(i.getUri().toURL().toString()));
 		} catch (MalformedURLException e) {
@@ -58,7 +58,7 @@ public class ImagesView extends TilePane implements CategoryView{
 	}
 
 	@Override
-	public void setRootModel(RootModel rootModel) {
+	public void setListeners(final RootModel rootModel) {
 		rootModel.setPlaylistModeListener(newValue -> {
 
         });

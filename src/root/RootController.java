@@ -40,7 +40,7 @@ public class RootController {
         rootModel.setSelectedCategory(newValue);
     };
 
-    public RootController(RootModel model) {
+    public RootController(final RootModel model) {
         rootModel = model;
     }
 
@@ -65,12 +65,12 @@ public class RootController {
 		Player.instance().next();
 	}
 
-    void togglePlaylist(RootView rootView) {
+    void togglePlaylist(final RootView rootView) {
         rootModel.togglePlaylistMode();
         rootView.getPlaylistButton().setText(rootModel.isPlaylistMode() ? "Done" : "Create Playlist");
     }
 
-    void chooseDirectory(Stage stage) {
+    void chooseDirectory(final Stage stage) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(stage);
 
@@ -87,7 +87,7 @@ public class RootController {
 		Player.instance().toggleShuffle();
 	}
 	
-	InvalidationListener seek(Slider seekbar) {
+	InvalidationListener seek(final Slider seekbar) {
 		return new InvalidationListener() {
 			@Override
 			public void invalidated(Observable observable) {
@@ -121,11 +121,12 @@ public class RootController {
 		}
 	}
 
-	public void updateCategoryView(RootView view, CategoryType value) {
+	public void updateCategoryView(final RootView view, final CategoryType value) {
 		CategoryView newView = null;
 		switch (value) {
 			case Songs:
 				newView = new SongsView(new SongsController());
+				((SongsView)newView).setRootModel(rootModel);
 				break;
 			case Playlists:
 				PlaylistModel playlistModel = new PlaylistModel();
@@ -146,11 +147,11 @@ public class RootController {
 				newView = new ImagesView(new ImagesController());
 				break;
 		}
-		newView.setRootModel(rootModel);
+		newView.setListeners(rootModel);
 		view.setCenter((Node) newView);
 	}
 
-	public void createPlaylist(RootView rootView, ListView<CategoryType> menu, Playlist playlist) {
+	public void createPlaylist(final RootView rootView, final ListView<CategoryType> menu, final Playlist playlist) {
 		PlaylistModel playlistModel = new PlaylistModel();
 		playlistModel.setDirectorySelected(rootModel.isDirectorySelected());
 		playlistModel.setSelectedPlaylist(playlist);
@@ -161,7 +162,7 @@ public class RootController {
 		menu.getSelectionModel().selectedItemProperty().addListener(getMenuListener());
 	}
 
-	public void searchTextChanged(String searchText) {
+	public void searchTextChanged(final String searchText) {
 		rootModel.setSearchText(searchText);
 	}
 }

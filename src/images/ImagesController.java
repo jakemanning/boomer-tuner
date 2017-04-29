@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 
 public class ImagesController {
 
-	public ChangeListener<Image> selectionListener(List<Image> images) {
+	public ChangeListener<Image> selectionListener(final List<Image> images) {
 		return (ov, oldValue, newValue) -> {
 			if (newValue == null) {
 				return; // If user selects new directory
@@ -18,7 +18,7 @@ public class ImagesController {
 		};
 	}
 
-	Predicate<Image> searchFilter(String searchText) {
+	Predicate<Image> searchFilter(final String searchText) {
 		return image -> {
 			String search = searchText.toLowerCase();
 			return image.getName().toLowerCase().contains(search);

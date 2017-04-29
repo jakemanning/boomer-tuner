@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 public class PlaylistController {
     private final PlaylistModel model;
 
-    public PlaylistController(PlaylistModel model) {
+    public PlaylistController(final PlaylistModel model) {
         this.model = model;
     }
 
@@ -21,7 +21,7 @@ public class PlaylistController {
         };
     }
 
-	Predicate<Playlist> searchFilter(String searchText) {
+	Predicate<Playlist> searchFilter(final String searchText) {
 		return playlist -> {
 			String search = searchText.toLowerCase();
 			String name = playlist.getName().toLowerCase();

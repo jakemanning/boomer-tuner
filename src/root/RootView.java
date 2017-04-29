@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.CacheHint;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -60,7 +61,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private Text currentTime;
 	private BorderPane controlPane;
 
-	public RootView(RootModel model, RootController controller) throws IOException {
+	public RootView(final RootModel model, final RootController controller) throws IOException {
 		rootModel = model;
 		rootController = controller;
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("root.fxml"));
@@ -81,6 +82,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		searchField.textProperty().addListener(obs -> rootController.searchTextChanged(searchField.getText()));
 		clearSearch.setOnMouseClicked(obs -> searchField.clear());
 		clearSearch.visibleProperty().bind(searchField.textProperty().isNotEmpty());
+		clearSearch.setCursor(Cursor.HAND);
 
 		volDown.setGraphic(volDownImage);
 		volUp.setGraphic(volUpImage);
@@ -132,7 +134,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		return playlist;
 	}
 
-	private ImageView createScaledImage(Image img, int width) {
+	private ImageView createScaledImage(final Image img, final int width) {
 		ImageView iView = new ImageView(img);
 		iView.setFitWidth(width);
 		iView.setPreserveRatio(true);
@@ -181,11 +183,11 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	}
 
 	@Override
-	public void selectedCategoryChanged(CategoryType value) {
+	public void selectedCategoryChanged(final CategoryType value) {
 		rootController.updateCategoryView(this, value);
 	}
 	@Override
-	public void playlistCreated(Playlist playlist) {
+	public void playlistCreated(final Playlist playlist) {
 		rootController.createPlaylist(this, menu, playlist);
 	}
 	@Override
@@ -233,10 +235,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		heightProperty().addListener((o, old, h) -> videoView.setFitHeight(h.doubleValue() - controlPane.getHeight()));
 	}
 
-
-
 	@Override
-	public void playingStatusChanged(CategoryType type, MediaPlayer.Status status) {
+	public void playingStatusChanged(final CategoryType type, MediaPlayer.Status status) {
 		if (status.equals(MediaPlayer.Status.PLAYING)) {
 			play.setGraphic(pauseImage);
 			if (type.equals(CategoryType.Videos)) {
@@ -252,7 +252,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	 * BABHHBEB)
 	 */
 	@Override
-	public void timeUpdated(Playable media, Duration elapsed, Duration duration) {
+	public void timeUpdated(final Playable media, final Duration elapsed, final Duration duration) {
 		if (media == null || seekbar == null || elapsed == null || duration == null) {
 			return;
 		}
@@ -265,11 +265,10 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 				seekbar.setValue(elapsed.toMillis() / duration.toMillis() * 100.0);
 			}
 		});
-
 	}
 
 	@Override
-	public void shuffleModeUpdated(boolean shuffling) {
+	public void shuffleModeUpdated(final boolean shuffling) {
 		if (shuffling) {
 			shuffle.setGraphic(shufflePressedImage);
 		} else {
@@ -278,7 +277,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	}
 
 	@Override
-	public void loopModeUpdated(boolean looping) {
+	public void loopModeUpdated(final boolean looping) {
 		if (looping) {
 			loop.setGraphic(loopPressedImage);
 		} else {
@@ -287,6 +286,6 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	}
 
 	@Override
-	public void crossfadeModeUpdated(boolean crossfade) {
+	public void crossfadeModeUpdated(final boolean crossfade) {
 	}
 }

@@ -19,7 +19,7 @@ public class AlbumsView extends SplitPane implements CategoryView, DirectoryList
 	private ListView<Album> albums;
 	private SongsView detail;
 
-	public AlbumsView(AlbumsModel model, AlbumsController controller, RootModel rootModel) {
+	public AlbumsView(final AlbumsModel model, final AlbumsController controller, final RootModel rootModel) {
 		this.model = model;
 		this.controller = controller;
 
@@ -60,22 +60,23 @@ public class AlbumsView extends SplitPane implements CategoryView, DirectoryList
 	}
 
 	@Override
-	public void setRootModel(RootModel rootModel) {
+	public void setListeners(final RootModel rootModel) {
 		rootModel.setPlaylistModeListener(this::playlistModeChanged);
 		rootModel.setSearchListener(this::searchTermChanged);
+		detail.setRootModel(rootModel);
 	}
 
 	private void playlistModeChanged(boolean playlistMode) {
 		detail.playlistModeChanged(playlistMode);
 	}
 
-	private void searchTermChanged(String searchTerm) {
+	private void searchTermChanged(final String searchTerm) {
 		albums.setItems(MediaLibrary.instance().getAlbums().filtered(controller.searchFilter(searchTerm)));
 	}
 
 	@Override
-	public void directorySet(boolean set) {
-		if(set) {
+	public void directorySet(final boolean set) {
+		if (set) {
 			detail.setPlaceholder(new Label("Select an album from the list"));
 		}
 	}

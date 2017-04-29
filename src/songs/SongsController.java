@@ -5,7 +5,7 @@ import models.Song;
 import java.util.function.Predicate;
 
 public class SongsController {
-	Predicate<Song> searchFilter(String searchText) {
+	Predicate<Song> searchFilter(final String searchText) {
 		return song -> {
 			String search = searchText.toLowerCase();
 			String title = song.getTitle().toLowerCase();

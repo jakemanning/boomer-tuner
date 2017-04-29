@@ -3,7 +3,6 @@ package utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-//import javafx.scene.image.Image;
 import models.*;
 
 import java.io.*;
@@ -12,6 +11,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+//import javafx.scene.image.Image;
 
 public class MediaLibrary {
 	private static MediaLibrary instance = new MediaLibrary();
@@ -27,6 +28,12 @@ public class MediaLibrary {
 		return instance;
 	}
 
+	private MediaLibrary() {
+		if (saveLocation().exists()) {
+			readSerializedLibrary(saveLocation());
+		}
+	}
+
 	private File saveLocation() {
 		File userDir = new File(System.getProperty("user.home"));
 		File storageDir = new File(userDir, ".boomertuner");
@@ -37,6 +44,7 @@ public class MediaLibrary {
 	}
 
 	public void clearLibrary() {
+		Player.instance().stop();
 		songs.clear();
 		playlists.clear();
 		albums.clear();
@@ -48,14 +56,8 @@ public class MediaLibrary {
 		}
 	}
 
-	private MediaLibrary() {
-		if (saveLocation().exists()) {
-			readSerializedLibrary(saveLocation());
-		}
-	}
-
 	@SuppressWarnings("unchecked")
-	private void readSerializedLibrary(File location) {
+	private void readSerializedLibrary(final File location) {
 		try {
 			FileInputStream fileIn = new FileInputStream(location);
 			ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -86,6 +88,7 @@ public class MediaLibrary {
 			out.writeObject(new ArrayList<>(playlists));
 			out.writeObject(new ArrayList<>(videos));
 			out.writeObject(new ArrayList<>(images));
+
 			out.close();
 			fileOut.close();
 			System.out.printf("Serialized data is saved in " + saveLocation());
@@ -98,44 +101,44 @@ public class MediaLibrary {
 		Task<Void> importTask = new Task<Void>() {
 			@Override
 			protected Void call() throws InterruptedException, IOException {
-				List<Path> paths = Files.walk(folder, 5).collect(Collectors.toList());
-				int size = paths.size();
-				for (int i = 0; i < size; i++) {
-					Path path = paths.get(i);
-					if (Song.accepts(path)) {
-						Song song = Song.from(path.toUri());
-						if (song != null && !songs.contains(song)) {
-							songs.add(song);
-							if (!artists.contains(song.getArtist())) {
-								artists.add(song.getArtist());
-							}
-							if (!albums.contains(song.getAlbum())) {
-								albums.add(song.getAlbum());
-							}
-				 		}
-					} else if (Video.accepts(path)) {
-						Video video = Video.from(path.toUri());
-						if (video != null && !videos.contains(video)) {
-							videos.add(video);
-						}
-					} else if(Image.accepts(path)){
-						Image image = Image.from(path.toUri());
-						//System.out.println("Image Found" + image);
-						if(image != null && !images.contains(image)){
-							images.add(image);
-						}
-					}
-					updateProgress(i, size);
+			List<Path> paths = Files.walk(folder, 5).collect(Collectors.toList());
+			final int size = paths.size();
+			for (int i = 0; i < size; i++) {
+				Path path = paths.get(i);
+				if (Song.accepts(path)) {
+					addSong(Song.from(path.toUri()));
+				} else if (Video.accepts(path)) {
+					addVideo(Video.from(path.toUri()));
+				} else if(Image.accepts(path)){
+					addImage(Image.from(path.toUri()));
 				}
-				//System.out.println(images);
-				return null;
+				updateProgress(i, size);
+			}
+			return null;
 			}
 		};
 		Runnable serialize = this::writeSerializedLibrary;
 		TaskRunner.run(importTask, "Importing Media...", serialize);
 	}
 
-	public Playlist addPlaylist(String name, List<? extends Playable> items) {
+	private boolean addSong(final Song song) {
+		if (song == null || songs.contains(song)) { return false; }
+		if (!artists.contains(song.getArtist())) { artists.add(song.getArtist()); }
+		if (!albums.contains(song.getAlbum())) { albums.add(song.getAlbum()); }
+		return songs.add(song);
+	}
+
+	private boolean addVideo(final Video video) {
+		if (video == null || videos.contains(video)) { return false; }
+		return videos.add(video);
+	}
+
+	private boolean addImage(final Image image) {
+		if (image == null || images.contains(image)) { return false; }
+		return images.add(image);
+	}
+
+	public Playlist addPlaylist(final String name, final List<? extends Playable> items) {
 		Playlist playlist = new Playlist(name, items);
 		playlists.add(playlist);
 		writeSerializedLibrary();

@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 
 public class VideosController {
 
-	public ChangeListener<Video> selectionListener(List<Video> videos) {
+	public ChangeListener<Video> selectionListener(final List<Video> videos) {
 		return (ov, oldValue, newValue) -> {
 			if (newValue == null) {
 				return; // If user selects new directory
@@ -18,7 +18,7 @@ public class VideosController {
 		};
 	}
 
-	public Predicate<Video> searchFilter(String searchText) {
+	public Predicate<Video> searchFilter(final String searchText) {
 		String search = searchText.toLowerCase();
 		return video -> video.getTitle().toLowerCase().contains(search);
 	}

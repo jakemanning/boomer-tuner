@@ -13,12 +13,12 @@ public class Artist implements Category, Serializable {
 		this.name = name;
 	}
 
-	public void addSong(Song song) {
+	public void addSong(final Song song) {
 		albums.add(song.getAlbum());
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())

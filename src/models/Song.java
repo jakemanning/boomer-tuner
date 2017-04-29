@@ -47,14 +47,17 @@ public class Song implements Category, Playable, Serializable {
 		try {
 			AudioFile f = AudioFileIO.read(new File(uri));
 			Tag tag = f.getTag();
+
+			String trackStr = tag.getFirst(FieldKey.TRACK);
+			if (trackStr.isEmpty()) { return null; }
+
 			Artist artist = new Artist(tag.getFirst(FieldKey.ARTIST));
 			Artwork artwork = tag.getFirstArtwork();
 			Album album = new Album(tag.getFirst(FieldKey.ALBUM), artwork);
 			String title = tag.getFirst(FieldKey.TITLE);
-			String trackStr = tag.getFirst(FieldKey.TRACK);
+			int track = Integer.parseInt(trackStr);
 			Integer seconds = f.getAudioHeader().getTrackLength() + 1;
 
-			int track = trackStr.isEmpty() ? -1 : Integer.valueOf(trackStr);
 			return new Song(title, artist, album, track, seconds, uri);
 		} catch (CannotReadException | IOException | TagException | InvalidAudioFrameException
 				| ReadOnlyFileException e) {
@@ -81,7 +84,7 @@ public class Song implements Category, Playable, Serializable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())

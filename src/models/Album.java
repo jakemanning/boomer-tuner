@@ -29,7 +29,7 @@ public class Album implements Category, Serializable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())
@@ -41,9 +41,7 @@ public class Album implements Category, Serializable {
 			return false;
 		if (!Objects.equals(artist.getName(), album.artist.getName()))
 			return false;
-		if (this.year != album.getYear())
-			return false;
-		return true;
+		return this.year == album.getYear();
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public class AlbumsModel {
 		return selectedAlbum;
 	}
 
-	public void setSelectedAlbum(Album selectedAlbum) {
+	public void setSelectedAlbum(final Album selectedAlbum) {
 		this.selectedAlbum.set(selectedAlbum);
 	}
 }
