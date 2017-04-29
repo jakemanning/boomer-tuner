@@ -47,9 +47,8 @@ public class Player {
 		return new MediaView(currentPlayer);
 	}
 
-	// region Media Player
+	// region Media Player=
     private void initPreferences() {
-        // TODO: Updated UI
         Preferences preferences = Preferences.userNodeForPackage(Player.class);
         shuffleMode.set(preferences.getBoolean("ShuffleMode", false));
         loopMode.set(preferences.getBoolean("LoopMode", false));
@@ -85,6 +84,7 @@ public class Player {
 	}
 
 	private void playCrossfade(final List<? extends Playable> items, final int index) {
+		// TODO: Get volume property working with crossfade
 		MediaPlayer oldPlayer = currentPlayer;
 		final double currentVolume = oldPlayer.getVolume();
 		oldPlayer.volumeProperty().unbind();

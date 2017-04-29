@@ -28,6 +28,7 @@ import org.controlsfx.control.textfield.CustomTextField;
 import utils.*;
 
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 public class RootView extends BorderPane implements SelectedCategoryListener, PlayerListener {
 	private RootModel rootModel;
@@ -84,13 +85,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		clearSearch.visibleProperty().bind(searchField.textProperty().isNotEmpty());
 		clearSearch.setCursor(Cursor.HAND);
 
-		volDown.setGraphic(volDownImage);
-		volUp.setGraphic(volUpImage);
-		shuffle.setGraphic(shuffleImage);
-		previous.setGraphic(previousImage);
-		play.setGraphic(playImage);
-		next.setGraphic(nextImage);
-		loop.setGraphic(loopImage);
+		setImages();
 
 		shuffle.setOnMouseClicked(e -> rootController.shufflePressed());
 		previous.setOnMouseClicked(e -> rootController.previousPressed());
@@ -130,6 +125,22 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		controlPane = (BorderPane) lookup("#controlPane");
 	}
 
+	private void setImages() {
+        Preferences preferences = Preferences.userNodeForPackage(Player.class);
+
+        volDown.setGraphic(volDownImage);
+        volUp.setGraphic(volUpImage);
+        previous.setGraphic(previousImage);
+        play.setGraphic(playImage);
+        next.setGraphic(nextImage);
+
+        final boolean isShuffleMode = preferences.getBoolean("ShuffleMode", false);
+        shuffle.setGraphic(isShuffleMode ? shufflePressedImage : shuffleImage);
+
+        final boolean isLoopMode = preferences.getBoolean("LoopMode", false);
+        loop.setGraphic(isLoopMode ? loopPressedImage: loopImage);
+    }
+
 	public Button getPlaylistButton() {
 		return playlist;
 	}
@@ -152,6 +163,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		final MenuItem open = new MenuItem("Import Media...");
 		open.setOnAction(e -> rootController.chooseDirectory(stage));
 		open.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
+
 		final MenuItem clear = new MenuItem("Delete Library");
 		clear.setOnAction(e -> MediaLibrary.instance().clearLibrary());
 		file.getItems().addAll(open, clear);
@@ -160,21 +172,31 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		final MenuItem play = new MenuItem("Play/Pause");
 		play.setOnAction(e -> rootController.playPressed());
 		play.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
+
 		final MenuItem previous = new MenuItem("Previous");
 		previous.setOnAction(e -> rootController.previousPressed());
 		previous.setAccelerator(new KeyCodeCombination(KeyCode.LEFT));
+
 		final MenuItem next = new MenuItem("Next");
 		next.setOnAction(e -> rootController.nextPressed());
 		next.setAccelerator(new KeyCodeCombination(KeyCode.RIGHT));
+
 		final CheckMenuItem shuffle = new CheckMenuItem("Shuffle");
+        shuffle.setSelected(Player.instance().shuffleModeProperty().get());
 		Player.instance().shuffleModeProperty().addListener((obs, old, val) -> shuffle.setSelected(val));
 		shuffle.setOnAction(e -> rootController.shufflePressed());
 		shuffle.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
+
+
 		final CheckMenuItem loop = new CheckMenuItem("Repeat");
+		loop.setSelected(Player.instance().loopModeProperty().get());
 		Player.instance().loopModeProperty().addListener((obs, old, val) -> loop.setSelected(val));
 		loop.setOnAction(e -> rootController.loopPressed());
 		loop.setAccelerator(new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
+
+
 		final CheckMenuItem crossfade = new CheckMenuItem("Crossfade");
+		crossfade.setSelected(Player.instance().loopModeProperty().get());
 		Player.instance().crossfadeModeProperty().addListener((obs, old, val) -> crossfade.setSelected(val));
 		crossfade.setOnAction(e -> rootController.crossfadePressed());
 		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade);
