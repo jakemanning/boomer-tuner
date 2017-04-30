@@ -61,6 +61,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	private Slider seekbar;
 	private Text currentTime;
 	private BorderPane controlPane;
+	private VBox menuVBox;
 
 	public RootView(final RootModel model, final RootController controller) throws IOException {
 		rootModel = model;
@@ -122,6 +123,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		songLength = (Text) lookup("#songLength");
 		seekbar = (Slider) lookup("#seekbar");
 		currentTime = (Text) lookup("#currentTime");
+		menuVBox = (VBox) lookup("#menuVBox");
 		controlPane = (BorderPane) lookup("#controlPane");
 	}
 
@@ -243,20 +245,31 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 	}
 
 	private void setVideoView(final MediaView videoView) {
+		// FIXME: For Some reason, this is getting called twice
+		menu.getSelectionModel().selectedItemProperty().removeListener(rootController.getMenuListener());
+		menu.getSelectionModel().select(CategoryType.Videos);
+		menu.getSelectionModel().selectedItemProperty().addListener(rootController.getMenuListener());
+		Button xButton = new Button("X");
+		xButton.setOnAction(e -> {
+			rootModel.setSelectedCategory(CategoryType.Videos);
+		});
+
 		artwork.setImage(null);
 		VBox container = new VBox();
+		container.getChildren().add(xButton);
 		container.setBackground(new Background(new BackgroundFill(Paint.valueOf("black"), null, null)));
 		container.setAlignment(Pos.CENTER);
 		double videoWidth = getWidth() - menu.getWidth();
-		double videoHeight = getHeight() - controlPane.getHeight();
+		double videoHeight = getHeight() - controlPane.getHeight() - xButton.getHeight() - menuVBox.getHeight();
 		videoView.setFitWidth(videoWidth);
 		videoView.setFitHeight(videoHeight);
 		videoView.setPreserveRatio(true);
 		VBox.setVgrow(videoView, Priority.ALWAYS);
 		container.getChildren().add(videoView);
 		setCenter(container);
+
 		widthProperty().addListener((o, old, w) -> videoView.setFitWidth(w.doubleValue() - menu.getWidth()));
-		heightProperty().addListener((o, old, h) -> videoView.setFitHeight(h.doubleValue() - controlPane.getHeight()));
+		heightProperty().addListener((o, old, h) -> videoView.setFitHeight(h.doubleValue() - controlPane.getHeight() - menuVBox.getHeight() - xButton.getHeight()));
 	}
 
 	@Override

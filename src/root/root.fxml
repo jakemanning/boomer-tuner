@@ -9,7 +9,7 @@
 <?import org.controlsfx.control.textfield.CustomTextField?>
 <fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml">
     <top>
-        <VBox>
+        <VBox fx:id="menuVBox">
             <MenuBar fx:id="menuBar"/>
             <HBox alignment="CENTER_RIGHT" maxHeight="40" minHeight="40" prefHeight="40">
                 <padding>
