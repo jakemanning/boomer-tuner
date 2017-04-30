@@ -185,6 +185,8 @@ public class Player {
 			@Override
 			public void invalidated(final javafx.beans.Observable observable) {
 				// Run once when less than 3 seconds away from the end of the song
+				if (currentPlayer == null) return;
+
 				if (currentPlayer.getCurrentTime()
 						.greaterThan(currentPlayer.getMedia().getDuration()
 								.subtract(Duration.seconds(CROSSFADE_DURATION)))
@@ -223,7 +225,9 @@ public class Player {
 
 	private void timeUpdated() {
 		for (PlayerListener listener : listeners) {
-			listener.timeUpdated(playQueue.get(currentIndex), currentPlayer.getCurrentTime(), currentPlayer.getTotalDuration());
+			if (currentPlayer != null) {
+				listener.timeUpdated(playQueue.get(currentIndex), currentPlayer.getCurrentTime(), currentPlayer.getTotalDuration());
+			}
 		}
 	}
 	// endregion

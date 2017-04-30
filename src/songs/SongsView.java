@@ -17,7 +17,6 @@ import models.Artist;
 import models.Playlist;
 import models.Song;
 import root.RootModel;
-import utils.CategoryType;
 import utils.CategoryView;
 import utils.MediaLibrary;
 import utils.Player;
@@ -139,7 +138,6 @@ public class SongsView extends TableView<Song> implements CategoryView {
     public void playlistCreated(final String text, final ObservableList<Song> songs, Stage stage) {
         Playlist playlist = MediaLibrary.instance().addPlaylist(text,new ArrayList<>(songs));
         stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
-        rootModel.setSelectedCategory(CategoryType.Playlists);
         rootModel.playlistCreated(playlist);
     }
 

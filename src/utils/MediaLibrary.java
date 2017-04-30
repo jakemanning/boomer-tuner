@@ -9,6 +9,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,6 +75,12 @@ public class MediaLibrary {
 					albums.add(song.getAlbum());
 				}
 			}
+
+			Collections.sort(albums, Comparator.comparing(Album::getName));
+			Collections.sort(artists, Comparator.comparing(Artist::getName));
+			Collections.sort(songs, Comparator.comparing(Song::getTitle));
+			Collections.sort(images, Comparator.comparing(Image::getName));
+
 			in.close();
 			fileIn.close();
 		} catch (IOException | ClassNotFoundException e) {
@@ -114,6 +122,10 @@ public class MediaLibrary {
 				}
 				updateProgress(i, size);
 			}
+			Collections.sort(albums, Comparator.comparing(Album::getName));
+			Collections.sort(artists, Comparator.comparing(Artist::getName));
+			Collections.sort(songs, Comparator.comparing(Song::getTitle));
+			Collections.sort(images, Comparator.comparing(Image::getName));
 			return null;
 			}
 		};
@@ -141,6 +153,7 @@ public class MediaLibrary {
 	public Playlist addPlaylist(final String name, final List<? extends Playable> items) {
 		Playlist playlist = new Playlist(name, items);
 		playlists.add(playlist);
+		Collections.sort(playlists, Comparator.comparing(Playlist::getName)); // Calls ChangeListener
 		writeSerializedLibrary();
 		return playlist;
 	}

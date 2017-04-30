@@ -28,13 +28,13 @@ public class PlaylistView extends SplitPane implements CategoryView {
         this.controller = controller;
         initializeViews();
 
-        initializeArtists();
+        initializePlaylists();
         initializeDetailView();
     }
 
-    private void initializeArtists() {
+    private void initializePlaylists() {
         playlists.setItems(MediaLibrary.instance().getPlaylists());
-        playlists.getSelectionModel().selectedItemProperty().addListener(controller.playlistSelectionListener());
+        playlists.getSelectionModel().selectedItemProperty().addListener(controller.playlistSelectionListener);
     }
 
     private void initializeDetailView() {
@@ -56,7 +56,9 @@ public class PlaylistView extends SplitPane implements CategoryView {
     }
 
     private void setItems(final Playlist playlist) {
+        playlists.getSelectionModel().selectedItemProperty().removeListener(controller.playlistSelectionListener);
         playlists.getSelectionModel().select(playlist);
+        playlists.getSelectionModel().selectedItemProperty().addListener(controller.playlistSelectionListener);
         ObservableList<Song> items = FXCollections.observableArrayList();
         playlist.getItems().forEach(playable -> {
             items.add((Song)playable);
@@ -85,7 +87,6 @@ public class PlaylistView extends SplitPane implements CategoryView {
     }
 
 	private void searchTermChanged(final String searchTerm) {
-        // FIXME: Search doesn't work
 		playlists.setItems(MediaLibrary.instance().getPlaylists().filtered(controller.searchFilter(searchTerm)));
 	}
 }

@@ -9,17 +9,16 @@ import java.util.function.Predicate;
  * Created by jakemanning on 4/22/17.
  */
 public class PlaylistController {
-    private final PlaylistModel model;
+    private PlaylistModel model;
 
     public PlaylistController(final PlaylistModel model) {
         this.model = model;
     }
 
-    ChangeListener<? super Playlist> playlistSelectionListener() {
-        return (ChangeListener<Playlist>) (observable, oldValue, newValue) -> {
-            model.setSelectedPlaylist(newValue);
-        };
-    }
+    public ChangeListener<Playlist> playlistSelectionListener = (observable, oldValue, newValue) -> {
+    	if (newValue != null)
+    		model.setSelectedPlaylist(newValue);
+    };
 
 	Predicate<Playlist> searchFilter(final String searchText) {
 		return playlist -> {

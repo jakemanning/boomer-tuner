@@ -37,8 +37,8 @@ public class RootController {
     private RootModel rootModel;
     private boolean playlistMode = false;
     private ChangeListener<CategoryType> menuListener = (ov, oldValue, newValue) -> {
-        rootModel.setSelectedCategory(newValue);
-    };
+		rootModel.setSelectedCategory(newValue);
+	};
 
     public RootController(final RootModel model) {
         rootModel = model;
@@ -158,14 +158,15 @@ public class RootController {
 	}
 
 	public void createPlaylist(final RootView rootView, final ListView<CategoryType> menu, final Playlist playlist) {
+		menu.getSelectionModel().selectedItemProperty().removeListener(getMenuListener());
+		menu.getSelectionModel().select(CategoryType.Playlists);
+		menu.getSelectionModel().selectedItemProperty().addListener(getMenuListener());
+
 		PlaylistModel playlistModel = new PlaylistModel();
 		playlistModel.setDirectorySelected(rootModel.isDirectorySelected());
 		playlistModel.setSelectedPlaylist(playlist);
 		CategoryView newView = new PlaylistView(playlistModel, new PlaylistController(playlistModel));
 		rootView.setCenter((Node) newView);
-		menu.getSelectionModel().selectedItemProperty().removeListener(getMenuListener());
-		menu.getSelectionModel().select(CategoryType.Playlists);
-		menu.getSelectionModel().selectedItemProperty().addListener(getMenuListener());
 	}
 
 	public void searchTextChanged(final String searchText) {
