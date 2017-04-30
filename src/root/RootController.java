@@ -103,6 +103,12 @@ public class RootController {
 		Player.instance().toggleCrossfade();
 	}
 
+	ChangeListener volumeUpdated(final Slider seekbar) {
+    	return (observable, oldValue, newValue) -> {
+			Player.instance().saveVolume();
+		};
+    }
+
 	public void volDownPressed() {
 		double currentVolume = Player.instance().getVolume();
 		if (currentVolume >= 0.0625) {

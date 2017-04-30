@@ -84,7 +84,6 @@ public class Player {
 	}
 
 	private void playCrossfade(final List<? extends Playable> items, final int index) {
-		// TODO: Get volume property working with crossfade
 		MediaPlayer oldPlayer = currentPlayer;
 		final double currentVolume = oldPlayer.getVolume();
 		oldPlayer.volumeProperty().unbind();
@@ -252,7 +251,11 @@ public class Player {
 
 	public void setVolume(final double volume) {
 		this.volume.set(volume);
-		preferences.putDouble("Volume", volume);
+		saveVolume();
+	}
+
+	public void saveVolume() {
+		preferences.putDouble("Volume", volume.get());
 	}
 	// endregion
 

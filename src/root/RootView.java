@@ -139,6 +139,8 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 
         final boolean isLoopMode = preferences.getBoolean("LoopMode", false);
         loop.setGraphic(isLoopMode ? loopPressedImage: loopImage);
+
+        volSlider.valueChangingProperty().addListener(rootController.volumeUpdated(volSlider));
     }
 
 	public Button getPlaylistButton() {
@@ -196,11 +198,11 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 
 
 		final CheckMenuItem crossfade = new CheckMenuItem("Crossfade");
-		crossfade.setSelected(Player.instance().loopModeProperty().get());
+		crossfade.setSelected(Player.instance().crossfadeModeProperty().get());
 		Player.instance().crossfadeModeProperty().addListener((obs, old, val) -> crossfade.setSelected(val));
 		crossfade.setOnAction(e -> rootController.crossfadePressed());
-		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade);
 
+		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade);
 		menuBar.getMenus().addAll(file, controls);
 	}
 
