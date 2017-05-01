@@ -193,9 +193,7 @@ public class RootController {
 	}
 
 	public void showHelp() {
-		final Scene scene = new Scene(new Pane());
-
-		final String text = "\t\t\t\t\t\tUsing Boomer Tuner:\n\n" +
+		final String helpText = "\t\t\t\t\t\tUsing Boomer Tuner:\n\n" +
 				"- Import media by choosing a directory with the accepted forms of media*\n" +
 				"- Any media imported is stored in your library. You can delete your library\n" +
 				"- Change media type by choosing from the menu on the left.\n" +
@@ -203,6 +201,19 @@ public class RootController {
 				"- Create playlists by pressing the \"Create Playlist\" button\n" +
 				"\tControl/Shift+Clicking allows you to select any amount of songs.\n" +
 				"\n*Accepted extensions: mp3, m4a, mov, mp4, m3u8, m4v, jp(e)g, png";
+		displayText(helpText, "Help Documentation");
+	}
+
+	public void lyricsPressed() {
+    	final String lyrics = Player.instance().getSongLyrics();
+    	displayText(lyrics, "Lyrics");
+	}
+
+	private void displayText(final String s, final String title) {
+		final Scene scene = new Scene(new Pane());
+
+		String text = s;
+		if (s == null || s.isEmpty()) { text = "Whoops! Nothing to see here"; }
 		final Text textItem = new Text(text);
 
 		final Button okButton = new Button("OK");
@@ -224,7 +235,7 @@ public class RootController {
 
 		final Stage stage = new Stage();
 		stage.setScene(scene);
-		stage.setTitle("Help Documentation");
+		stage.setTitle(title);
 		stage.show();
 
 

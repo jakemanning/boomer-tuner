@@ -171,20 +171,6 @@ public class Player {
 		currentIndex = index;
 		setCurrentPlayer(new MediaPlayer(new Media(playQueue.get(currentIndex).getUri().toString())));
 		currentPlayer.play();
-
-		try {
-			Song s = (Song)playQueue.get(currentIndex);
-			MusixMatch musixMatch = new MusixMatch("8291e7a7568f841274a4168afd505710");
-			Track track = musixMatch.getMatchingTrack(s.getTitle(), s.getArtist().getName());
-			TrackData data = track.getTrack();
-			int trackID = data.getTrackId();
-			Lyrics lyrics = musixMatch.getLyrics(trackID);
-
-			System.out.println("Lyrics Body     : "     + lyrics.getLyricsBody());
-			System.out.println("Lyrics Copyright : "    + lyrics.getLyricsCopyright());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	// endregion
 
@@ -251,6 +237,32 @@ public class Player {
 	// endregion
 
 	// region Properties
+	public String getSongLyrics() {
+		if (currentPlayer == null || playQueue == null) return null;
+
+		final Playable playable = playQueue.get(currentIndex);
+		if (playable.getClass() != Song.class) {
+			return null;
+		}
+
+		try {
+			final Song s = (Song)playable;
+			final MusixMatch musixMatch = new MusixMatch("8291e7a7568f841274a4168afd505710");
+			final Track track = musixMatch.getMatchingTrack(s.getTitle(), s.getArtist().getName());
+			final TrackData data = track.getTrack();
+			final int trackID = data.getTrackId();
+			final Lyrics lyrics = musixMatch.getLyrics(trackID);
+
+			final StringBuilder sb = new StringBuilder(s.getTitle());
+			sb.append(" - ").append(s.getArtist().getName()).append("\n\n");
+			sb.append(lyrics.getLyricsBody());
+			return sb.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public BooleanProperty shuffleModeProperty() {
 		return shuffleMode;
 	}

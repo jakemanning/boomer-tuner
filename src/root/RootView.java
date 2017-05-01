@@ -223,7 +223,11 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		Player.instance().crossfadeModeProperty().addListener((obs, old, val) -> crossfade.setSelected(val));
 		crossfade.setOnAction(e -> rootController.crossfadePressed());
 
-		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade);
+		final MenuItem lyrics = new MenuItem("Retrieve Lyrics");
+		lyrics.setOnAction(e -> rootController.lyricsPressed());
+		lyrics.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
+
+		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade, lyrics);
 		return controls;
 	}
 

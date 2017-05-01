@@ -157,3 +157,7 @@
     -fx-text-fill: black;
     -fx-progress-color: white;
 }
+
+.text-flow {
+    -fx-fill: white;
+}
