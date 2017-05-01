@@ -20,12 +20,13 @@ import java.net.MalformedURLException;
 public class ImagesView extends ScrollPane implements CategoryView{
 	private ImagesController imagesController;
 	private TilePane tilePane = new TilePane();
+	private ObservableList<Image> images;
 	
 	public ImagesView(final ImagesController ic){
 		imagesController  = ic;
 		initView();
 
-		ObservableList<Image> images = MediaLibrary.instance().getImages();
+		images = MediaLibrary.instance().getImages();
 		addImages(images);
 	}
 
@@ -50,7 +51,7 @@ public class ImagesView extends ScrollPane implements CategoryView{
 			protected Void call() throws InterruptedException, IOException {
 				final int size = images.size();
 				for (int i = 0; i < size; i++) {
-					if (Thread.currentThread().isInterrupted()) return null;
+					if (Thread.currentThread().isInterrupted()) break;
 					addImageView(images.get(i));
 					updateProgress(i, size);
 				}
@@ -67,7 +68,7 @@ public class ImagesView extends ScrollPane implements CategoryView{
 			ImageView imageView = new ImageView(new javafx.scene.image.Image(imageName));
 			imageView.setSmooth(true);
 			imageView.setCache(true);
-			imageView.setCacheHint(CacheHint.QUALITY);
+			imageView.setCacheHint(CacheHint.SPEED);
 			imageView.setPreserveRatio(true);
 			imageView.setFitWidth(200);
 
@@ -83,16 +84,5 @@ public class ImagesView extends ScrollPane implements CategoryView{
 
 	@Override
 	public void setListeners(final RootModel rootModel) {
-		rootModel.setPlaylistModeListener(newValue -> {
-
-        });
-//		rootModel.setSearchListener(searchText -> {
-//			getChildren().clear();
-//			for (Image i : images) {
-//				if (imagesController.searchFilter(searchText).test(i)) {
-//					addImageView(i);
-//				}
-//			}
-//		});
 	}
 }

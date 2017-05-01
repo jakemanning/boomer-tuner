@@ -51,7 +51,7 @@ public class Player {
 		return new MediaView(currentPlayer);
 	}
 
-	// region Media Player=
+	// region Media Player
     private void initPreferences() {
         Preferences preferences = Preferences.userNodeForPackage(Player.class);
         shuffleMode.set(preferences.getBoolean("ShuffleMode", false));

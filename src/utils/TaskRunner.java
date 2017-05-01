@@ -37,7 +37,7 @@ public class TaskRunner {
 
 		Scene scene = new Scene(box);
 		if (isDarkMode) {
-			scene.getStylesheets().add("utils/taskRunner.css");
+			scene.getStylesheets().add("root/darkMode.css");
 		}
 
 		stage.setScene(scene);

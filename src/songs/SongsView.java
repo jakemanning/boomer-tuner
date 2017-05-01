@@ -5,11 +5,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import models.Album;
@@ -99,10 +99,7 @@ public class SongsView extends TableView<Song> implements CategoryView {
     }
 
     public void createPlaylistName(final ObservableList<Song> selectedCells) {
-        Scene scene = new Scene(new Group());
-        if (rootModel.darkModeProperty().get()) {
-            scene.getStylesheets().add("songs/songPlaylist.css");
-        }
+        Scene scene = new Scene(new Pane());
 
         TextField textField = new TextField ();
         Button createButton = new Button("Create");
@@ -116,8 +113,13 @@ public class SongsView extends TableView<Song> implements CategoryView {
         grid.add(textField, 1, 0);
         grid.add(createButton, 2, 0);
 
-        Group root = (Group) scene.getRoot();
+        Pane root = (Pane)scene.getRoot();
         root.getChildren().add(grid);
+
+        if (rootModel.darkModeProperty().get()) {
+            scene.getStylesheets().add("root/darkMode.css");
+            grid.getStyleClass().add("background-root");
+        }
 
         Stage stage = new Stage();
         stage.setScene(scene);

@@ -13,13 +13,13 @@ import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -193,7 +193,7 @@ public class RootController {
 	}
 
 	public void showHelp() {
-		final Scene scene = new Scene(new Group());
+		final Scene scene = new Scene(new Pane());
 
 		final String text = "\t\t\t\t\t\tUsing Boomer Tuner:\n\n" +
 				"- Import media by choosing a directory with the accepted forms of media*\n" +
@@ -214,8 +214,13 @@ public class RootController {
 		grid.add(textItem, 0, 0);
 		grid.add(okButton, 1, 0);
 
-		final Group root = (Group) scene.getRoot();
+		final Pane root = (Pane) scene.getRoot();
 		root.getChildren().add(grid);
+
+		if (rootModel.darkModeProperty().get()) {
+			scene.getStylesheets().add("root/darkMode.css");
+			textItem.getStyleClass().add("text");
+		}
 
 		final Stage stage = new Stage();
 		stage.setScene(scene);

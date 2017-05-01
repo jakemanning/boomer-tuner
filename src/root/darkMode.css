@@ -97,13 +97,17 @@
     -fx-fill: white;
 }
 
-#playlist {
+.button {
     -fx-background-color: #616161;
     -fx-text-fill: white;
 }
 
-#playlist:hover{
+.button:hover{
     -fx-background-color: #131313;
+}
+
+.text {
+    -fx-fill: white;
 }
 
 .list-view > .virtual-flow > .scroll-bar:vertical,
@@ -146,4 +150,10 @@
 .scroll-pane > .scroll-bar > .increment-button,
 .scroll-pane > .scroll-bar > .decrement-button {
     -fx-opacity: 0;
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-progress-color: white;
 }

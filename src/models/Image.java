@@ -3,19 +3,20 @@ package models;
 import java.io.Serializable;
 import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 public class Image implements Category, Serializable{
 	private final String name;
 	private final URI uri;
 	
-	public Image(final URI uri){
+	public Image(final String name, final URI uri){
 		this.uri = uri;
-		name = uri.toString().substring(0, uri.toString().length()-3);
+		this.name = name;
 	}
 	
 	public static Image from(final URI uri){
-		return new Image(uri);
+		return new Image(Paths.get(uri).getFileName().toString() ,uri);
 	}
 	
 	public static boolean accepts(final Path path) {

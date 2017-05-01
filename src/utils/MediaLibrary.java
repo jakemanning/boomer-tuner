@@ -112,6 +112,7 @@ public class MediaLibrary {
 			List<Path> paths = Files.walk(folder, 5).collect(Collectors.toList());
 			final int size = paths.size();
 			for (int i = 0; i < size; i++) {
+				if (Thread.currentThread().isInterrupted()) break;
 				Path path = paths.get(i);
 				if (Song.accepts(path)) {
 					addSong(Song.from(path.toUri()));
