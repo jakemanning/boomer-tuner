@@ -235,7 +235,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		final Menu helpMenu = new Menu("Help");
 		final MenuItem helpItem = new MenuItem("Boomer Tuner Help");
 		helpItem.setOnAction(e -> rootController.showHelp());
-		helpItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.SHORTCUT_DOWN));
+		helpItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
 		helpMenu.getItems().addAll(helpItem);
 		return helpMenu;
 	}
