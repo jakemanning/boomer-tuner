@@ -70,6 +70,9 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		fxmlLoader.setRoot(this);
 		fxmlLoader.load();
 		getStylesheets().add("root/root.css");
+		if (rootModel.darkModeProperty().get()) {
+			getStylesheets().add("root/darkMode.css");
+		}
 		rootModel.addSelectedCategoryListener(this);
 		Player.instance().addListener(this);
 		lookupViews();
@@ -163,6 +166,14 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 			menuBar.setUseSystemMenuBar(true);
 		}
 
+		final Menu file = createFileMenu(stage);
+		final Menu controls = createControlsMenu();
+		final Menu helpMenu = createHelpMenu();
+
+		menuBar.getMenus().addAll(file, controls, helpMenu);
+	}
+
+	private Menu createFileMenu(final Stage stage) {
 		final Menu file = new Menu("File");
 		final MenuItem open = new MenuItem("Import Media...");
 		open.setOnAction(e -> rootController.chooseDirectory(stage));
@@ -170,8 +181,17 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 
 		final MenuItem clear = new MenuItem("Delete Library");
 		clear.setOnAction(e -> MediaLibrary.instance().clearLibrary());
-		file.getItems().addAll(open, clear);
 
+		final CheckMenuItem darkMode = new CheckMenuItem("Dark Mode");
+		darkMode.setSelected(rootModel.darkModeProperty().get());
+		rootModel.darkModeProperty().addListener((obs, old, val) -> darkMode.setSelected(val));
+		darkMode.setOnAction(e -> rootController.toggleDarkMode(getStylesheets()));
+
+		file.getItems().addAll(open, clear, darkMode);
+		return file;
+	}
+
+	private Menu createControlsMenu() {
 		final Menu controls = new Menu("Controls");
 		final MenuItem play = new MenuItem("Play/Pause");
 		play.setOnAction(e -> rootController.playPressed());
@@ -186,11 +206,10 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		next.setAccelerator(new KeyCodeCombination(KeyCode.RIGHT));
 
 		final CheckMenuItem shuffle = new CheckMenuItem("Shuffle");
-        shuffle.setSelected(Player.instance().shuffleModeProperty().get());
+		shuffle.setSelected(Player.instance().shuffleModeProperty().get());
 		Player.instance().shuffleModeProperty().addListener((obs, old, val) -> shuffle.setSelected(val));
 		shuffle.setOnAction(e -> rootController.shufflePressed());
 		shuffle.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
-
 
 		final CheckMenuItem loop = new CheckMenuItem("Repeat");
 		loop.setSelected(Player.instance().loopModeProperty().get());
@@ -203,15 +222,18 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		crossfade.setSelected(Player.instance().crossfadeModeProperty().get());
 		Player.instance().crossfadeModeProperty().addListener((obs, old, val) -> crossfade.setSelected(val));
 		crossfade.setOnAction(e -> rootController.crossfadePressed());
-		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade);
 
+		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade);
+		return controls;
+	}
+
+	private Menu createHelpMenu() {
 		final Menu helpMenu = new Menu("Help");
 		final MenuItem helpItem = new MenuItem("Boomer Tuner Help");
 		helpItem.setOnAction(e -> rootController.showHelp());
 		helpItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.SHORTCUT_DOWN));
 		helpMenu.getItems().addAll(helpItem);
-
-		menuBar.getMenus().addAll(file, controls, helpMenu);
+		return helpMenu;
 	}
 
 	@Override

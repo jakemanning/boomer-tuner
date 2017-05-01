@@ -1,21 +1,35 @@
 package root;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import models.Playlist;
 import utils.CategoryType;
 import utils.DirectoryListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class RootModel {
     private boolean playlistMode = false;
     private boolean directorySelected = false;
+    private BooleanProperty darkModeProperty = new SimpleBooleanProperty(false);
     private CategoryType selectedCategory;
 	private PlaylistModeListener playlistListener = null;
 	private List<DirectoryListener> directoryListeners = new ArrayList<>();
 	private List<SelectedCategoryListener> categoryListeners = new ArrayList<>();
 	private SearchListener searchListener = null;
 	private String searchText = "";
+
+	public RootModel() {
+	    Preferences preferences = Preferences.userNodeForPackage(RootModel.class);
+	    final boolean isDarkMode = preferences.getBoolean("DarkMode", false);
+	    darkModeProperty.set(isDarkMode);
+    }
+
+    public BooleanProperty darkModeProperty() {
+	    return darkModeProperty;
+    }
 
 	public boolean isPlaylistMode() {
 		return playlistMode;

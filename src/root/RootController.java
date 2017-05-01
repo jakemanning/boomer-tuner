@@ -11,6 +11,7 @@ import images.ImagesView;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -38,6 +39,7 @@ import videos.VideosView;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.prefs.Preferences;
 
 public class RootController {
     private RootModel rootModel;
@@ -88,6 +90,17 @@ public class RootController {
 			rootModel.setDirectorySelection(true);
 		}
     }
+
+    void toggleDarkMode(final ObservableList<String> stylesheets) {
+		rootModel.darkModeProperty().set(!rootModel.darkModeProperty().get());
+		final boolean isDarkMode = rootModel.darkModeProperty().get();
+		if (isDarkMode) {
+			stylesheets.add("root/darkMode.css");
+		} else {
+			stylesheets.remove("root/darkMode.css");
+		}
+		Preferences.userNodeForPackage(RootModel.class).putBoolean("DarkMode", rootModel.darkModeProperty().get());
+	}
 
 	void shufflePressed() {
 		Player.instance().toggleShuffle();
