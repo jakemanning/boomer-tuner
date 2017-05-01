@@ -16,6 +16,10 @@ import models.Category;
 import models.Playable;
 import models.Song;
 import models.Video;
+import org.jmusixmatch.MusixMatch;
+import org.jmusixmatch.entity.lyrics.Lyrics;
+import org.jmusixmatch.entity.track.Track;
+import org.jmusixmatch.entity.track.TrackData;
 
 import java.util.*;
 import java.util.prefs.Preferences;
@@ -167,6 +171,20 @@ public class Player {
 		currentIndex = index;
 		setCurrentPlayer(new MediaPlayer(new Media(playQueue.get(currentIndex).getUri().toString())));
 		currentPlayer.play();
+
+		try {
+			Song s = (Song)playQueue.get(currentIndex);
+			MusixMatch musixMatch = new MusixMatch("8291e7a7568f841274a4168afd505710");
+			Track track = musixMatch.getMatchingTrack(s.getTitle(), s.getArtist().getName());
+			TrackData data = track.getTrack();
+			int trackID = data.getTrackId();
+			Lyrics lyrics = musixMatch.getLyrics(trackID);
+
+			System.out.println("Lyrics Body     : "     + lyrics.getLyricsBody());
+			System.out.println("Lyrics Copyright : "    + lyrics.getLyricsCopyright());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	// endregion
 

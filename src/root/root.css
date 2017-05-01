@@ -15,3 +15,14 @@
     -glyph-size: 13;
     -glyph-name: TIMES_CIRCLE;
 }
+
+#play:hover,
+#previous:hover,
+#next:hover,
+#volumeDown:hover,
+#volumeUp:hover,
+#shuffle:hover,
+#loop:hover {
+    -fx-background-color: -fx-inner-border, #c4c4c4;
+    -fx-background-radius: 5px, 5px, 5px, 5px;
+}

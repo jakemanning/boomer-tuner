@@ -100,15 +100,19 @@ public class SongsView extends TableView<Song> implements CategoryView {
 
     public void createPlaylistName(final ObservableList<Song> selectedCells) {
         Scene scene = new Scene(new Group());
+        if (rootModel.darkModeProperty().get()) {
+            scene.getStylesheets().add("songs/songPlaylist.css");
+        }
 
         TextField textField = new TextField ();
         Button createButton = new Button("Create");
+        Label label = new Label("Playlist Name: ");
 
         GridPane grid = new GridPane();
         grid.setVgap(4);
         grid.setHgap(10);
         grid.setPadding(new Insets(5, 5, 5, 5));
-        grid.add(new Label("Playlist Name: "), 0, 0);
+        grid.add(label, 0, 0);
         grid.add(textField, 1, 0);
         grid.add(createButton, 2, 0);
 

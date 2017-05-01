@@ -40,4 +40,9 @@ public class Image implements Category, Serializable{
 	public URI getUri() {
 		return uri;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

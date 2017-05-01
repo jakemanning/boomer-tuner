@@ -195,14 +195,14 @@ public class RootController {
 	public void showHelp() {
 		final Scene scene = new Scene(new Group());
 
-		final String text = "\t\t\t\t\t\tUsing Boomer Tuner:\n" +
+		final String text = "\t\t\t\t\t\tUsing Boomer Tuner:\n\n" +
 				"- Import media by choosing a directory with the accepted forms of media*\n" +
+				"- Any media imported is stored in your library. You can delete your library\n" +
 				"- Change media type by choosing from the menu on the left.\n" +
 				"- Search at the top to find specific items in your library\n" +
 				"- Create playlists by pressing the \"Create Playlist\" button\n" +
 				"\tControl/Shift+Clicking allows you to select any amount of songs.\n" +
-				"- Any media imported is stored in your library. You can delete your library\n" +
-				"\n\t*Accepted extensions: mp3, m4a, mov, mp4, m3u8, m4v, jp(e)g, png";
+				"\n*Accepted extensions: mp3, m4a, mov, mp4, m3u8, m4v, jp(e)g, png";
 		final Text textItem = new Text(text);
 
 		final Button okButton = new Button("OK");

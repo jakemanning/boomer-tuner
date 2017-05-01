@@ -10,9 +10,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import root.RootModel;
 
-class TaskRunner {
-	static void run(Task task, String title, Runnable onSuccess) {
+import java.util.prefs.Preferences;
+
+public class TaskRunner {
+	public static void run(Task task, String title, Runnable onSuccess) {
+		Preferences preferences = Preferences.userNodeForPackage(RootModel.class);
+		final boolean isDarkMode = preferences.getBoolean("DarkMode", false);
+
 		Stage stage = new Stage();
 		stage.setTitle("Please wait...");
 		stage.initModality(Modality.WINDOW_MODAL);
@@ -30,11 +36,17 @@ class TaskRunner {
 		box.getChildren().addAll(label, bar);
 
 		Scene scene = new Scene(box);
+		if (isDarkMode) {
+			scene.getStylesheets().add("utils/taskRunner.css");
+		}
+
 		stage.setScene(scene);
 
 		task.setOnSucceeded(event -> {
 			stage.close();
-			onSuccess.run();
+			if (onSuccess != null) {
+				onSuccess.run();
+			}
 		});
 
 		Thread thread = new Thread(task);
@@ -48,9 +60,13 @@ class TaskRunner {
 				stage.show();
 			}
 		});
+
+		stage.setOnCloseRequest(r -> {
+			task.cancel(true);
+		});
 	}
 
-	static Task<Void> sleepTask(final int millis) {
+	public static Task<Void> sleepTask(final int millis) {
 		return new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
