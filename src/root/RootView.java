@@ -72,6 +72,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		getStylesheets().add("root/root.css");
 		if (rootModel.darkModeProperty().get()) {
 			getStylesheets().add("root/darkMode.css");
+			invertImages();
 		}
 		rootModel.addSelectedCategoryListener(this);
 		Player.instance().addListener(this);
@@ -148,6 +149,32 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
         volSlider.valueChangingProperty().addListener(rootController.volumeUpdated(volSlider));
     }
 
+	private void invertImages() {
+		if (rootModel.darkModeProperty().get()) {
+			volDownImage.setImage(Icon.VOLDOWN_DARK.image());
+			volUpImage.setImage(Icon.VOLUP_DARK.image());
+			shuffleImage.setImage(Icon.SHUFFLE_DARK.image());
+			shufflePressedImage.setImage(Icon.SHUFFLE_PRESSED_DARK.image());
+			previousImage.setImage(Icon.PREVIOUS_DARK.image());
+			pauseImage.setImage(Icon.PAUSE_DARK.image());
+			playImage.setImage(Icon.PLAY_DARK.image());
+			nextImage.setImage(Icon.NEXT_DARK.image());
+			loopImage.setImage(Icon.LOOP_DARK.image());
+			loopPressedImage.setImage(Icon.LOOP_PRESSED_DARK.image());
+		} else {
+			volDownImage.setImage(Icon.VOLDOWN.image());
+			volUpImage.setImage(Icon.VOLUP.image());
+			shuffleImage.setImage(Icon.SHUFFLE.image());
+			shufflePressedImage.setImage(Icon.SHUFFLE_PRESSED.image());
+			previousImage.setImage(Icon.PREVIOUS.image());
+			pauseImage.setImage(Icon.PAUSE.image());
+			playImage.setImage(Icon.PLAY.image());
+			nextImage.setImage(Icon.NEXT.image());
+			loopImage.setImage(Icon.LOOP.image());
+			loopPressedImage.setImage(Icon.LOOP_PRESSED.image());
+		}
+	}
+
 	public Button getPlaylistButton() {
 		return playlist;
 	}
@@ -185,7 +212,10 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		final CheckMenuItem darkMode = new CheckMenuItem("Dark Mode");
 		darkMode.setSelected(rootModel.darkModeProperty().get());
 		rootModel.darkModeProperty().addListener((obs, old, val) -> darkMode.setSelected(val));
-		darkMode.setOnAction(e -> rootController.toggleDarkMode(getStylesheets()));
+		darkMode.setOnAction(e -> {
+			rootController.toggleDarkMode(getStylesheets());
+			invertImages();
+		});
 
 		file.getItems().addAll(open, clear, darkMode);
 		return file;

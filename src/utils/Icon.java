@@ -18,7 +18,20 @@ public enum Icon {
 	VOLUP ("res/playercontrols/volup.png"), 
 	PREVIOUS ("res/playercontrols/rewind.png"),
 	NEXT("res/playercontrols/fastforward.png"),
-	DEFAULT_ARTWORK("res/artwork.png");
+	DEFAULT_ARTWORK("res/artwork.png"),
+
+	SHUFFLE_DARK("res/playercontrols-dark/shuffle.png"),
+	SHUFFLE_PRESSED_DARK("res/playercontrols-dark/shuffle_pressed.png"),
+	PLAY_DARK("res/playercontrols-dark/play.png"),
+	MUTE_DARK("res/playercontrols-dark/mute.png"),
+	STOP_DARK("res/playercontrols-dark/stop.png"),
+	PAUSE_DARK("res/playercontrols-dark/pause.png"),
+	VOLDOWN_DARK("res/playercontrols-dark/voldown.png"),
+	LOOP_DARK("res/playercontrols-dark/loop.png"),
+	LOOP_PRESSED_DARK("res/playercontrols-dark/loop_pressed.png"),
+	VOLUP_DARK("res/playercontrols-dark/volup.png"),
+	PREVIOUS_DARK("res/playercontrols-dark/rewind.png"),
+	NEXT_DARK("res/playercontrols-dark/fastforward.png");
 	
 	private Image image;
 	
