@@ -20,7 +20,7 @@ public class Image implements Category, Serializable{
 	
 	public static boolean accepts(final Path path) {
 		final String normalized = path.toString().toLowerCase();
-		return normalized.endsWith(".jpg") || normalized.endsWith(".png");
+		return normalized.endsWith(".jpg") || normalized.endsWith(".png") || normalized.endsWith(".jpeg");
 	}
 	
 	@Override

@@ -203,9 +203,15 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		crossfade.setSelected(Player.instance().crossfadeModeProperty().get());
 		Player.instance().crossfadeModeProperty().addListener((obs, old, val) -> crossfade.setSelected(val));
 		crossfade.setOnAction(e -> rootController.crossfadePressed());
-
 		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade);
-		menuBar.getMenus().addAll(file, controls);
+
+		final Menu helpMenu = new Menu("Help");
+		final MenuItem helpItem = new MenuItem("Boomer Tuner Help");
+		helpItem.setOnAction(e -> rootController.showHelp());
+		helpItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.SHORTCUT_DOWN));
+		helpMenu.getItems().addAll(helpItem);
+
+		menuBar.getMenus().addAll(file, controls, helpMenu);
 	}
 
 	@Override

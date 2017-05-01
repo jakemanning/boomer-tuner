@@ -11,9 +11,15 @@ import images.ImagesView;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import models.Playlist;
@@ -171,5 +177,41 @@ public class RootController {
 
 	public void searchTextChanged(final String searchText) {
 		rootModel.setSearchText(searchText);
+	}
+
+	public void showHelp() {
+		final Scene scene = new Scene(new Group());
+
+		final String text = "\t\t\t\t\t\tUsing Boomer Tuner:\n" +
+				"- Import media by choosing a directory with the accepted forms of media*\n" +
+				"- Change media type by choosing from the menu on the left.\n" +
+				"- Search at the top to find specific items in your library\n" +
+				"- Create playlists by pressing the \"Create Playlist\" button\n" +
+				"\tControl/Shift+Clicking allows you to select any amount of songs.\n" +
+				"- Any media imported is stored in your library. You can delete your library\n" +
+				"\n\t*Accepted extensions: mp3, m4a, mov, mp4, m3u8, m4v, jp(e)g, png";
+		final Text textItem = new Text(text);
+
+		final Button okButton = new Button("OK");
+
+		final GridPane grid = new GridPane();
+		grid.setVgap(4);
+		grid.setHgap(10);
+		grid.setPadding(new Insets(5, 5, 5, 5));
+		grid.add(textItem, 0, 0);
+		grid.add(okButton, 1, 0);
+
+		final Group root = (Group) scene.getRoot();
+		root.getChildren().add(grid);
+
+		final Stage stage = new Stage();
+		stage.setScene(scene);
+		stage.setTitle("Help Documentation");
+		stage.show();
+
+
+		okButton.setOnAction(e -> {
+			stage.close();
+		});
 	}
 }
