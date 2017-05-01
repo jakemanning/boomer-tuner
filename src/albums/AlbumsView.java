@@ -10,15 +10,16 @@ import root.RootModel;
 import songs.SongsController;
 import songs.SongsView;
 import utils.CategoryView;
+import utils.DirectoryListener;
 import utils.MediaLibrary;
 
-public class AlbumsView extends SplitPane implements CategoryView {
+public class AlbumsView extends SplitPane implements CategoryView, DirectoryListener {
 	private final AlbumsModel model;
 	private final AlbumsController controller;
 	private ListView<Album> albums;
 	private SongsView detail;
 
-	public AlbumsView(AlbumsModel model, AlbumsController controller) {
+	public AlbumsView(final AlbumsModel model, final AlbumsController controller, final RootModel rootModel) {
 		this.model = model;
 		this.controller = controller;
 
@@ -26,20 +27,18 @@ public class AlbumsView extends SplitPane implements CategoryView {
 
 		initializeAlbums();
 		initializeDetailView();
+
+		rootModel.addDirectoryListener(this::directorySet);
 	}
 
 	private void initializeAlbums() {
 		albums.setItems(MediaLibrary.instance().getAlbums());
 		albums.getSelectionModel().selectedItemProperty().addListener(controller.albumSelectionListener());
+		// TODO: Ensure is sorted. Artist is only sorted initially since music is probably sorted in artist order. Need to implement Comparable in Album/Artist/PLaylist/etc.
 	}
 
 	private void initializeDetailView() {
-		if (model.isDirectorySelected()){
-			detail.setPlaceholder(new Label("Select an album from the list"));
-		}else{
-			detail.setPlaceholder(new Label("Choose a directory to view albums"));
-		}
-
+		detail.setPlaceholder(new Label("Import media to view albums"));
 		detail.getColumns().remove(3); // remove album column
 		model.selectedAlbumProperty().addListener((observable, oldValue, newValue) -> {
 			ObservableList<Song> items = MediaLibrary.instance().getSongs()
@@ -61,11 +60,24 @@ public class AlbumsView extends SplitPane implements CategoryView {
 	}
 
 	@Override
-	public void setRootModel(RootModel rootModel) {
+	public void setListeners(final RootModel rootModel) {
 		rootModel.setPlaylistModeListener(this::playlistModeChanged);
+		rootModel.setSearchListener(this::searchTermChanged);
+		detail.setRootModel(rootModel);
 	}
 
 	private void playlistModeChanged(boolean playlistMode) {
 		detail.playlistModeChanged(playlistMode);
+	}
+
+	private void searchTermChanged(final String searchTerm) {
+		albums.setItems(MediaLibrary.instance().getAlbums().filtered(controller.searchFilter(searchTerm)));
+	}
+
+	@Override
+	public void directorySet(final boolean set) {
+		if (set) {
+			detail.setPlaceholder(new Label("Select an album from the list"));
+		}
 	}
 }

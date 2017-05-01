@@ -10,21 +10,23 @@ import root.RootModel;
 import songs.SongsController;
 import songs.SongsView;
 import utils.CategoryView;
+import utils.DirectoryListener;
 import utils.MediaLibrary;
 
-public class ArtistsView extends SplitPane implements CategoryView {
+public class ArtistsView extends SplitPane implements CategoryView, DirectoryListener {
 	private final ArtistsModel model;
 	private final ArtistsController controller;
 	private ListView<Artist> artists;
 	private SongsView detail;
 
-	public ArtistsView(ArtistsModel model, ArtistsController controller) {
+	public ArtistsView(final ArtistsModel model, final ArtistsController controller, final RootModel rootModel) {
 		this.model = model;
 		this.controller = controller;
 		initializeViews();
 
 		initializeArtists();
 		initializeDetailView();
+		rootModel.addDirectoryListener(this::directorySet);
 	}
 
 	private void initializeArtists() {
@@ -33,11 +35,7 @@ public class ArtistsView extends SplitPane implements CategoryView {
 	}
 
 	private void initializeDetailView() {
-		if(model.isDirectorySelected()){
-			detail.setPlaceholder(new Label("Select an artist from the list"));
-		}else {
-			detail.setPlaceholder(new Label("Choose a directory to view artists"));
-		}
+		detail.setPlaceholder(new Label("Import media to view artists"));
 		detail.getColumns().remove(2); // remove artist column
 		model.selectedArtistProperty().addListener((observable, oldValue, newValue) -> {
 			ObservableList<Song> items = MediaLibrary.instance().getSongs()
@@ -59,11 +57,24 @@ public class ArtistsView extends SplitPane implements CategoryView {
 	}
 
 	@Override
-	public void setRootModel(RootModel rootModel) {
+	public void setListeners(final RootModel rootModel) {
 		rootModel.setPlaylistModeListener(this::playlistModeChanged);
+		rootModel.setSearchListener(this::searchTermChanged);
+		detail.setRootModel(rootModel);
 	}
 
-	private void playlistModeChanged(boolean playlistMode) {
+	private void playlistModeChanged(final boolean playlistMode) {
 		detail.playlistModeChanged(playlistMode);
+	}
+
+	private void searchTermChanged(String searchTerm) {
+		artists.setItems(MediaLibrary.instance().getArtists().filtered(controller.searchFilter(searchTerm)));
+	}
+
+	@Override
+	public void directorySet(final boolean set) {
+		if(set) {
+			detail.setPlaceholder(new Label("Select an artist from the list"));
+		}
 	}
 }

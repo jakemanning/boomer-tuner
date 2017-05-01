@@ -1,27 +1,51 @@
 package root;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import models.Playlist;
 import utils.CategoryType;
+import utils.DirectoryListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class RootModel {
     private boolean playlistMode = false;
     private boolean directorySelected = false;
+    private BooleanProperty darkModeProperty = new SimpleBooleanProperty(false);
     private CategoryType selectedCategory;
 	private PlaylistModeListener playlistListener = null;
+	private List<DirectoryListener> directoryListeners = new ArrayList<>();
 	private List<SelectedCategoryListener> categoryListeners = new ArrayList<>();
+	private SearchListener searchListener = null;
+	private String searchText = "";
 
-    public boolean isPlaylistMode() {
-        return playlistMode;
+	public RootModel() {
+	    Preferences preferences = Preferences.userNodeForPackage(RootModel.class);
+	    final boolean isDarkMode = preferences.getBoolean("DarkMode", false);
+	    darkModeProperty.set(isDarkMode);
     }
 
-    public void setPlaylistMode(boolean playlistMode) {
+    public BooleanProperty darkModeProperty() {
+	    return darkModeProperty;
+    }
+
+	public boolean isPlaylistMode() {
+		return playlistMode;
+	}
+
+    public void setPlaylistMode(final boolean playlistMode) {
         this.playlistMode = playlistMode;
         playlistModeChanged();
     }
-    public void setDirectorySelection(boolean selection){
+    public void setDirectorySelection(final boolean selection){
         directorySelected = selection;
+        directorySelectionChanged();
+    }
+    public void addDirectoryListener(final DirectoryListener listener){
+        directoryListeners.add(listener);
+        directorySelectionChanged();
     }
     public boolean isDirectorySelected(){
         return directorySelected;
@@ -35,17 +59,24 @@ public class RootModel {
         return selectedCategory;
     }
 
-    public void setSelectedCategory(CategoryType selectedCategory) {
+    public void setSelectedCategory(final CategoryType selectedCategory) {
         this.selectedCategory = selectedCategory;
         categoryChanged();
     }
 
-	public void setPlaylistModeListener(PlaylistModeListener listener) {
+	public void setPlaylistModeListener(final PlaylistModeListener listener) {
 		playlistListener = listener;
 		playlistListener.playlistModeChanged(playlistMode);
 	}
 
-    public void addSelectedCategoryListener(SelectedCategoryListener listener) {
+	public void playlistCreated(final Playlist playlist) {
+        this.selectedCategory = CategoryType.Playlists;
+        for (SelectedCategoryListener listener: categoryListeners) {
+            listener.playlistCreated(playlist);
+        }
+    }
+
+    public void addSelectedCategoryListener(final SelectedCategoryListener listener) {
         categoryListeners.add(listener);
     }
 
@@ -58,6 +89,23 @@ public class RootModel {
     private void playlistModeChanged() {
 		if (playlistListener != null) {
 			playlistListener.playlistModeChanged(playlistMode);
+		}
+	}
+	private  void directorySelectionChanged() {
+        for(DirectoryListener listener : directoryListeners){
+            listener.directorySet(directorySelected);
+        }
+    }
+
+	public void setSearchListener(final SearchListener listener) {
+		searchListener = listener;
+		searchListener.searchTextUpdated(searchText);
+	}
+
+	public void setSearchText(final String searchText) {
+		this.searchText = searchText;
+		if (searchListener != null) {
+			searchListener.searchTextUpdated(searchText);
 		}
 	}
 }

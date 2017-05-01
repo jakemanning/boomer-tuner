@@ -24,7 +24,7 @@ public class ArtistsModel {
 		return selectedArtist;
 	}
 
-	public void setSelectedArtist(Artist selectedArtist) {
+	public void setSelectedArtist(final Artist selectedArtist) {
 		this.selectedArtist.set(selectedArtist);
 	}
 }

@@ -1,8 +1,9 @@
 package root;
 
+import models.Playlist;
 import utils.CategoryType;
 
-@FunctionalInterface
 public interface SelectedCategoryListener {
-    void selectedCategoryChanged(CategoryType value);
+    void selectedCategoryChanged(final CategoryType value);
+    void playlistCreated(final Playlist playlist);
 }

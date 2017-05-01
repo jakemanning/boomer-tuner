@@ -12,7 +12,7 @@ public enum CategoryType {
 
 	Class<? extends Category> aClass;
 
-	CategoryType(Class<? extends Category> aClass) {
+	CategoryType(final Class<? extends Category> aClass) {
 		this.aClass = aClass;
 	}
 	
@@ -21,7 +21,7 @@ public enum CategoryType {
 		return this.name();
 	}
 
-	public static CategoryType of(Category category) {
+	public static CategoryType of(final Category category) {
 		for (CategoryType categoryType : CategoryType.values()) {
 			if (categoryType.aClass.equals(category.getClass())) {
 				return categoryType;

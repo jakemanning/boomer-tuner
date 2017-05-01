@@ -3,5 +3,5 @@ package utils;
 import root.RootModel;
 
 public interface CategoryView {
-	void setRootModel(RootModel rootModel);
+	void setListeners(final RootModel rootModel);
 }

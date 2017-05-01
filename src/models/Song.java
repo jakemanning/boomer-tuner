@@ -1,5 +1,6 @@
 package models;
 
+import javafx.util.Duration;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -12,20 +13,21 @@ import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.Objects;
 
-public class Song implements Category, Playable {
+public class Song implements Category, Playable, Serializable {
 	private final String title;
 	private final Artist artist;
 	private final int track;
-	private final Integer length;
+	private final int length;
 	private final URI uri;
 	private final Album album;
 
-	public Song(final String title, final Artist artist, final Album album, final int track, final Artwork artwork,
-			final int seconds, final URI uri) {
+	public Song(final String title, final Artist artist, final Album album, final int track,
+				final int seconds, final URI uri) {
 		this.title = title;
 		this.artist = artist;
 		this.album = album;
@@ -45,15 +47,30 @@ public class Song implements Category, Playable {
 		try {
 			AudioFile f = AudioFileIO.read(new File(uri));
 			Tag tag = f.getTag();
+
+			String trackStr = tag.getFirst(FieldKey.TRACK);
+			if (trackStr.isEmpty()) { return null; }
+
 			Artist artist = new Artist(tag.getFirst(FieldKey.ARTIST));
 			Artwork artwork = tag.getFirstArtwork();
 			Album album = new Album(tag.getFirst(FieldKey.ALBUM), artwork);
 			String title = tag.getFirst(FieldKey.TITLE);
-			String trackStr = tag.getFirst(FieldKey.TRACK);
+			int track = Integer.parseInt(trackStr);
 			Integer seconds = f.getAudioHeader().getTrackLength() + 1;
 
-			int track = trackStr.isEmpty() ? -1 : Integer.valueOf(trackStr);
-			return new Song(title, artist, album, track, artwork, seconds, uri);
+			return new Song(title, artist, album, track, seconds, uri);
+		} catch (CannotReadException | IOException | TagException | InvalidAudioFrameException
+				| ReadOnlyFileException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	Artwork getArtwork() {
+		try {
+			AudioFile f = AudioFileIO.read(new File(uri));
+			Tag tag = f.getTag();
+			return tag.getFirstArtwork();
 		} catch (CannotReadException | IOException | TagException | InvalidAudioFrameException
 				| ReadOnlyFileException e) {
 			e.printStackTrace();
@@ -67,7 +84,7 @@ public class Song implements Category, Playable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())
@@ -105,17 +122,7 @@ public class Song implements Category, Playable {
 	}
 
 	public String getDuration() {
-		Integer minutes = (int) (length / 60.0);
-		String minutesOutput = "00";
-		if (minutes != 0) {
-			minutesOutput = minutes.toString();
-		}
-		Integer seconds = (int) (length % 60);
-		String secondsOutput = seconds.toString();
-		if (seconds < 10) {
-			secondsOutput = "0" + seconds;
-		}
-		return (minutesOutput + ":" + secondsOutput);
+		return Playable.format(Duration.seconds(length));
 	}
 
 	public URI getUri() {

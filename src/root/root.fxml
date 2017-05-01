@@ -1,17 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
 <fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <VBox fx:id="menuVBox">
+            <MenuBar fx:id="menuBar"/>
+            <HBox alignment="CENTER_RIGHT" maxHeight="40" minHeight="40" prefHeight="40">
+                <padding>
+                    <Insets right="20"/>
+                </padding>
+                <!--Source: https://vocabhunter.github.io/2017/01/15/Search-Bar.html-->
+                <CustomTextField fx:id="searchField">
+                    <left>
+                        <Label styleClass="searchBoxLabel">
+                            <graphic>
+                                <FontAwesomeIconView styleClass="searchBoxLabelIcon"/>
+                            </graphic>
+                        </Label>
+                    </left>
+                    <right>
+                        <Label fx:id="clearSearch" styleClass="clearSearchLabel">
+                            <graphic>
+                                <FontAwesomeIconView styleClass="clearSearchLabelIcon"/>
+                            </graphic>
+                        </Label>
+                    </right>
+                </CustomTextField>
+            </HBox>
+        </VBox>
+    </top>
     <bottom>
         <BorderPane fx:id="controlPane" maxHeight="100.0" minHeight="100.0" prefHeight="50.0" minWidth="600">
             <left>
                 <HBox alignment="CENTER_LEFT" maxHeight="100.0" minHeight="100.0" prefHeight="100.0" maxWidth="150"
                       minWidth="150">
                     <VBox alignment="CENTER" maxHeight="100" minHeight="100" prefHeight="100">
-                        <ImageView fx:id="artwork" fitHeight="100.0" fitWidth="100" preserveRatio="true"/>
+                        <ImageView fx:id="artwork" />
                     </VBox>
                 </HBox>
             </left>
@@ -32,6 +62,11 @@
             </center>
             <bottom>
                 <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
+                    <Label fx:id="volumeDown" minHeight="40.0" maxHeight="40.0" minWidth="30" maxWidth="30" HBox.hgrow="NEVER"/>
+                    <Slider fx:id="volumeSlider" min="0.00" max="1.00" prefWidth="120" HBox.hgrow="NEVER"/>
+                    <Label fx:id="volumeUp" minHeight="40.0" maxHeight="40.0" minWidth="30" maxWidth="30" HBox.hgrow="NEVER"/>
+                    <Region minWidth="20.0" maxWidth="20.0"/>
+
                     <Label fx:id="shuffle" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
                     <Region minWidth="20.0" maxWidth="20.0"/>
                     <Label fx:id="previous" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
@@ -39,6 +74,7 @@
                     <Label fx:id="next" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
                     <Region minWidth="20.0" maxWidth="20.0"/>
                     <Label fx:id="loop" minHeight="40.0" maxHeight="40.0" HBox.hgrow="NEVER"/>
+                    <Region minWidth="200.0" maxWidth="200.0"/>
                 </HBox>
             </bottom>
             <right>
@@ -52,7 +88,7 @@
         </BorderPane>
     </bottom>
     <left>
-        <VBox prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="200.0" prefWidth="120.0" BorderPane.alignment="CENTER">
             <children>
                 <ListView fx:id="menu" prefHeight="576.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
             </children>

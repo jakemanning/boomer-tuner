@@ -5,7 +5,9 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -14,8 +16,13 @@ import models.Category;
 import models.Playable;
 import models.Song;
 import models.Video;
+import org.jmusixmatch.MusixMatch;
+import org.jmusixmatch.entity.lyrics.Lyrics;
+import org.jmusixmatch.entity.track.Track;
+import org.jmusixmatch.entity.track.TrackData;
 
 import java.util.*;
+import java.util.prefs.Preferences;
 
 public class Player {
 
@@ -23,36 +30,50 @@ public class Player {
 	public static Player instance() {
 		return instance;
 	}
+	private Player() { initPreferences(); }
 
+	private final Preferences preferences = Preferences.userNodeForPackage(Player.class);
 	private BooleanProperty shuffleMode = new SimpleBooleanProperty(false);
 	private BooleanProperty loopMode = new SimpleBooleanProperty(false);
 	private BooleanProperty crossfadeMode = new SimpleBooleanProperty(false);
+	private DoubleProperty volume = new SimpleDoubleProperty(1.00);
+	private static final int CROSSFADE_DURATION = 3;
 	private Random random = new Random();
-
-	private Player() {
-	}
-
+	private final int secondThreshold = 7;
 	private List<PlayerListener> listeners = new ArrayList<>();
-
 	private MediaPlayer currentPlayer;
 	private List<Playable> playQueue = new ArrayList<>();
 	private Deque<Playable> lastPlayed = new ArrayDeque<>();
 	private int currentIndex;
+	private final int maxDeckSize = 30;
 
 	public MediaView getView() {
 		return new MediaView(currentPlayer);
 	}
 
-	private void setCurrentPlayer(MediaPlayer player) {
+	// region Media Player
+    private void initPreferences() {
+        Preferences preferences = Preferences.userNodeForPackage(Player.class);
+        shuffleMode.set(preferences.getBoolean("ShuffleMode", false));
+        loopMode.set(preferences.getBoolean("LoopMode", false));
+        crossfadeMode.set(preferences.getBoolean("CrossFadeMode", false));
+        volume.setValue(preferences.getDouble("Volume", 1.00));
+    }
+
+	private void setCurrentPlayer(final MediaPlayer player) {
 		currentPlayer = player;
 		Category newItem = playQueue.get(currentIndex);
-		if (CategoryType.of(newItem) == CategoryType.Songs) {
-			newSongBeingPlayed();
-		} else if (CategoryType.of(newItem) == CategoryType.Videos) {
-			newVideoBeingPlayed();
+		switch (CategoryType.of(newItem)) {
+			case Songs: newSongBeingPlayed(); break;
+			case Videos: newVideoBeingPlayed(); break;
 		}
+
 		currentPlayer.setOnEndOfMedia(() -> {
-			lastPlayed.addFirst(playQueue.get(currentIndex));
+			if (lastPlayed.size() > maxDeckSize) {
+				lastPlayed.pollLast();
+				lastPlayed.addFirst(playQueue.get(currentIndex));
+			}
+
 			currentIndex = nextIndex();
 			Media media = new Media(playQueue.get(currentIndex).getUri().toString());
 			setCurrentPlayer(new MediaPlayer(media));
@@ -63,68 +84,27 @@ public class Player {
 		currentPlayer.currentTimeProperty().addListener(ov -> timeUpdated());
 		currentPlayer.currentTimeProperty().addListener(crossfadeTimeListener());
 		currentPlayer.setOnReady(this::timeUpdated);
+		currentPlayer.volumeProperty().bind(volume);
 	}
 
-	private void play(List<? extends Playable> items, int index) {
-		if (currentPlayer != null && currentPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
-			currentPlayer.stop();
-		}
-		playQueue = new ArrayList<>(items);
-		currentIndex = index;
-		setCurrentPlayer(new MediaPlayer(new Media(playQueue.get(currentIndex).getUri().toString())));
-		currentPlayer.play();
-	}
-
-	private void playCrossfade(List<? extends Playable> items, int index) {
+	private void playCrossfade(final List<? extends Playable> items, final int index) {
 		MediaPlayer oldPlayer = currentPlayer;
 		final double currentVolume = oldPlayer.getVolume();
+		oldPlayer.volumeProperty().unbind();
 		playQueue = new ArrayList<>(items);
 		currentIndex = index;
+
 		MediaPlayer newPlayer = new MediaPlayer(new Media(playQueue.get(currentIndex).getUri().toString()));
 		newPlayer.setVolume(0);
-		setCurrentPlayer(newPlayer);
 		newPlayer.play();
-		Timeline crossfade = new Timeline(new KeyFrame(Duration.seconds(3),
+		Timeline crossfade = new Timeline(new KeyFrame(Duration.seconds(CROSSFADE_DURATION),
 				new KeyValue(oldPlayer.volumeProperty(), 0),
 				new KeyValue(newPlayer.volumeProperty(), currentVolume)));
-		crossfade.setOnFinished(event -> oldPlayer.stop());
+		crossfade.setOnFinished(event -> {
+			oldPlayer.stop();
+			setCurrentPlayer(newPlayer);
+		});
 		crossfade.play();
-	}
-
-	private InvalidationListener crossfadeTimeListener() {
-		return new InvalidationListener() {
-			private boolean run = false;
-
-			@Override
-			public void invalidated(javafx.beans.Observable observable) {
-				// Run once when less than 3 seconds away from the end of the song
-				if (currentPlayer.getCurrentTime()
-						.greaterThan(currentPlayer.getMedia().getDuration().subtract(Duration.seconds(3)))
-						&& !run && crossfadeMode.get()) {
-					run = true;
-					currentPlayer.setOnEndOfMedia(() -> {
-					});
-					lastPlayed.addFirst(playQueue.get(currentIndex));
-					playCrossfade(playQueue, nextIndex());
-				}
-			}
-		};
-	}
-
-	public void toggleShuffle() {
-		shuffleMode.set(!shuffleMode.get());
-	}
-	public void toggleLoop() {
-		loopMode.set(!loopMode.get());
-	}
-
-	public void toggleCrossfade() {
-		crossfadeMode.set(!crossfadeMode.get());
-	}
-
-	public void playSongs(List<Song> songs, int index) {
-		lastPlayed.clear();
-		play(songs, index);
 	}
 
 	private int previousIndex() {
@@ -146,71 +126,89 @@ public class Player {
 			return currentIndex;
 		}
 		if (shuffleMode.get()) {
-			return random.nextInt(playQueue.size());
+			int nextIndex = (random.nextInt(playQueue.size()));
+			while(playQueue.size() > 1 && nextIndex == currentIndex) {
+				nextIndex = (random.nextInt(playQueue.size()));
+			}
+			return nextIndex;
+
 		}
 		return (currentIndex + 1) % playQueue.size();
 	}
+	// endregion
 
-	public void playVideos(List<Video> videos, int index) {
+	// region Toggling
+	public void toggleShuffle() {
+		shuffleMode.set(!shuffleMode.get());
+		preferences.putBoolean("ShuffleMode", shuffleMode.get());
+	}
+	public void toggleLoop() {
+		loopMode.set(!loopMode.get());
+		preferences.putBoolean("LoopMode", loopMode.get());
+	}
+	public void toggleCrossfade() {
+		crossfadeMode.set(!crossfadeMode.get());
+		preferences.putBoolean("CrossFadeMode", crossfadeMode.get());
+	}
+	// endregion
+
+	// region Play
+	public void playVideos(final List<Video> videos, final int index) {
 		lastPlayed.clear();
 		play(videos, index);
 	}
 
-	public void resume() {
+	public void playSongs(final List<Song> songs, final int index) {
+		lastPlayed.clear();
+		play(songs, index);
+	}
+
+	private void play(final List<? extends Playable> items, final int index) {
 		if (currentPlayer != null) {
-			currentPlayer.play();
+			currentPlayer.stop();
 		}
+		playQueue = new ArrayList<>(items);
+		currentIndex = index;
+		setCurrentPlayer(new MediaPlayer(new Media(playQueue.get(currentIndex).getUri().toString())));
+		currentPlayer.play();
 	}
+	// endregion
 
-	public boolean isPlaying() {
-		return currentPlayer != null && currentPlayer.getStatus().equals(javafx.scene.media.MediaPlayer.Status.PLAYING);
-	}
-
-	public void pause() {
-		if (currentPlayer != null) {
-			currentPlayer.pause();
-		}
-	}
-
-	public void previous() {
-		if (currentPlayer != null && currentPlayer.getCurrentTime().greaterThan(Duration.seconds(7))) {
-			currentPlayer.seek(Duration.ZERO);
-		} else {
-			play(playQueue, previousIndex());
-		}
-	}
-
-	public void seek(double value) {
-		currentPlayer.seek(currentPlayer.getMedia().getDuration().multiply(value));
-	}
-
-	public void next() {
-		if (currentPlayer != null) {
-			lastPlayed.addFirst(playQueue.get(currentIndex));
-			play(playQueue, nextIndex());
-		}
-	}
-
-	public void addListener(PlayerListener listener) {
+	// region Listeners
+	public void addListener(final PlayerListener listener) {
 		listeners.add(listener);
 		shuffleMode.addListener(obs -> listener.shuffleModeUpdated(shuffleMode.get()));
 		loopMode.addListener(obs -> listener.loopModeUpdated(loopMode.get()));
 		crossfadeMode.addListener(obs -> listener.crossfadeModeUpdated(crossfadeMode.get()));
 	}
 
-	public BooleanProperty shuffleModeProperty() {
-		return shuffleMode;
+	private InvalidationListener crossfadeTimeListener() {
+		return new InvalidationListener() {
+			private boolean run = false;
+
+			@Override
+			public void invalidated(final javafx.beans.Observable observable) {
+				// Run once when less than 3 seconds away from the end of the song
+				if (currentPlayer == null) return;
+
+				if (currentPlayer.getCurrentTime()
+						.greaterThan(currentPlayer.getMedia().getDuration()
+								.subtract(Duration.seconds(CROSSFADE_DURATION)))
+						&& !run && crossfadeMode.get()) {
+					run = true;
+					currentPlayer.setOnEndOfMedia(() -> {
+						// clear out the normal behaviour for the end of a song
+						// playCrossfade will start the next song a little early
+						// so there's no need to do anything once the current song ends
+					});
+					lastPlayed.addFirst(playQueue.get(currentIndex));
+					playCrossfade(playQueue, nextIndex());
+				}
+			}
+		};
 	}
 
-	public BooleanProperty loopModeProperty() {
-		return loopMode;
-	}
-
-	public BooleanProperty crossfadeModeProperty() {
-		return crossfadeMode;
-	}
-
-	private void playingStatusChanged(MediaPlayer.Status status) {
+	private void playingStatusChanged(final MediaPlayer.Status status) {
 		for (PlayerListener listener : listeners) {
 			CategoryType type = CategoryType.of(playQueue.get(currentIndex));
 			listener.playingStatusChanged(type, status);
@@ -231,7 +229,113 @@ public class Player {
 
 	private void timeUpdated() {
 		for (PlayerListener listener : listeners) {
-			listener.timeUpdated(playQueue.get(currentIndex), currentPlayer.getCurrentTime(), currentPlayer.getTotalDuration());
+			if (currentPlayer != null) {
+				listener.timeUpdated(playQueue.get(currentIndex), currentPlayer.getCurrentTime(), currentPlayer.getTotalDuration());
+			}
 		}
 	}
+	// endregion
+
+	// region Properties
+	public String getSongLyrics() {
+		if (currentPlayer == null || playQueue == null) return null;
+
+		final Playable playable = playQueue.get(currentIndex);
+		if (playable.getClass() != Song.class) {
+			return null;
+		}
+
+		try {
+			final Song s = (Song)playable;
+			final MusixMatch musixMatch = new MusixMatch("8291e7a7568f841274a4168afd505710");
+			final Track track = musixMatch.getMatchingTrack(s.getTitle(), s.getArtist().getName());
+			final TrackData data = track.getTrack();
+			final int trackID = data.getTrackId();
+			final Lyrics lyrics = musixMatch.getLyrics(trackID);
+
+			final StringBuilder sb = new StringBuilder(s.getTitle());
+			sb.append(" - ").append(s.getArtist().getName()).append("\n\n");
+			sb.append(lyrics.getLyricsBody());
+			return sb.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public BooleanProperty shuffleModeProperty() {
+		return shuffleMode;
+	}
+
+	public BooleanProperty loopModeProperty() {
+		return loopMode;
+	}
+
+	public BooleanProperty crossfadeModeProperty() {
+		return crossfadeMode;
+	}
+
+	public double getVolume() {
+		return volume.get();
+	}
+
+	public DoubleProperty volumeProperty() {
+		return volume;
+	}
+
+	public void setVolume(final double volume) {
+		this.volume.set(volume);
+		saveVolume();
+	}
+
+	public void saveVolume() {
+		preferences.putDouble("Volume", volume.get());
+	}
+	// endregion
+
+	// region Basic Functions
+	public void resume() {
+		if (currentPlayer != null) {
+			currentPlayer.play();
+		}
+	}
+
+	public boolean isPlaying() {
+		return currentPlayer != null && currentPlayer.getStatus().equals(javafx.scene.media.MediaPlayer.Status.PLAYING);
+	}
+
+	public void pause() {
+		if (currentPlayer != null) {
+			currentPlayer.pause();
+		}
+	}
+
+	public void stop() {
+		if (currentPlayer != null) {
+			currentPlayer.stop();
+			currentPlayer = null;
+		}
+	}
+
+	public void previous() {
+		if (currentPlayer != null && currentPlayer.getCurrentTime().greaterThan(Duration.seconds(secondThreshold))) {
+			currentPlayer.seek(Duration.ZERO);
+		} else if (currentPlayer != null) {
+			play(playQueue, previousIndex());
+		}
+	}
+
+	public void seek(final double value) {
+		if (currentPlayer != null) {
+			currentPlayer.seek(currentPlayer.getMedia().getDuration().multiply(value));
+		}
+	}
+
+	public void next() {
+		if (currentPlayer != null) {
+			lastPlayed.addFirst(playQueue.get(currentIndex));
+			play(playQueue, nextIndex());
+		}
+	}
+	// endregion
 }

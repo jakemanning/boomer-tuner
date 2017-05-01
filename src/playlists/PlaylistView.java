@@ -28,30 +28,42 @@ public class PlaylistView extends SplitPane implements CategoryView {
         this.controller = controller;
         initializeViews();
 
-        initializeArtists();
+        initializePlaylists();
         initializeDetailView();
     }
 
-    private void initializeArtists() {
+    private void initializePlaylists() {
         playlists.setItems(MediaLibrary.instance().getPlaylists());
-        playlists.getSelectionModel().selectedItemProperty().addListener(controller.playlistSelectionListener());
+        playlists.getSelectionModel().selectedItemProperty().addListener(controller.playlistSelectionListener);
     }
 
     private void initializeDetailView() {
-        detail.setPlaceholder(new Label("Choose a directory to view playlists"));
-        detail.getColumns().remove(2); // remove artist column
+        if (model.isDirectorySelected() && MediaLibrary.instance().getPlaylists().size() > 0){
+            detail.setPlaceholder(new Label("Select a playlist from the list"));
+        } else{
+            detail.setPlaceholder(new Label("Create a playlist to view playlists"));
+        }
 
         model.selectedPlaylistProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue.getItems());
-            ObservableList<Song> items = FXCollections.observableArrayList();
-            newValue.getItems().forEach(playable -> {
-                items.add((Song)playable);
-            });
-            detail.setItems(items);
+            setItems(newValue);
         });
+
         if (model.getSelectedPlaylist() == null) {
             detail.setItems(null);
+        } else {
+            setItems(model.getSelectedPlaylist());
         }
+    }
+
+    private void setItems(final Playlist playlist) {
+        playlists.getSelectionModel().selectedItemProperty().removeListener(controller.playlistSelectionListener);
+        playlists.getSelectionModel().select(playlist);
+        playlists.getSelectionModel().selectedItemProperty().addListener(controller.playlistSelectionListener);
+        ObservableList<Song> items = FXCollections.observableArrayList();
+        playlist.getItems().forEach(playable -> {
+            items.add((Song)playable);
+        });
+        detail.setItems(items);
     }
 
     private void initializeViews() {
@@ -64,11 +76,17 @@ public class PlaylistView extends SplitPane implements CategoryView {
     }
 
     @Override
-    public void setRootModel(RootModel rootModel) {
+    public void setListeners(final RootModel rootModel) {
         rootModel.setPlaylistModeListener(this::playlistModeChanged);
-    }
+		rootModel.setSearchListener(this::searchTermChanged);
+		detail.setRootModel(rootModel);
+	}
 
-    private void playlistModeChanged(boolean playlistMode) {
+    private void playlistModeChanged(final boolean playlistMode) {
         detail.playlistModeChanged(playlistMode);
     }
+
+	private void searchTermChanged(final String searchTerm) {
+		playlists.setItems(MediaLibrary.instance().getPlaylists().filtered(controller.searchFilter(searchTerm)));
+	}
 }

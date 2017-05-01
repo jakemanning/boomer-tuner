@@ -13,6 +13,10 @@
             <id>jaudiotagger-repository</id>
             <url>https://dl.bintray.com/ijabz/maven</url>
         </repository>
+        <repository>
+            <id>fontawesomefx-repository</id>
+            <url>https://dl.bintray.com/jerady/maven</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -24,6 +28,21 @@
             <groupId>org.mp4parser</groupId>
             <artifactId>isoparser</artifactId>
             <version>1.9.27</version>
+        </dependency>
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.12</version>
+        </dependency>
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx</artifactId>
+            <version>8.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sachinhandiekar</groupId>
+            <artifactId>jMusixMatch</artifactId>
+            <version>1.1.4</version>
         </dependency>
     </dependencies>
 

@@ -6,20 +6,24 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-public class Video implements Category, Playable {
+public class Video implements Category, Playable, Serializable {
 	private final String title;
-	private final StringProperty duration = new SimpleStringProperty(Playable.format(Duration.ZERO));
+	private transient StringProperty duration = new SimpleStringProperty(Playable.format(Duration.ZERO));
 
 	public String getTitle() {
 		return title;
 	}
 
 	public StringProperty durationProperty() {
+		if (duration == null) {
+			duration = Video.from(this.uri).duration;
+		}
 		return duration;
 	}
 
@@ -29,7 +33,7 @@ public class Video implements Category, Playable {
 
 	private final URI uri;
 
-	private Video(String title, URI uri) {
+	private Video(final String title, final URI uri) {
 		this.title = title;
 		this.uri = uri;
 	}
@@ -49,19 +53,19 @@ public class Video implements Category, Playable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Video video = (Video) o;
-		return Objects.equals(title, video.title) && Objects.equals(duration.get(), video.duration.get())
-				&& Objects.equals(uri, video.uri);
+		return Objects.equals(title, video.title) &&
+				Objects.equals(uri, video.uri);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(title, duration.get(), uri);
+		return Objects.hash(title, uri);
 	}
 
 	@Override

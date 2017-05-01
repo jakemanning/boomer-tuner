@@ -4,7 +4,7 @@
 <?import javafx.scene.control.TableView?>
 <fx:root type="TableView" xmlns:fx="http://javafx.com/fxml" prefHeight="575.0" prefWidth="668.0">
     <columns>
-        <TableColumn fx:id="titleCol" editable="false" prefWidth="400.0" text="Title"/>
-        <TableColumn fx:id="durationCol" editable="false" prefWidth="100.0" text="Duration"/>
+        <TableColumn fx:id="titleCol" editable="false" resizable="false" text="Title"/>
+        <TableColumn fx:id="durationCol" editable="false" resizable="false" text="Duration"/>
     </columns>
 </fx:root>

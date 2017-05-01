@@ -8,6 +8,8 @@ public interface Category {
 			return Song.from(path.toUri());
 		} else if (Video.accepts(path)) {
 			return Video.from(path.toUri());
+		} else if (Image.accepts(path)){
+			return Image.from(path.toUri());
 		} else {
 			return null;
 		}

@@ -9,6 +9,15 @@ import models.Playlist;
  */
 public class PlaylistModel {
     private ObjectProperty<Playlist> selectedPlaylist = new SimpleObjectProperty<>();
+    private boolean directorySelected = false;
+
+    public void setDirectorySelected(boolean selected) {
+        directorySelected = selected;
+    }
+
+    public boolean isDirectorySelected() {
+        return directorySelected;
+    }
 
     public Playlist getSelectedPlaylist() {
         return selectedPlaylist.get();
