@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.CacheHint;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
@@ -34,6 +35,7 @@ public class ImagesView extends ScrollPane implements CategoryView{
 		prefHeight(575);
 		prefWidth(668);
 
+		tilePane.setAlignment(Pos.TOP_CENTER);
 		tilePane.setVgap(10);
 		tilePane.setHgap(10);
 		tilePane.setPadding(new Insets(10,10,10,10));
