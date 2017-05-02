@@ -72,6 +72,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		getStylesheets().add("root/root.css");
 		if (rootModel.darkModeProperty().get()) {
 			getStylesheets().add("root/darkMode.css");
+			invertImages();
 		}
 		rootModel.addSelectedCategoryListener(this);
 		Player.instance().addListener(this);
@@ -148,6 +149,32 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
         volSlider.valueChangingProperty().addListener(rootController.volumeUpdated(volSlider));
     }
 
+	private void invertImages() {
+		if (rootModel.darkModeProperty().get()) {
+			volDownImage.setImage(Icon.VOLDOWN_DARK.image());
+			volUpImage.setImage(Icon.VOLUP_DARK.image());
+			shuffleImage.setImage(Icon.SHUFFLE_DARK.image());
+			shufflePressedImage.setImage(Icon.SHUFFLE_PRESSED_DARK.image());
+			previousImage.setImage(Icon.PREVIOUS_DARK.image());
+			pauseImage.setImage(Icon.PAUSE_DARK.image());
+			playImage.setImage(Icon.PLAY_DARK.image());
+			nextImage.setImage(Icon.NEXT_DARK.image());
+			loopImage.setImage(Icon.LOOP_DARK.image());
+			loopPressedImage.setImage(Icon.LOOP_PRESSED_DARK.image());
+		} else {
+			volDownImage.setImage(Icon.VOLDOWN.image());
+			volUpImage.setImage(Icon.VOLUP.image());
+			shuffleImage.setImage(Icon.SHUFFLE.image());
+			shufflePressedImage.setImage(Icon.SHUFFLE_PRESSED.image());
+			previousImage.setImage(Icon.PREVIOUS.image());
+			pauseImage.setImage(Icon.PAUSE.image());
+			playImage.setImage(Icon.PLAY.image());
+			nextImage.setImage(Icon.NEXT.image());
+			loopImage.setImage(Icon.LOOP.image());
+			loopPressedImage.setImage(Icon.LOOP_PRESSED.image());
+		}
+	}
+
 	public Button getPlaylistButton() {
 		return playlist;
 	}
@@ -168,9 +195,10 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 
 		final Menu file = createFileMenu(stage);
 		final Menu controls = createControlsMenu();
+		final Menu view = createViewMenu();
 		final Menu helpMenu = createHelpMenu();
 
-		menuBar.getMenus().addAll(file, controls, helpMenu);
+		menuBar.getMenus().addAll(file, controls, view, helpMenu);
 	}
 
 	private Menu createFileMenu(final Stage stage) {
@@ -182,12 +210,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		final MenuItem clear = new MenuItem("Delete Library");
 		clear.setOnAction(e -> MediaLibrary.instance().clearLibrary());
 
-		final CheckMenuItem darkMode = new CheckMenuItem("Dark Mode");
-		darkMode.setSelected(rootModel.darkModeProperty().get());
-		rootModel.darkModeProperty().addListener((obs, old, val) -> darkMode.setSelected(val));
-		darkMode.setOnAction(e -> rootController.toggleDarkMode(getStylesheets()));
-
-		file.getItems().addAll(open, clear, darkMode);
+		file.getItems().addAll(open, clear);
 		return file;
 	}
 
@@ -223,12 +246,26 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		Player.instance().crossfadeModeProperty().addListener((obs, old, val) -> crossfade.setSelected(val));
 		crossfade.setOnAction(e -> rootController.crossfadePressed());
 
-		final MenuItem lyrics = new MenuItem("Retrieve Lyrics");
+		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade);
+		return controls;
+	}
+
+	private Menu createViewMenu() {
+		final Menu view = new Menu("View");
+		final CheckMenuItem darkMode = new CheckMenuItem("Dark Mode");
+		darkMode.setSelected(rootModel.darkModeProperty().get());
+		rootModel.darkModeProperty().addListener((obs, old, val) -> darkMode.setSelected(val));
+		darkMode.setOnAction(e -> {
+			rootController.toggleDarkMode(getStylesheets());
+			invertImages();
+		});
+
+		final MenuItem lyrics = new MenuItem("Show Lyrics");
 		lyrics.setOnAction(e -> rootController.lyricsPressed());
 		lyrics.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
 
-		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade, lyrics);
-		return controls;
+		view.getItems().addAll(darkMode, lyrics);
+		return view;
 	}
 
 	private Menu createHelpMenu() {
