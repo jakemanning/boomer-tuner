@@ -185,6 +185,7 @@ public class RootController {
 		playlistModel.setDirectorySelected(rootModel.isDirectorySelected());
 		playlistModel.setSelectedPlaylist(playlist);
 		CategoryView newView = new PlaylistView(playlistModel, new PlaylistController(playlistModel));
+		newView.setListeners(rootModel);
 		rootView.setCenter((Node) newView);
 	}
 
