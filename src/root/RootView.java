@@ -195,9 +195,10 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 
 		final Menu file = createFileMenu(stage);
 		final Menu controls = createControlsMenu();
+		final Menu view = createViewMenu();
 		final Menu helpMenu = createHelpMenu();
 
-		menuBar.getMenus().addAll(file, controls, helpMenu);
+		menuBar.getMenus().addAll(file, controls, view, helpMenu);
 	}
 
 	private Menu createFileMenu(final Stage stage) {
@@ -209,15 +210,7 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		final MenuItem clear = new MenuItem("Delete Library");
 		clear.setOnAction(e -> MediaLibrary.instance().clearLibrary());
 
-		final CheckMenuItem darkMode = new CheckMenuItem("Dark Mode");
-		darkMode.setSelected(rootModel.darkModeProperty().get());
-		rootModel.darkModeProperty().addListener((obs, old, val) -> darkMode.setSelected(val));
-		darkMode.setOnAction(e -> {
-			rootController.toggleDarkMode(getStylesheets());
-			invertImages();
-		});
-
-		file.getItems().addAll(open, clear, darkMode);
+		file.getItems().addAll(open, clear);
 		return file;
 	}
 
@@ -253,12 +246,26 @@ public class RootView extends BorderPane implements SelectedCategoryListener, Pl
 		Player.instance().crossfadeModeProperty().addListener((obs, old, val) -> crossfade.setSelected(val));
 		crossfade.setOnAction(e -> rootController.crossfadePressed());
 
-		final MenuItem lyrics = new MenuItem("Retrieve Lyrics");
+		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade);
+		return controls;
+	}
+
+	private Menu createViewMenu() {
+		final Menu view = new Menu("View");
+		final CheckMenuItem darkMode = new CheckMenuItem("Dark Mode");
+		darkMode.setSelected(rootModel.darkModeProperty().get());
+		rootModel.darkModeProperty().addListener((obs, old, val) -> darkMode.setSelected(val));
+		darkMode.setOnAction(e -> {
+			rootController.toggleDarkMode(getStylesheets());
+			invertImages();
+		});
+
+		final MenuItem lyrics = new MenuItem("Show Lyrics");
 		lyrics.setOnAction(e -> rootController.lyricsPressed());
 		lyrics.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
 
-		controls.getItems().addAll(play, previous, next, shuffle, loop, crossfade, lyrics);
-		return controls;
+		view.getItems().addAll(darkMode, lyrics);
+		return view;
 	}
 
 	private Menu createHelpMenu() {
